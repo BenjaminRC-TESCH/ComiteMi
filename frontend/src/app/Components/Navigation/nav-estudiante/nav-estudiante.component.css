@@ -1,0 +1,65 @@
+/************************/
+/*ESTILO PARA EL HEADER*/
+/**********************/
+.navbar {
+    padding: 0;
+    margin: 0;
+    position: fixed;
+    /* Fijar la navegación en la parte superior */
+    top: 0;
+    /* Mantenerla en la parte superior */
+    width: 100%;
+    /* Asegurar que ocupe el 100% del ancho de la pantalla */
+    z-index: 1000;
+    /* Asegurar que quede por encima de otros elementos */
+}
+
+.nav-item {
+    color: black;
+    position: relative;
+}
+
+.container-fluid {
+    background-color: #8BC34A;
+}
+
+.container-fluid img {
+    height: 50px;
+    width: 140px;
+    margin-left: 50px;
+    margin-right: 50px;
+    cursor: pointer;
+}
+
+.container-fluid a:hover {
+    background-color: #ddd;
+    color: black;
+    cursor: pointer;
+}
+
+.container-fluid a.active {
+    border-radius: 10px;
+    background-color: white;
+    color: black;
+}
+
+.dropdown-menu-end {
+    right: 0;
+}
+
+.dropdown-menu {
+    top: calc(100% + 10px);
+    /* Ajusta la posición vertical */
+    overflow-y: auto;
+    /* Habilita el scroll vertical */
+    max-height: 200px;
+    /* Limita la altura del menú desplegable */
+}
+
+.estudiante-reg{
+    font-weight: bold;
+}
+
+.nav-link{
+    color: black;
+}

@@ -1,0 +1,31 @@
+footer {
+    background-color: #000000;
+    color: #fff;
+    text-align: center;
+    padding: 1px;
+    width: 100%;
+    font-size: 15px;
+    margin-top: auto;
+    /* Se asegura de que el footer esté al final del contenedor flex */
+}
+
+.p1, .p2, .p3 {
+    font-size: 1.20vw;
+    color: white;
+    text-align: center;
+    margin-bottom: 2vh;
+}
+
+
+@media (max-width: 800px) {
+    .p1, .p2, .p3 {
+        font-size: 3vw;
+    }
+}
+
+
+@media (max-width: 576px) {
+    .p1, .p2, .p3 {
+        font-size: 3vw;
+    }
+}

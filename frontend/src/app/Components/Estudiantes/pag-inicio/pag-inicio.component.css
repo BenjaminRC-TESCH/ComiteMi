@@ -1,0 +1,282 @@
+
+
+.navbar {
+    padding: 0;
+    margin: 0;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.container-fluid {
+    background-color: #8BC34A;
+}
+
+.container-fluid img {
+    height: 50px;
+    width: 140px;
+    margin-left: 50px;
+    margin-right: 50px;
+    cursor: pointer;
+}
+
+.container-fluid a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.container-fluid a.active {
+    border-radius: 10px;
+    background-color: white;
+    color: black;
+}
+
+.dropdown-menu-end {
+    right: 0;
+}
+
+.dropdown-menu {
+    top: calc(100% + 10px);
+    overflow-y: auto;
+    max-height: 200px;
+}
+
+/***************************/
+/*ESTILOS PARA LOS SECTION*/
+/*************************/
+
+section {
+    width: 100%;
+}
+
+.sec1{
+    margin-top: 3%;
+}
+
+.carousel-inner {
+    width: 100%;
+    /* Ajusta el ancho al 100% para que se adapte al contenedor */
+}
+
+.carousel-item img {
+    margin-top: 0px;
+    object-fit: fill;
+    max-height: 100%;
+    /* Establece un tamaño máximo para las imágenes */
+}
+
+/*SECCION 2*/
+.sec22 {
+    display: flex;
+    background: rgb(208, 207, 207);
+    height: 100vh;
+    /* Ajuste al 100% del alto de la pantalla */
+    align-items: center;
+}
+
+.contenido-izquierda {
+    margin-right: 5%;
+    /* Ajuste del margen derecho en porcentaje */
+}
+
+.img2 {
+    height: 60%;
+    /* Ajuste de altura en porcentaje */
+    width: auto;
+    /* Ancho automático para mantener la proporción original */
+    max-width: 40%;
+    /* Ancho máximo en relación al tamaño de la sección */
+    margin-left: 5%;
+    /* Ajuste del margen izquierdo en porcentaje */
+    border-radius: 40px;
+}
+
+@media (max-width: 576px) {
+    .sec22 {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        height: 450px;
+    }
+
+    .contenido-izquierda {
+        margin-right: 10;
+        /* Elimina el margen derecho para dispositivos móviles */
+    }
+
+    .img2 {
+        height: auto;
+        width: 60%;
+        max-width: none;
+        margin-left: 0;
+    }
+}
+
+/* Estilo base común para texto y párrafo */
+.convo,
+.pCaso {
+    margin-left: 10%;
+    /* Ajuste del margen izquierdo en porcentaje */
+    margin-right: 10%;
+    /* Ajuste del margen derecho en porcentaje */
+    margin-bottom: 1%;
+    /* Ajuste del margen inferior en porcentaje */
+}
+
+.convo {
+    border-color: #000000;
+    padding-top: 2%;
+    /* Ajuste del padding superior en porcentaje */
+    font-size: 5vw;
+    /* Ajuste del tamaño de fuente en vw */
+}
+
+.pCaso {
+    padding-bottom: 3%;
+    /* Ajuste del padding inferior en porcentaje */
+    font-size: 1.5vw;
+    /* Ajuste del tamaño de fuente en vw */
+    text-align: center;
+    margin-top: 3vh;
+}
+
+@media (max-width: 576px) {
+
+    .convo,
+    .pCaso {
+        margin-left: 5%;
+        /* Ajuste del margen izquierdo para pantallas pequeñas */
+        margin-right: 5%;
+        /* Ajuste del margen derecho para pantallas pequeñas */
+        font-size: 3.5vw;
+        /* Tamaño de fuente relativo para pantallas pequeñas */
+    }
+
+    .convo {
+        font-size: 4.5vw;
+        /* Tamaño de fuente ligeramente mayor para .convo en pantallas pequeñas */
+    }
+
+    /* Centrar el texto y los botones */
+    .sec22 {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+/* Estilo base común para los botones */
+.btn-secondary,
+.btn-light {
+    font-size: 1.75vw;
+    border-radius: 40px;
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    /* Espacio entre botones */
+    margin-left: 30px;
+}
+
+.btn-light {
+    border: 2px solid black;
+}
+
+@media (max-width: 576px) {
+
+    .btn-secondary,
+    .btn-light {
+        width: 60%;
+        /* Ancho al 100% para ocupar toda la pantalla */
+        font-size: 3vw;
+        /* Tamaño de fuente relativo */
+    }
+}
+
+/*SECCION 3*/
+.sec33 {
+    background-color: #8BC34A;
+    padding: 4vh 2vw;
+    box-sizing: border-box;
+}
+
+.tipCas {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: 900;
+    text-align: center;
+    font-size: 4vw;
+    margin-bottom: 2vh;
+    margin-top: 3vh;
+}
+
+.contenedor-img {
+    text-align: center;
+}
+
+table {
+    background: #8BC34A;
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2vh;
+    margin-top: 5vh;
+}
+
+th,
+td {
+    padding: 2vh;
+    text-align: center;
+    font-size: 2vw;
+}
+
+.td1, .td2, .td3{
+    margin-bottom: 10px;
+}
+
+.img3,
+.img4,
+.img5 {
+    padding-top: 1vh;
+    width: auto;
+    /* Ancho automático para mantener la proporción original */
+    max-width: 30%;
+    /* Ancho máximo */
+    height: 14vh;
+    /* Altura relativa */
+    margin: auto;
+    display: block;
+    margin-bottom: 1vh;
+    /* Espaciado entre imágenes */
+}
+
+.ResTer {
+    margin-top: 1vh;
+    margin-left: 2vw;
+    text-align: justify;
+    font-size: 2vw;
+    /* Tamaño de fuente relativo */
+}
+
+@media (max-width: 576px) {
+    .tipCas {
+        font-size: 6vw;
+        /* Tamaño de fuente relativo para dispositivos móviles */
+    }
+
+    th,
+    td {
+        font-size: 4vw;
+        /* Tamaño de fuente relativo para dispositivos móviles */
+    }
+
+    .img3,
+    .img4,
+    .img5 {
+        max-width: 50%;
+        /* Ancho máximo para dispositivos móviles */
+    }
+
+    .ResTer {
+        font-size: 3vw;
+        /* Tamaño de fuente relativo para dispositivos móviles */
+    }
+}

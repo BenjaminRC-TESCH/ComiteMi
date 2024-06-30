@@ -1,0 +1,109 @@
+<app-nav-administrador></app-nav-administrador>
+
+<main>
+    <div>
+        <h1 class="icon-heading">
+            <i class="fas fa-user-graduate"></i> ESTUDIANTES
+        </h1>
+    </div>
+    <div class="header_fixed">
+        <table class="table table-striped" *ngIf="!selectedStudent && !isEditing">
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellidos</th>
+                    <th scope="col">Matrícula</th>
+                    <th scope="col">Carrera</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                <tr *ngFor="let student of students">
+                    <td>{{ student.nombre }}</td>
+                    <td>{{ student.aPaterno }} {{ student.aMaterno }}</td>
+                    <td>{{ student.matricula }}</td>
+                    <td>{{ student.carrera }}</td>
+                    <td>{{ student.correo }}</td>
+                    <td>
+                        <button class="custom-button editar-button editar" (click)="selectStudent(student)">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                        <button class="custom-button eliminar-button eliminar" (click)="deleteStudent(student._id)">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr> 
+            </tbody>
+        </table>
+
+        <div class="container mt-4" *ngIf="selectedStudent && isEditing">
+            <form class="card p-4" #studentForm="ngForm" (ngSubmit)="updateStudent(studentForm)">
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre:</label>
+                    <input id="nombre" type="text" name="nombre" [(ngModel)]="selectedStudent.nombre" class="form-control"
+                        required>
+                </div>
+                <div class="mb-3">
+                    <label for="aPaterno" class="form-label">Apellido Paterno:</label>
+                    <input id="aPaterno" type="text" name="aPaterno" [(ngModel)]="selectedStudent.aPaterno" class="form-control"
+                        required>
+                </div>
+                <div class="mb-3">
+                    <label for="aMaterno" class="form-label">Apellido Materno:</label>
+                    <input id="aMaterno" type="text" name="aMaterno" [(ngModel)]="selectedStudent.aMaterno" class="form-control"
+                        required>
+                </div>
+                <div class="mb-3">
+                    <label for="matricula" class="form-label">Matricula:</label>
+                    <input id="matricula" type="text" name="matricula" [(ngModel)]="selectedStudent.matricula"
+                        class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="carrera" class="form-label">Carrera:</label>
+                    <select id="carrera" name="carrera" [(ngModel)]="selectedStudent.carrera" class="form-control">
+                        <option selected disabled>Selecciona...</option>
+                        <option value="Ingeniería en Sistemas Computacionales">Ingeniería en Sistemas
+                            Computacionales</option>
+                        <option value="Ingeniería Industrial">Ingeniería Industrial</option>
+                        <option value="Ingeniería Electromecánica">Ingeniería Electromecánica</option>
+                        <option value="Ingeniería Informática">Ingeniería Informática</option>
+                        <option value="Ingeniería Electrónica">Ingeniería Electrónica</option>
+                        <option value="Ingeniería en Administración">Ingeniería en Administración</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="correo" class="form-label">Correo:</label>
+                    <input id="correo" type="text" name="correo" [(ngModel)]="selectedStudent.correo" class="form-control"
+                        required disabled>
+                </div> 
+                <div class="mb-3 position-relative">
+                    <label for="password" class="form-label">Contraseña:</label>
+                    <div class="input-group">
+                        <input id="password" [type]="showPassword ? 'text' : 'password'" name="password" [(ngModel)]="password"
+                            class="form-control" [disabled]="!enablePassword" #passwordField="ngModel" [required]="enablePassword">
+                        <button type="button"
+                            class="btn btn-showpassword btn-outline-secondary position-absolute top-50 end-0 translate-middle-y"
+                            (click)="togglePasswordVisibility()" [disabled]="!enablePassword">
+                            <i class="fas fa-eye" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="enablePassword" [(ngModel)]="enablePassword"
+                        (change)="togglePassword()">
+                    <label class="form-check-label" for="enablePassword">Modificar contraseña</label>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary"
+                        [disabled]="!studentForm.form.valid || (enablePassword && !passwordField.valid)">Guardar
+                        Cambios</button>
+                    <button type="button" class="btn btn-secondary" (click)="toggleEdit()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<app-footer></app-footer>

@@ -1,0 +1,90 @@
+ :host {
+     display: flex;
+     flex-direction: column;
+     min-height: 100vh;
+ }
+
+ main {
+     flex: 1;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     overflow-x: auto;
+     overflow-y: auto;
+     padding: 1rem;
+     max-width: 100vw;
+     font-family: 'Roboto', sans-serif;
+     margin-top: 60px;
+ }
+
+ .container {
+     box-shadow: 0 0 10px rgba(0, 0, 0.1, 0.1);
+     width: 100%;
+     box-sizing: border-box;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     color: black;
+     margin: 0 auto;
+ }
+
+ .card1 {
+     margin: 0 10%;
+     width: 80%;
+     background-color: black;
+     color: white;
+     text-align: center;
+     margin-top: 25px;
+ }
+
+ .card {
+     margin: 0 10%;
+     width: 80%;
+     text-align: justify;
+     margin-top: 25px;
+     margin-bottom: 20px;
+     border: none;
+ }
+
+ .p {
+     text-align: center;
+     margin-top: 30px;
+ }
+
+ .form-check {
+     width: 90%;
+     margin-left: 10%;
+ }
+
+ .form-check1 {
+     width: 80%;
+     margin-left: 12%;
+ }
+
+ .editableFiled {
+     background-color: black;
+     color: white;
+ }
+
+
+
+
+ footer {
+     background-color: #000000;
+     color: #fff;
+     text-align: center;
+     padding: 1px;
+     width: 100%;
+     font-size: 11px;
+     /* Ajusta el tamaño de la fuente según tus preferencias */
+ }
+
+
+ body {
+     background-image: url('/assets/images/Plantillav.jpg');
+     background-repeat: no-repeat;
+     background-size: 30%;
+     /* Ajusta el tamaño de la imagen según tus preferencias */
+     background-position: top right;
+     /* Ajusta la posición de la imagen a la esquina superior derecha */
+ }

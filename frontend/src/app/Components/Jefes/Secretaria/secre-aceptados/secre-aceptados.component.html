@@ -1,0 +1,73 @@
+<app-nav-secretaria></app-nav-secretaria>
+
+<main>
+    <div>
+        <div class="align-text-center d-flex flex-column align-items-center">
+            <img src="assets/images/Aceptado.png" alt="Imagen de bienvenida" width="70" height="60"
+                style="display: inline-block;">
+            <h1 style="display: inline-block;">ACEPTADOS</h1>
+        </div>
+        <div class="search-button mt-3">
+            <div class="search">
+                <input type="text" placeholder="Buscar..." (keyup)="buscarPorMatricula($event)">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+    </div>
+    <div class="header_fixed">
+        <div class="search-table-container">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="8" style="text-align: left; font-size: 20px;">SEGUIMIENTO</th>
+                    </tr>
+                    <tr>
+                        <th>MATRICULA</th>
+                        <th>NOMBRE COMPLETO</th>
+                        <th>CARRERA</th>
+                        <th>ESTADO</th>
+                        <th>TIPO DE CASO</th>
+                        <th>FECHA DE SOLICITUD</th>
+                        <th>MOTIVOS</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let alumno of Alumno">
+                        <td>{{ alumno.matricula }}</td>
+                        <td>{{ alumno.nombreCom }}</td>
+                        <td>{{ alumno.carrera }}</td>
+                        <td>{{ alumno.casoEsta }}</td>
+                        <td>{{ alumno.casoTipo }}</td>
+                        <td>{{ alumno.createdAt | date:'dd/MM/yyyy '}}</td>
+                        <td>
+                            <div class="botones-container">
+                                <button class="info" (click)="mostrarInformacion(alumno)">
+                                    <i class="material-icons">message</i>
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="botones-container">
+                                <button class="pape" (click)="verPDF(alumno.pdfPath)">
+                                    <i class="material-icons">description</i>
+                                </button>
+                                <button class="Aceptar" (click)="aceptarAlumno(alumno._id, alumno.nombreCom)">
+                                    <i class="material-icons">check_circle</i>
+                                </button>
+                                <button class="rechazar" (click)="rechazarAlumno(alumno._id, alumno.nombreCom)">
+                                    <i class="material-icons">cancel</i>
+                                </button>
+
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</main>
+
+<app-footer></app-footer>

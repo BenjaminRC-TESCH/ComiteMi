@@ -1,0 +1,63 @@
+<div class="container row justify-content-between">
+    <div class="card" *ngFor="let alumno of alumnosAceptados; let i = index">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Sesión de Comité:</th>
+                    <th scope="col">{{romano}}</th>
+                    <th scope="col">Fecha de la sesión:</th>
+                    <th scope="col">xxxx</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Número del Caso:</td>
+                    <td colspan="3">{{'3.3.' + (i + 1 )}}</td>
+                </tr>
+                <tr>
+                    <td>Carrera de Ingeniería:</td>
+                    <td colspan="3">{{ alumno.carrera }}</td>
+                </tr>
+                <tr>
+                    <td>Nombre del Estudiante</td>
+                    <td colspan="3">{{ alumno.nombreCom }}</td>
+                </tr>
+                <tr>
+                    <td colspan="4">Descripción General del Caso:</td>
+                </tr>
+                <tr>
+                    <td colspan="4"><input type="text" [(ngModel)]="DGeneral[i]"></td>
+                </tr>
+                <tr>
+                    <td colspan="4">Resulución del Comité Académico:</td>
+                </tr>
+                <tr>
+                    <td colspan="4"><input type="text" [(ngModel)]="Solucion[i]"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">Visto Bueno Director General del TESCHA</td>
+                    <td>
+                        <label class="radio-container">Sí
+                            <input type="radio" name="opcion_{{i}}" checked="checked">
+                            <span class="checkmark"></span>
+                        </label>
+                    </td>
+                    <td>
+                        <label class="radio-container">No
+                            <input type="radio" name="opcion_{{i}}">
+                            <span class="checkmark"></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align: center;">
+                        LIC. GUILLERMO GUSTAVO FALCÓN TORRES <br>
+                        DIRECTOR GENERAL <br>
+                        TESCHA
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <button (click)="Guardar()">Generar PDF</button>
+</div>

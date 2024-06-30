@@ -1,0 +1,50 @@
+<app-nav-estudiante></app-nav-estudiante>
+
+<main>
+    <section class="sec22">
+        <form (submit)="Signin()" class="login-form">
+            <div class="form-box" *ngIf="ocultarLogin">
+                <div class="form-value">
+                    <h2>Iniciar Sesión</h2>
+                    <div class="inputbox">
+                        <input type="email" [(ngModel)]="user.email" name="email" class="form-control" placeholder="Email"
+                            required autofocus>
+                    </div>
+                    <div class="inputbox">
+                        <input type="{{ showPassword ? 'text' : 'password' }}" [(ngModel)]="user.password" name="password"
+                            class="form-control" placeholder="Password" required>
+                        <button type="button" class="btn btn-outline-secondary password-toggle"
+                            (click)="togglePasswordVisibility()">
+                            <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                        </button>
+                    </div>
+
+                    <div class="question">
+                        <a routerLink="/registro-estudiantes">¿Aún no tienes cuenta?, regístrate.</a>
+                    </div>
+    
+                    <button type="submit" class="btn btn-sing btn-primary btn-block">Iniciar sesión</button>
+                </div>
+            </div>
+        </form>
+    
+        <div class="mostrarformulario" *ngIf="roles.length > 1 && mostrarSeleccionRol">
+            <h3>Selecciona tu rol:</h3>
+            <select [(ngModel)]="selectedRole" class="form-control">
+                <option *ngFor="let role of roles" [value]="role">{{ getRoleName(role) }}</option>
+            </select>
+            <button (click)="confirmRole()" class="btn btn-primary">Confirmar Rol</button>
+        </div>
+    
+        <div class="mostrarformulario" *ngIf="mostrarFormularioVerificacion">
+            <form (submit)="verified()">
+                <input type="text" class="form-control" id="exampleFormControlInput1"
+                    [(ngModel)]="codeVerified.codigoVerificacion" name="codigoVerificacion"
+                    placeholder="Introduce tu código de verificación" autocomplete="off">
+                <button type="submit">Verificar</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<app-footer></app-footer>

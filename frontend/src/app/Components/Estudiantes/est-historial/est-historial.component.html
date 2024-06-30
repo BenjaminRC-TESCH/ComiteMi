@@ -1,0 +1,62 @@
+<app-nav-estudiante></app-nav-estudiante>
+
+<main>
+    <div class="table-container table-responsive">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Matrícula</th>
+                    <th scope="col">Carrera</th>
+                    <th scope="col">Tipo de caso</th>
+                    <th scope="col">Evidencia</th>
+                    <th scope="col">Información</th>
+                    <th scope="col">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let alumno of paginatedAlumnos; let i = index">
+                    <th scope="row">{{ currentPage * pageSize + i + 1 }}</th>
+                    <td>{{ alumno.nombreCom }}</td>
+                    <td>{{ alumno.matricula }}</td>
+                    <td>{{ alumno.carrera }}</td>
+                    <td>{{ alumno.casoTipo }}</td>
+                    <td>
+                        <button (click)="verPDF(alumno.pdfPath)">Ver PDF</button>
+                    </td>
+                    <td>
+                        <div class="botones-container">
+                            <button class="info" (click)="mostrarInformacion(alumno)">
+                                <i class="material-icons">message</i>
+                            </button>
+                        </div>
+                    </td>
+                    <td>{{ alumno.casoEsta }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
+        <ul class="pagination">
+            <li class="page-item" [class.disabled]="currentPage === 0">
+                <a class="page-link" (click)="prevPage()" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" *ngFor="let page of totalPagesArray; let i = index"
+                [class.active]="currentPage === i">
+                <a class="page-link" (click)="goToPage(i)">{{ i + 1 }}</a>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+                <a class="page-link" (click)="nextPage()" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</main> 
+
+<app-footer></app-footer>

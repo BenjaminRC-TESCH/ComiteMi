@@ -1,0 +1,68 @@
+<app-nav-administrador></app-nav-administrador>
+
+<main>
+    <div>
+        <h1 class="icon-heading">
+            <i class="fas fa-book-reader"></i> CASOS
+        </h1>
+    </div>
+    <div class="header_fixed">
+        <table *ngIf="!selectedCaso && !showAddForm">
+            <thead>
+                <tr>
+                    <th>Caso</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                <tr *ngFor="let caso of casos">
+                    <td>{{ caso.nombreCaso }}</td>
+                    <td>
+                        <button class="custom-button editar-button editar" (click)="editarCaso(caso)"><i
+                                class="fas fa-pencil-alt"></i></button>
+                        <button class="custom-button editar-button eliminar" (click)="eliminarCaso(caso._id)"><i
+                                class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div *ngIf="selectedCaso" class="container mt-4">
+            <form (ngSubmit)="guardarCambios()" class="card p-4">
+                <h2 class="text-center mb-4">Editar Caso</h2>
+
+                <div class="mb-3">
+                    <label for="roleName" class="form-label">Caso:</label>
+                    <input id="roleName" type="text" [(ngModel)]="selectedCaso.nombreCaso" name="roleName"
+                        class="form-control" required>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        <div *ngIf="showAddForm" class="container mt-4">
+            <form (ngSubmit)="agregarCaso()" class="card p-4">
+                <h2 class="text-center mb-4">Agregar Caso</h2>
+
+                <div class="mb-3">
+                    <label for="newRoleName" class="form-label">Caso:</label>
+                    <input id="newRoleName" type="text" [(ngModel)]="newCaso.nombreCaso" name="newRoleName"
+                        class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Agregar Caso</button>
+                <button type="button" class="btn btn-secondary" (click)="cancelarAgregarCaso()">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <button *ngIf="!selectedCaso && !showAddForm" id="vaciarDatos" class="btn btn-primary custom-button ms-auto" (click)="mostrarFormularioAgregar()">
+        <i class="fas fa-user-plus"></i> Agregar Caso
+    </button>
+</main>
+
+<app-footer></app-footer>

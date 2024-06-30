@@ -1,0 +1,68 @@
+<app-nav-administrador></app-nav-administrador>
+
+<main>
+    <div>
+        <h1 class="icon-heading">
+            <i class="fas fa-university"></i> CARRERAS
+        </h1>
+    </div>
+    <div class="header_fixed">
+        <table *ngIf="!selectedCarrera && !showAddForm">
+            <thead>
+                <tr>
+                    <th>Carrera</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                <tr *ngFor="let carreras of carreras">
+                    <td>{{ carreras.nombreCarrera }}</td>
+                    <td>
+                        <button class="custom-button editar-button editar" (click)="editarCarrera(carreras)"><i
+                                class="fas fa-pencil-alt"></i></button>
+                        <button class="custom-button editar-button eliminar" (click)="eliminarCarrera(carreras._id)"><i
+                                class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div *ngIf="selectedCarrera" class="container mt-4">
+            <form (ngSubmit)="guardarCambios()" class="card p-4">
+                <h2 class="text-center mb-4">Editar Carrera</h2>
+
+                <div class="mb-3">
+                    <label for="roleName" class="form-label">Carrera:</label>
+                    <input id="roleName" type="text" [(ngModel)]="selectedCarrera.nombreCarrera" name="roleName"
+                        class="form-control" required>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        <div *ngIf="showAddForm" class="container mt-4">
+            <form (ngSubmit)="agregarCaso()" class="card p-4">
+                <h2 class="text-center mb-4">Agregar Carrera</h2>
+
+                <div class="mb-3">
+                    <label for="newRoleName" class="form-label">Carrera:</label>
+                    <input id="newRoleName" type="text" [(ngModel)]="newCarrera.nombreCarrera" name="newRoleName"
+                        class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Agregar Carrera</button>
+                <button type="button" class="btn btn-secondary" (click)="cancelarAgregarCaso()">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <button *ngIf="!selectedCarrera && !showAddForm" id="vaciarDatos" class="btn btn-primary custom-button ms-auto" (click)="mostrarFormularioAgregar()">
+        <i class="fas fa-user-plus"></i> Agregar Carrera
+    </button>
+</main>
+
+<app-footer></app-footer>

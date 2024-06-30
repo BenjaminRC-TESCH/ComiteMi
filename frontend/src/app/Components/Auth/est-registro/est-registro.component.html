@@ -1,0 +1,92 @@
+<app-nav-estudiante></app-nav-estudiante>
+<main>
+    <div class="container">
+        <div class="container-fluid-bag">
+            <div class="preview px-4 px-lg-5">
+
+                <div class="profile-holder text-center">
+                    <img class="profile-pic rounded-circle" width="100" src="../../../assets/images/profile.jpg"
+                        alt="image">
+                </div>
+                <h1 class="title">Registro</h1>
+                <form (submit)="Signup()" class="needs-validation" novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" name="nombre" [(ngModel)]="student.nombre" value=""
+                                required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Apellido Parterno</label>
+                            <input type="text" class="form-control" name="aPaterno" [(ngModel)]="student.aPaterno"
+                                value="" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Apellido Materno</label>
+                            <input type="text" class="form-control" name="aMaterno" [(ngModel)]="student.aMaterno"
+                                value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Matricula</label>
+                            <input type="number" class="form-control" name="matricula" [(ngModel)]="student.matricula"
+                                required>
+                            <div class="invalid-feedback">
+                                Introduce una matricula válida.
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Carrera</label>
+                            <select class="form-select" name="carrera" [(ngModel)]="student.carrera" required>
+                                <option selected disabled value="">Selecciona...</option>
+                                <option value="Ingeniería en Sistemas Computacionales">Ingeniería en Sistemas
+                                    Computacionales</option>
+                                <option value="Ingeniería Industrial">Ingeniería Industrial</option>
+                                <option value="Ingeniería Electromecánica">Ingeniería Electromecánica</option>
+                                <option value="Ingeniería Informática">Ingeniería Informática</option>
+                                <option value="Ingeniería Electrónica">Ingeniería Electrónica</option>
+                                <option value="Ingeniería en Administración">Ingeniería en Administración</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Selecciona una carrera.
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Correo</label>
+                            <input type="email" class="form-control" name="correo" [(ngModel)]="student.correo"
+                                required>
+                            <div class="invalid-feedback">
+                                Introduce un correo valido.
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" name="password" [(ngModel)]="student.password"
+                                required>
+                            <div class="invalid-feedback">
+                                Introduce una contraseña valida.
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Confirmar Contraseña</label>
+                            <input type="password" class="form-control" name="cofirmPassword"
+                                [(ngModel)]="student.confirmPassword" required>
+                            <div class="invalid-feedback">
+                                Introduce una contraseña valida.
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-12 mt-4 text-center">
+                        <button class="btn btn-primary" type="submit">Registrar</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+<app-footer></app-footer>

@@ -1,0 +1,82 @@
+<app-nav-estudiante></app-nav-estudiante>
+
+<section id="carrucel" class="sec1">
+  <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+        aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+        aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+        aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active d-item">
+        <img src="assets/images/inicio.jpg" class="d-block w-100 d-img" alt="slider1">
+      </div>
+      <div class="carousel-item d-item">
+        <img src="assets/images/inicio2.jpg" class="d-block w-100 d-img" alt="slider2">
+      </div>
+      <div class="carousel-item d-item">
+        <img src="assets/images/inicio3.jpg" class="d-block w-100 d-img" alt="slider3">
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+      data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+      data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</section>
+
+<section id="convocatoria" class="sec2">
+  <div class="sec22">
+    <div class="contenido-izquierda">
+      <h1 class="convo">Convocatoria</h1>
+      <p class="pCaso">Sobre la convocatoria para casos de comité académico</p>
+      <button type="button" class="btn btn-secondary">Lineamientos</button>
+      <button routerLink="/regcaso" type="button" class="btn btn-light">Registrar Caso</button>
+    </div>
+    <img class="img2" src="assets/images/comite1.jpg" alt="comite1">
+  </div>
+</section>
+
+<section id="tipo" class="sec3">
+  <div class="sec33">
+    <img class="img3" src="assets/images/tipoCasoComite.png" alt="">
+    <h1 class="tipCas">TIPO DE CASOS</h1>
+    <table>
+      <thead>
+        <tr>
+          <th class="th1"><img class="img4" src="assets/images/book.png" alt=""></th>
+          <th class="th2"><img class="img4" src="assets/images/school.png" alt=""></th>
+          <th class="th3"><img class="img4" src="assets/images/figures.png" alt=""></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td1">Residencias por tercera ocasión</td>
+          <td class="td2">Cambio de modalidad (Presencial y Semipresencial)</td>
+          <td class="td3">Decimotercer semestre</td>
+        </tr> 
+        <tr>
+          <th><img class="img4" src="assets/images/pencil-and-ruler.png" alt=""></th>
+          <th><img class="img4" src="assets/images/docs.png" alt=""></th>
+          <th><img class="img4" src="assets/images/delete.png" alt=""></th>
+        </tr>
+        <tr>
+          <td class="td1">Asignatura por asesoria</td>
+          <td class="td2">Curso de materias de especialidad<br> No Vigente</td>
+          <td class="td3">Anulacion de semestre</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<app-footer></app-footer>

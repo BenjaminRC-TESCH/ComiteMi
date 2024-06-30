@@ -1,0 +1,117 @@
+<app-nav-estudiante></app-nav-estudiante>
+
+<main>
+    <div class="container">
+        <div class="container-fluid-bag">
+
+            <!--Vista previa de los datos del alumno-->
+            <div class="preview px-4 px-lg-5" *ngIf="student && !isEditing">
+                <div class="profile-holder text-center">
+                    <img class="profile-pic rounded-circle" width="100" src="../../../assets/images/profile.jpg"
+                        alt="image">
+                </div>
+                <div class="text-center">
+                    <h2 class="profile-name text-uppercase">{{ student.nombre }} {{ student.aPaterno }} {{
+                        student.aMaterno }}</h2>
+                    <div class="profile-role-title text-uppercase">{{ student.carrera }}</div>
+                </div>
+                <div class="resume-contact mt-4">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-inline-item me-md-3 me-lg-5">
+                            <i class="bi bi-building me-2"></i>
+                            Matricula: {{ student.matricula }}
+                        </li>
+                        <li class="list-inline-item me-lg-5">
+                            <i class="bi bi-envelope me-2"></i>
+                            Correo: {{ student.correo }}
+                        </li>
+                        <li class="list-inline-item me-lg-5">
+                            <i class="bi bi-incognito me-2"></i>
+                            Password: ********
+                        </li>
+                    </ul>
+                </div>
+                <div class="resume-update mt-4 text-center">
+                    <button type="button" class="btn btn-primary" (click)="toggleEdit()">Editar Perfil</button>
+                </div>
+            </div>
+
+            <!--Formulario para actualizar datos del alumno-->
+            <div class="postview px-4 px-lg-5" *ngIf="student && isEditing">
+                <form #studentForm="ngForm" (ngSubmit)="updateStudentProfile(studentForm)">
+                    <div class="profile-holder text-center">
+                        <img class="profile-pic rounded-circle" width="100" src="../../../assets/images/profile.jpg"
+                            alt="image">
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre:</label>
+                        <input id="nombre" type="text" name="nombre" [(ngModel)]="student.nombre" class="form-control"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="aPaterno" class="form-label">Apellido Paterno:</label>
+                        <input id="aPaterno" type="text" name="aPaterno" [(ngModel)]="student.aPaterno"
+                            class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="aMaterno" class="form-label">Apellido Materno:</label>
+                        <input id="aMaterno" type="text" name="aMaterno" [(ngModel)]="student.aMaterno"
+                            class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="matricula" class="form-label">Matricula:</label>
+                        <input id="matricula" type="text" name="matricula" [(ngModel)]="student.matricula"
+                            class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="carrera" class="form-label">Carrera:</label>
+                        <select id="roles" name="roles" [(ngModel)]="student.carrera" class="form-control">
+                            <option selected disabled>Selecciona...</option>
+                            <option value="Ingeniería en Sistemas Computacionales">Ingeniería en Sistemas
+                                Computacionales</option>
+                            <option value="Ingeniería Industrial">Ingeniería Industrial</option>
+                            <option value="Ingeniería Electromecánica">Ingeniería Electromecánica</option>
+                            <option value="Ingeniería Informática">Ingeniería Informática</option>
+                            <option value="Ingeniería Electrónica">Ingeniería Electrónica</option>
+                            <option value="Ingeniería en Administración">Ingeniería en Administración</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="correo" class="form-label">Correo:</label>
+                        <input id="correo" type="text" name="correo" [(ngModel)]="student.correo" class="form-control"
+                            required>
+                    </div>
+                    <div class="mb-3 position-relative">
+                        <label for="password" class="form-label">Contraseña:</label>
+                        <div class="input-group">
+                            <input id="password" [type]="showPassword ? 'text' : 'password'" name="password"
+                                [(ngModel)]="password" class="form-control" [disabled]="!enablePassword"
+                                #passwordField="ngModel" [required]="enablePassword">
+                            <button type="button"
+                                class="btn btn-showpassword btn-outline-secondary position-absolute top-50 end-0 translate-middle-y"
+                                (click)="togglePasswordVisibility()" [disabled]="!enablePassword">
+                                <i class="fas fa-eye" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="enablePassword" [(ngModel)]="enablePassword"
+                            (change)="togglePassword()">
+                        <label class="form-check-label" for="enablePassword">Modificar contraseña</label>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary"
+                            [disabled]="!studentForm.form.valid || (enablePassword && !passwordField.valid)">Guardar
+                            Cambios</button>
+                        <button type="button" class="btn btn-secondary" (click)="toggleEdit()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</main>
+
+<app-footer></app-footer>
+    

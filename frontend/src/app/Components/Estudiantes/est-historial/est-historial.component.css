@@ -1,0 +1,63 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: auto;
+    padding: 1rem;
+    max-width: 100vw;
+    font-family: 'Roboto', sans-serif;
+}
+
+.table-container {
+    overflow-x: auto;
+    width: 100%;
+    margin-top: 5%;
+}
+
+thead tr th{
+    background-color: #212529;
+    color: #fff;
+}
+
+.table {
+    min-width: 600px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+}
+
+.pagination .page-item .page-link {
+    background-color: #8BC34A;
+    color: #fff;
+    cursor: pointer;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #fff;
+    border-color: #8BC34A;
+    color: #000;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+button {
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;
+    padding: 4px 8px 4px 8px;
+}

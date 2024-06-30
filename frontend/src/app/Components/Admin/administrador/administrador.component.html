@@ -1,0 +1,144 @@
+<app-nav-administrador></app-nav-administrador>
+
+<main>
+  <div>
+    <h1 class="icon-heading">
+      <i class="fas fa-users"></i> USUARIOS
+    </h1>
+  </div>
+  <div class="header_fixed">
+    <table *ngIf="!selectedUser && !showAddForm">
+      <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>Correo Electronico</th>
+          <th>Cargo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <ng-container *ngFor="let roleId of user.roles">
+              {{ getRoleName(roleId) }}, <br>
+            </ng-container>
+          </td>
+          <button class="custom-button editar-button editar" (click)="editarUsuario(user)"><i
+              class="fas fa-pencil-alt"></i></button>
+          <button class="custom-button editar-button eliminar" (click)="eliminarUsuario(user._id)"><i
+              class="fas fa-trash"></i></button>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="selectedUser" class="container mt-4">
+      <form (ngSubmit)="guardarCambios()" class="card p-4">
+        <h2 class="text-center mb-4">Editar Usuario</h2>
+
+        <div class="mb-3">
+          <label for="name" class="form-label">Usuario:</label>
+          <input id="name" type="text" [(ngModel)]="selectedUser.name" name="name" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Correo Electrónico:</label>
+          <input id="email" type="text" [(ngModel)]="selectedUser.email" name="email" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <input class="form-check-input" type="checkbox" id="enableRoles" [(ngModel)]="enableRoles" name="enableRoles">
+          <label class="form-check-label" for="enableRoles">Modificar roles</label>
+        </div>
+
+        <div *ngIf="enableRoles">
+          <div class="mb-3" *ngFor="let role of selectedUser.roles; let i = index">
+            <label for="roles{{i}}" class="form-label">Rol {{i + 1}}:</label>
+            <div class="input-group">
+              <select id="roles{{i}}" [(ngModel)]="selectedUser.roles[i]" name="roles{{i}}" class="form-control">
+                <option *ngFor="let roleOption of roles" [value]="roleOption.id_rol">{{ roleOption.nombreRol }}</option>
+              </select>
+              <button type="button" class="btn btn-danger ms-2" (click)="quitarRol(i)">Quitar</button>
+            </div>
+          </div>
+          <div class="mb-3">
+            <button type="button" class="btn btn-secondary" (click)="agregarRol()">Agregar Rol</button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Contraseña:</label>
+          <div class="input-group">
+            <input id="password" [type]="showPassword ? 'text' : 'password'" name="password" [(ngModel)]="password"
+              class="form-control" [disabled]="!enablePassword" #passwordField="ngModel" [required]="enablePassword">
+            <button type="button"
+              class="btn btn-showpassword btn-outline-secondary position-absolute top-50 end-0 translate-middle-y"
+              (click)="togglePasswordVisibility()" [disabled]="!enablePassword">
+              <i class="fas fa-eye" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+            </button>
+          </div> 
+        </div>
+
+        <div class="mb-3">
+          <input class="form-check-input" type="checkbox" id="enablePassword" [(ngModel)]="enablePassword"
+            (change)="togglePassword()">
+          <label class="form-check-label" for="enablePassword">Modificar contraseña</label>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button [disabled]="!selectedUser.name || !selectedUser.email || (enablePassword && !passwordField.valid)"
+            type="submit" class="btn btn-primary">Guardar Cambios</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+
+    <div *ngIf="showAddForm" class="container mt-4">
+      <form (ngSubmit)="agregarUsuario()" class="card p-4">
+        <h2 class="text-center mb-4">Agregar Usuario</h2>
+
+        <div class="mb-3">
+          <label for="name" class="form-label">Usuario:</label>
+          <input id="name" type="text" [(ngModel)]="newUser.name" name="name" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Correo Electrónico:</label>
+          <input id="email" type="text" [(ngModel)]="newUser.email" name="email" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="roles" class="form-label">Cargo:</label>
+          <select id="roles" [(ngModel)]="newUser.roles" name="roles" class="form-control">
+            <option *ngFor="let role of roles" [value]="role.id_rol">{{ role.nombreRol }}</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Contraseña:</label>
+          <div class="input-group">
+            <input id="password" [type]="showPassword ? 'text' : 'password'" name="password" [(ngModel)]="newUser.password"
+              class="form-control" #passwordField="ngModel" [required]="enablePassword">
+            <button type="button"
+              class="btn btn-showpassword btn-outline-secondary position-absolute top-50 end-0 translate-middle-y"
+              (click)="togglePasswordVisibility()">
+              <i class="fas fa-eye" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Agregar Usuario</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelarAgregarUsuario()">Cancelar</button>
+
+      </form>
+    </div>
+
+    <button *ngIf="!selectedUser && !showAddForm" id="vaciarDatos" class="btn btn-primary custom-button ms-auto"
+      (click)="mostrarFormularioAgregar()">
+      <i class="fas fa-user-plus"></i> Agregar Usuario
+    </button>
+  </div>
+</main>
+
+<app-footer></app-footer>
