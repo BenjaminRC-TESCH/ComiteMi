@@ -11,11 +11,6 @@
     z-index: 1000;
 }
 
-.nav-item {
-    position: relative;
-    width: 100px;
-    text-align: center;
-}
 
 .nav-item a{
     color: #000;

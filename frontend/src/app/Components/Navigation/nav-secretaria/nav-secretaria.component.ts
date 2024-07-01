@@ -8,8 +8,14 @@ import { AuthService } from '../../../Services/auth.service';
     templateUrl: './nav-secretaria.component.html',
     styleUrls: ['./nav-secretaria.component.css'],
 })
-export class NavSecretariaComponent {
+export class NavSecretariaComponent implements OnInit {
+    userEmail: string | null = '';
+
     constructor(private authService: AuthService, private router: Router) {}
+
+    ngOnInit() {
+        this.userEmail = sessionStorage.getItem('userEmail');
+    }
 
     logout() {
         Swal.fire({
