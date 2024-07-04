@@ -12,6 +12,7 @@
         <tr>
           <th>Usuario</th>
           <th>Correo Electronico</th>
+          <th>Departamento</th>
           <th>Cargo</th>
           <th>Acciones</th>
         </tr>
@@ -20,9 +21,10 @@
         <tr *ngFor="let user of users">
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
+          <th>A</th>
           <td>
             <ng-container *ngFor="let roleId of user.roles">
-              {{ getRoleName(roleId) }}, <br>
+              <li>{{ getRoleName(roleId) }}</li>
             </ng-container>
           </td>
           <button class="custom-button editar-button editar" (click)="editarUsuario(user)"><i

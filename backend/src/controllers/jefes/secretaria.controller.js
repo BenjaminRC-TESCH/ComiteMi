@@ -299,5 +299,54 @@ secreCtrl.getHistorialSecre = async (req, res) => {
     }
 };
 
+//Metodo para obtener los alumnos aceptados
+secreCtrl.getAlumnosAceptadosComite = async (req, res) => {
+    try {
+        // Obtener todos los alumnos de la base de datos cuyo casoEsta sea igual a "AceptadoJefes"
+        const alumnos = await Comite.find({ casoEsta: Estados.ACEPTADO_COMITE });
+
+        // Obtener todos los reciclajes de la base de datos cuyo casoEsta sea igual a "AceptadoJefes"
+        const reciclajes = await Reciclaje.find({ casoEsta: Estados.ACEPTADO_COMITE });
+
+        // Combinar los resultados de ambas consultas
+        const todosLosAlumnos = [...alumnos, ...reciclajes];
+
+        // Mapear los alumnos para ajustar la respuesta
+        const alumnosConEvidencia = todosLosAlumnos.map((alumno) => {
+            return {
+                _id: alumno._id,
+                matricula: alumno.matricula,
+                nombreCom: alumno.nombreCom,
+                telefono: alumno.telefono,
+                casoEsta: alumno.casoEsta,
+                direccion: alumno.direccion,
+                carrera: alumno.carrera,
+                casoTipo: alumno.casoTipo,
+                semestre: alumno.semestre,
+                correo: alumno.correo,
+                motivosAca: alumno.motivosAca,
+                motivosPer: alumno.motivosPer,
+                evidencia: {
+                    url: `${req.protocol}://${req.get('host')}/api/alumnos/${alumno._id}/pdf`, // Ruta para ver el PDF del alumno
+                    fileName: `evidencia_${alumno._id}.pdf`, // Nombre del archivo
+                    contentType: alumno.contentType, // Tipo de contenido
+                },
+                motivoComi: alumno.motivoComi,
+                createdAt: alumno.createdAt, // Incluir el campo createdAt
+            };
+        });
+
+        // Verificar si se encontraron alumnos con el estado "AceptadoJefes" en alguna de las colecciones
+        if (alumnosConEvidencia.length === 0) {
+            return res.status(404).json({ message: 'No se encontraron alumnos con estado "AceptadoJefes".' });
+        }
+
+        res.status(200).json(alumnosConEvidencia);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener los alumnos.' });
+    }
+};
+
 module.exports = secreCtrl;
 module.exports.fileUploadMiddleware = fileUpload;

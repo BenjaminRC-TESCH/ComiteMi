@@ -5,7 +5,7 @@ actaCtrl.conversor = async (req, res) => {
     try {
         const acta = await Acta.findOne();
         if (!acta) {
-            return res.status(404).json({ message: 'Acta no encontrada' });
+            return res.status(404).json({ message: 'Acta no encontrada GET' });
         }
         const number = acta.number;
         const words = convertToWords(number);
@@ -44,6 +44,7 @@ const convertToWords = (number) => {
         return tens[Math.floor(number / 10)] + ' ' + units[number % 10];
     }
 };
+
 const convertToRoman = (number) => {
     const romanNumerals = [
         'I',
@@ -152,11 +153,12 @@ const convertToRoman = (number) => {
     }
     return romanNumerals[number - 1];
 };
+
 actaCtrl.Act = async (req, res) => {
     try {
         const acta = await Acta.findOne();
         if (!acta) {
-            return res.status(404).json({ message: 'Acta no encontrada' });
+            return res.status(404).json({ message: 'Acta no encontrada PUT' });
         }
         acta.number++;
         await acta.save();

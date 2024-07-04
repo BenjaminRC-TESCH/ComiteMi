@@ -21,7 +21,7 @@ POST http://127.0.0.1:3000/api/user/login Content-Type: application/json
 
 ### POST http://127.0.0.1:3000/api/user/cart/items Content-Type: application/json
 
-{
+{ 
 "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjY0YjNmNzMxNDkzMDg4MTE3MmI5YzYiLCJyb2xlIjoiQ2xpZW50ZSIsImlhdCI6MTcxNzkwNzQyOH0.df1benCYnAQD-dCBxMP7hQwKy8DOaQxuK2ApooOHleM"
 }
 
@@ -30,3 +30,11 @@ POST http://127.0.0.1:3000/api/user/login Content-Type: application/json
 {
 "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjY0YjNmNzMxNDkzMDg4MTE3MmI5YzYiLCJyb2xlIjoiQ2xpZW50ZSIsImlhdCI6MTcxNzk5OTA0OX0.jJvk7USrApC5UGMufo8z6zuy6n9H0fk1usZnvN-iEpc"
 }
+
+
+###
+GET http://127.0.0.1:4000/api/get/secretaria/aceptador/comite
+
+
+###
+GET http://127.0.0.1:4000/api/acta/number

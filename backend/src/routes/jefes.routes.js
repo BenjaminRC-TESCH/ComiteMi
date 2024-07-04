@@ -14,7 +14,13 @@ const {
     getReciclajefe,
 } = require('../controllers/jefes/jefes.controllers');
 
-const { aceptarSecre, rechazarSecre, getHistorialSecre, getAceptadosSecretaria } = require('../controllers/jefes/secretaria.controller');
+const {
+    aceptarSecre,
+    rechazarSecre,
+    getHistorialSecre,
+    getAceptadosSecretaria,
+    getAlumnosAceptadosComite,
+} = require('../controllers/jefes/secretaria.controller');
 
 router.get('/get/alumno/:matricula', getAlumno); //ruta para obtener los alumno segun la matricula
 router.get('/alumnos/:id/pdf', getAlumnoPdf); //Ruta para mostrar el pdf del caso segun el alumno
@@ -39,5 +45,7 @@ router.get('/get/secretaria/comite/aceptados', getAceptadosSecretaria); //Ruta p
 router.put('/aceptar/secretaria/comite/:id', aceptarSecre); //Aceptar los casos por la secretaria
 router.put('/rechazar/secretaria/comite/:id', rechazarSecre); //Rechazar los casos por las secretaria
 router.get('/historial/secretaria/comite', getHistorialSecre); //Obtener el historial de casos aceptados
+
+router.get('/get/secretaria/aceptador/comite', getAlumnosAceptadosComite);
 
 module.exports = router;

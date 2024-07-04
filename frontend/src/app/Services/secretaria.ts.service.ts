@@ -37,8 +37,7 @@ export class SecretariaTsService {
         return this.http.get<any[]>(`${this.URL}/historial/secretaria/comite`);
     }
 
-    //Metodo para obtener los alumnos del PAPELERA
-    //getReciclajeAlumnos(carrera: string): Observable<any[]> {
-    //return this.jefesService.getReciclajeAlumnos();
-    //}
+    getAlumnosAceptadosComite(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.URL}/get/secretaria/aceptador/comite`);
+    }
 }

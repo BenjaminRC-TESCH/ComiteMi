@@ -52,9 +52,11 @@ export class SecreActaDosComponent implements OnInit {
     chunk(arr: any[], size: number) {
         return arr.reduce((acc, _, i) => (i % size ? acc : [...acc, arr.slice(i, i + size)]), []);
     }
+
     getDGenerals(): string[] {
         return this.DGeneral;
     }
+
     getSolucion(): string[] {
         return this.Solucion;
     }
@@ -95,6 +97,7 @@ export class SecreActaDosComponent implements OnInit {
             }
         );
     }
+
     getCurrentDateTimeFormatted(): { date: string; time: string } {
         const optionsDate: Intl.DateTimeFormatOptions = {
             day: 'numeric',
@@ -116,8 +119,9 @@ export class SecreActaDosComponent implements OnInit {
     getCurrentDate(): Date {
         return new Date();
     }
+
     obtenerAlumnosAceptados() {
-        this.SecretariaTsService.getAlumnosAceptados().subscribe(
+        this.SecretariaTsService.getAlumnosAceptadosComite().subscribe(
             (data: any[]) => {
                 this.alumnosAceptados = data;
             },
@@ -128,19 +132,19 @@ export class SecreActaDosComponent implements OnInit {
     }
 
     ReAlumn(): void {
-        this.router.navigate(['/RevAlumno']);
+        this.router.navigate(['/secre-revision-alumno']);
     }
 
     generatePDF() {
         // Llamar al servicio para actualizar el número de acta
-        this.dataService.updateActaNumber().subscribe(
-            (response) => {
-                this.generatePDF1();
-            },
-            (error) => {
-                console.error('Error al actualizar el número de acta:', error);
-            }
-        );
+        ////this.dataService.updateActaNumber().subscribe(
+        //(response) => {
+        this.generatePDF1();
+        // },
+        // (error) => {
+        //     console.error('Error al actualizar el número de acta:', error);
+        //  }
+        //);
     }
 
     generatePDF1() {
@@ -309,7 +313,9 @@ export class SecreActaDosComponent implements OnInit {
                         {
                             text: '1. Lista de asistencia y declaración de quórum.',
                         },
-                        { text: '2. Lectura y aprobación del Orden del día.' },
+                        {
+                            text: '2. Lectura y aprobación del Orden del día.',
+                        },
                         {
                             text: '3. Discusión y resolución de los asuntos para los que fue citado el Comité Académico.',
                         },

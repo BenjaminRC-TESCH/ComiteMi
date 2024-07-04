@@ -107,13 +107,17 @@ const routes: Routes = [
         path: 'admin-casos',
         component: AdminCasosComponent,
         canActivate: [authGuard],
-        data: { expectedRole: '1000' },
+        data: {
+            expectedRole: ['1000'],
+        },
     },
     {
         path: 'admin-carreras',
         component: AdminCarrerasComponent,
         canActivate: [authGuard],
-        data: { expectedRole: '1000' },
+        data: {
+            expectedRole: ['1000'],
+        },
     },
 
     /*Rutas para Jefes*/

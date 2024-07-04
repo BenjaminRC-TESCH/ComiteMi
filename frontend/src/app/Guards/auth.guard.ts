@@ -9,8 +9,8 @@ export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
     const userRoles = authService.getRole(); // Get roles as array
     const expectedRoles = route.data['expectedRole'];
 
-    console.log(userRoles);
-    console.log(expectedRoles);
+    //console.log(userRoles);
+    //console.log(expectedRoles);
 
     if (!isAuthenticated) {
         Swal.fire({

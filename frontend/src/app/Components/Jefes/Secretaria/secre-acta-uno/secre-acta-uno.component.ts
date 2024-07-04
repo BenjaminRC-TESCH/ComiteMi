@@ -13,7 +13,7 @@ export class SecreActaUnoComponent implements OnInit {
     tipoSesion: string = '';
     public palabras: string = '';
     public romano: string = '';
-
+ 
     constructor(private router: Router, private dataService: DataService) {
         this.currentDateAndTime = this.getCurrentDateTimeFormatted();
     }
@@ -116,7 +116,7 @@ export class SecreActaUnoComponent implements OnInit {
             this.dataService.setTipoSesion(this.tipoSesion);
 
             // Realizar la navegación solo si la condición se cumple
-            this.router.navigate(['/pagActaTwo']);
+            this.router.navigate(['/secretaria-acta-dos']);
         }
     }
 }

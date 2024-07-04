@@ -3,52 +3,55 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class DataService {
-  private tipoSesion: string = '';
-  private asistentesSeleccionados: any[] = [];
-  private DGeneral: string[]=[];
-  private Solucion: string[]=[];
-  private URL = 'http://localhost:4000/api'
-  constructor(private http: HttpClient){}
+    private tipoSesion: string = '';
+    private asistentesSeleccionados: any[] = [];
+    private DGeneral: string[] = [];
+    private Solucion: string[] = [];
 
-  obtenerInformacionActa(): Observable<any> {
-    return this.http.get<any>(this.URL + '/acta/number');
-  }
-  
-  setTipoSesion(tipoSesion: string): void {
-    this.tipoSesion = tipoSesion;
-  }
+    private URL = 'http://localhost:4000/api';
 
-  getTipoSesion(): string {
-    return this.tipoSesion;
-  }
+    constructor(private http: HttpClient) {}
 
-  setAsistentesSeleccionados(asistentes: any[]): void {
-    this.asistentesSeleccionados = asistentes;
-  }
+    obtenerInformacionActa(): Observable<any> {
+        return this.http.get<any>(this.URL + '/acta/number');
+    }
 
-  getAsistentesSeleccionados(): any[] {
-    return this.asistentesSeleccionados;
-  }
+    setTipoSesion(tipoSesion: string): void {
+        this.tipoSesion = tipoSesion;
+    }
 
-  setDGeneral(value: string[]): void {
-    this.DGeneral = value;
-  }
+    getTipoSesion(): string {
+        return this.tipoSesion;
+    }
 
-  getDGeneral(): string[] {
-    return this.DGeneral;
-  }
+    setAsistentesSeleccionados(asistentes: any[]): void {
+        this.asistentesSeleccionados = asistentes;
+    }
 
-  setSolucion(value: string[]): void {
-    this.Solucion = value;
-  }
+    getAsistentesSeleccionados(): any[] {
+        return this.asistentesSeleccionados;
+    }
 
-  getSolucion(): string[] {
-    return this.Solucion;
-  }
-  updateActaNumber(): Observable<any> {
-    return this.http.put<any>(this.URL + '/acta/number', {});
-  }
+    setDGeneral(value: string[]): void {
+        this.DGeneral = value;
+    }
+
+    getDGeneral(): string[] {
+        return this.DGeneral;
+    }
+
+    setSolucion(value: string[]): void {
+        this.Solucion = value;
+    }
+
+    getSolucion(): string[] {
+        return this.Solucion;
+    }
+
+    updateActaNumber(): Observable<any> {
+        return this.http.put<any>(this.URL + '/acta/number', {});
+    }
 }
