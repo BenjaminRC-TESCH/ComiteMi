@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import * as moment from 'moment';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import Swal from 'sweetalert2';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -22,19 +23,23 @@ export class SecreActaDosComponent implements OnInit {
     @ViewChild('Text7', { static: true }) Text7: ElementRef;
     @ViewChild('Text8', { static: true }) Text8: ElementRef;
     @ViewChild('Text9', { static: true }) Text9: ElementRef;
+
     public inputValue: string = '';
     public inputValue1: string = '';
     public inputValue2: string = '';
-    currentDateAndTime: { date: string; time: string };
     public palabras: string = '';
     public romano: string = '';
     public tipoSesion: string = '';
+
+    currentDateAndTime: { date: string; time: string };
+
     periodo: string = '';
     sesion: string = '';
-    asistentesSeleccionados: any[] = [];
-    alumnosAceptados: any[] = [];
     DGeneral: string[] = [];
     Solucion: string[] = [];
+    participantes: any[] = [];
+    asistentesSeleccionados: any[] = [];
+    alumnosAceptados: any[] = [];
 
     constructor(private router: Router, private dataService: DataService, private SecretariaTsService: SecretariaTsService) {
         this.currentDateAndTime = this.getCurrentDateTimeFormatted();
@@ -47,6 +52,19 @@ export class SecreActaDosComponent implements OnInit {
         this.asistentesSeleccionados = this.dataService.getAsistentesSeleccionados();
         this.DGeneral = this.dataService.getDGeneral();
         this.Solucion = this.dataService.getSolucion();
+        this.getAsistentes();
+    }
+
+    getAsistentes() {
+        this.dataService.getParticipantes().subscribe(
+            (participantes) => {
+                this.participantes = participantes.map((participante) => ({
+                    ...participante,
+                    presente: false,
+                }));
+            },
+            (error) => {}
+        );
     }
 
     chunk(arr: any[], size: number) {
@@ -63,24 +81,33 @@ export class SecreActaDosComponent implements OnInit {
 
     getFormattedAsistentes(): string {
         return this.asistentesSeleccionados
-            .map((asistente) => `${asistente.nombre}, ${asistente.cargo} ${asistente.cargoSec ? 'y ' + asistente.cargoSec : ''}`)
+            .map((asistente) => {
+                let rolesFormatted = '';
+                if (asistente.roles.length > 1) {
+                    rolesFormatted = asistente.roles.slice(0, -1).join(', ') + ' y ' + asistente.roles.slice(-1);
+                } else {
+                    rolesFormatted = asistente.roles[0];
+                }
+                return `${asistente.name}, ${rolesFormatted}`;
+            })
             .join(', ');
     }
 
     getPresidente(): string | undefined {
-        const presidente = this.asistentesSeleccionados.find((asistente) => asistente.cargoSec === 'Presidente del Comité Académico');
+        const presidente = this.participantes.find((asistente) => asistente.roles.includes('Presidente del Comité Académico'));
 
         if (presidente) {
-            return `${presidente.nombre}`;
+            return `${presidente.name}`;
         } else {
             return 'No se encontró al Presidente del Comité Académico entre los asistentes seleccionados.';
         }
     }
+
     getSecret(): string | undefined {
-        const Secret = this.asistentesSeleccionados.find((asistente) => asistente.cargoSec === 'Secretaria de Comité Académico');
+        const Secret = this.participantes.find((asistente) => asistente.roles.includes('Secretaria de Comité'));
 
         if (Secret) {
-            return `${Secret.nombre}`;
+            return `${Secret.name}`;
         } else {
             return 'No se encontró al secretari@ del Comité Académico entre los asistentes seleccionados.';
         }
@@ -116,6 +143,31 @@ export class SecreActaDosComponent implements OnInit {
         return { date: formattedDate, time: formattedTime };
     }
 
+    //Funcio que retorna Fecha en el siguiente formato 11-agosto-2024
+    getFormattedCurrentDateWithYear(): string {
+        const options: Intl.DateTimeFormatOptions = {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+        };
+        const date = new Date();
+        const formattedDate = date.toLocaleDateString('es-MX', options);
+
+        // Remove the word "de" and replace spaces with hyphens
+        const cleanDate = formattedDate.replace(/ de /g, '-');
+        return cleanDate;
+    }
+
+    getFormattedCurrentDate(): string {
+        const options: Intl.DateTimeFormatOptions = {
+            day: 'numeric',
+            month: 'long',
+        };
+        const date = new Date();
+        const formattedDate = date.toLocaleDateString('es-MX', options);
+        return formattedDate;
+    }
+
     getCurrentDate(): Date {
         return new Date();
     }
@@ -132,19 +184,19 @@ export class SecreActaDosComponent implements OnInit {
     }
 
     ReAlumn(): void {
-        this.router.navigate(['/secre-revision-alumno']);
+        this.router.navigate(['/secretaria-revision-alumno']);
     }
 
     generatePDF() {
-        // Llamar al servicio para actualizar el número de acta
-        ////this.dataService.updateActaNumber().subscribe(
-        //(response) => {
-        this.generatePDF1();
-        // },
-        // (error) => {
-        //     console.error('Error al actualizar el número de acta:', error);
-        //  }
-        //);
+        Swal.fire({
+            title: '¿Deseas generar el PDF con el nuevo número de acta?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, generar PDF',
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            this.generatePDF1();
+        });
     }
 
     generatePDF1() {
@@ -163,10 +215,10 @@ export class SecreActaDosComponent implements OnInit {
 
         const TM = this.inputValue.toUpperCase();
         const tableContent = {
-            margin: [100, 0, 0, 0],
+            margin: [0, 0, 0, 0],
             table: {
                 headerRows: 1,
-                widths: ['auto', 'auto', 'auto'],
+                widths: ['20%', '40%', '40%'],
                 body: [
                     [
                         {
@@ -192,15 +244,19 @@ export class SecreActaDosComponent implements OnInit {
                 ],
             },
         };
+
         const asistentesData = this.asistentesSeleccionados.map((asistente) => {
-            if (asistente.cargoSec) {
-                return `${asistente.nombre} - ${asistente.cargo} y ${asistente.cargoSec}`;
+            let rolesFormatted = '';
+            if (asistente.roles.length > 1) {
+                rolesFormatted = asistente.roles.slice(0, -1).join(', ') + ' y ' + asistente.roles.slice(-1);
             } else {
-                return `${asistente.nombre} - ${asistente.cargo}`;
+                rolesFormatted = asistente.roles[0];
             }
+            return `${asistente.name.toUpperCase()}\n${rolesFormatted}`;
         });
 
         const groupedAsistentes = [];
+
         for (let i = 0; i < asistentesData.length; i += 2) {
             groupedAsistentes.push([asistentesData[i], asistentesData[i + 1] || '']);
         }
@@ -222,14 +278,14 @@ export class SecreActaDosComponent implements OnInit {
                     margin: [0, 0, 0, 0],
                     table: {
                         headerRows: 1,
-                        widths: ['auto', 'auto', 'auto', 'auto'],
-                        heights: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 90, 'auto'],
+                        widths: ['20%', '20%', '20%', '40%'], // Ajusta los anchos de las columnas según sea necesario
+                        heights: [20, 20, 20, 20, 20, 20, 20, 20, 20, 90, 20], // Ajusta las alturas de las filas según sea necesario
                         body: [
                             [
                                 { text: 'Sesión de Comité:' },
                                 { text: this.romano },
                                 { text: 'Fecha de la sesión:' },
-                                { text: formattedDate },
+                                { text: this.getFormattedCurrentDateWithYear() },
                             ],
                             [{ text: 'Número del Caso' }, { text: '3.3.' + (index + 1), colSpan: 3 }],
                             [{ text: 'Carrera de Ingeniería' }, { text: alumno.carrera, colSpan: 3 }],
@@ -305,6 +361,8 @@ export class SecreActaDosComponent implements OnInit {
                     alignment: 'justify',
                 },
                 { text: '\n\n' },
+                { text: 'La sesión se efectuó conforme al siguiente:', alignment: 'justify' },
+                { text: '\n\n' },
                 { text: 'ORDEN DEL DÍA:', alignment: 'center' },
                 { text: '\n' },
                 {
@@ -331,8 +389,11 @@ export class SecreActaDosComponent implements OnInit {
                     ],
                 },
                 { text: '\n\n' },
+
                 tableContent,
+
                 { text: '\n' },
+
                 {
                     type: 'none',
                     ol: [
@@ -352,28 +413,47 @@ export class SecreActaDosComponent implements OnInit {
                         {
                             text: '1.LISTA DE ASISTENCIA Y DECLARATORIA DE QUÓRUM.',
                         },
-                        { text: '\n' },
+                        {
+                            text: '\n',
+                        },
                         {
                             text: '',
                             type: 'none',
                             ol: [{ text: text3, alignment: 'justify' }],
                         },
-                        { text: '\n\n' },
-                        { text: '2. LECTURA Y APROBACIÓN DEL ORDE DEL DÍA.' },
-                        { text: '\n' },
+                        {
+                            text: '\n\n',
+                        },
+                        {
+                            text: '2. LECTURA Y APROBACIÓN DEL ORDE DEL DÍA.',
+                        },
+                        {
+                            text: '\n',
+                        },
                         {
                             text: '',
                             type: 'none',
                             ol: [{ text: text4, alignment: 'justify' }, { text: '\n' }, { text: text5, alignment: 'justify' }],
                         },
-                        { text: '\n' },
-                        { text: text6 },
-                        { text: text7, margin: [146, 0, 0, 0] },
-                        { text: '\n' },
+                        {
+                            text: '\n',
+                        },
+                        {
+                            text: text6,
+                        },
+                        {
+                            text: text7,
+                            margin: [146, 0, 0, 0],
+                        },
+                        {
+                            text: '\n',
+                        },
                         {
                             text: '3. Discusión y resolución de los asuntos para los que fue citado el Comité Académico.',
                         },
-                        { text: '\n' },
+                        {
+                            text: '\n',
+                        },
                         {
                             text: '',
                             type: 'none',
@@ -383,10 +463,20 @@ export class SecreActaDosComponent implements OnInit {
                                 },
                             ],
                         },
-                        { text: '\n' },
-                        { text: text8, alignment: 'justify' },
-                        { text: '\n' },
-                        { text: text9, alignment: 'justify' },
+                        {
+                            text: '\n',
+                        },
+                        {
+                            text: text8,
+                            alignment: 'justify',
+                        },
+                        {
+                            text: '\n',
+                        },
+                        {
+                            text: text9,
+                            alignment: 'justify',
+                        },
                     ],
                 },
                 { text: '\n\n' },
@@ -394,10 +484,20 @@ export class SecreActaDosComponent implements OnInit {
                 {
                     type: 'none',
                     ol: [
-                        { text: '4. ASUNTOS GENERALES.' },
-                        { text: '\n' },
-                        { text: '', type: 'none', ol: [{ text: '4.1 ' + TM }] },
-                        { text: '\n' },
+                        {
+                            text: '4. ASUNTOS GENERALES.',
+                        },
+                        {
+                            text: '\n',
+                        },
+                        {
+                            text: '',
+                            type: 'none',
+                            ol: [{ text: '4.1 ' + TM }],
+                        },
+                        {
+                            text: '\n',
+                        },
                         {
                             text:
                                 'El ' +
@@ -410,7 +510,9 @@ export class SecreActaDosComponent implements OnInit {
                                 this.sesion,
                             alignment: 'justify',
                         },
-                        { text: '\n' },
+                        {
+                            text: '\n',
+                        },
                         {
                             text: 'La ' + this.getSecret() + 'informa lo siguiente:',
                         },
@@ -418,14 +520,18 @@ export class SecreActaDosComponent implements OnInit {
                             text: '',
                             ul: [{ text: this.inputValue1 }, { text: this.inputValue2 }],
                         },
-                        { text: '\n' },
+                        {
+                            text: '\n',
+                        },
                         {
                             text:
                                 'El ' +
                                 this.getPresidente() +
                                 'preguntó si existen comentarios al respecto. No habiendo comentarios , se da por concluido.',
                         },
-                        { text: '\n' },
+                        {
+                            text: '\n',
+                        },
                         {
                             text:
                                 'Una vez agotados los puntos de la ' +
@@ -439,13 +545,44 @@ export class SecreActaDosComponent implements OnInit {
                                 ' se da por concluida',
                             alignment: 'justify',
                         },
-                        { text: '\n\n\n' },
+                        {
+                            text: '\n\n\n',
+                        },
                         tableContent3,
                     ],
                 },
             ],
         };
-        const pdf = pdfMake.createPdf(docDefinition);
-        pdf.open();
+
+        pdfMake.createPdf(docDefinition).getBuffer((buffer) => {
+            const formData = new FormData();
+            formData.append('file', new Blob([buffer]), 'document.pdf');
+
+            const userToken = sessionStorage.getItem('token');
+            if (userToken) {
+                formData.append('token', userToken);
+            } else {
+                console.error('No se pudo obtener el token del sessionStorage');
+            }
+
+            this.dataService.createActaNumber(formData).subscribe(
+                (response) => {
+                    console.log('PDF enviado y almacenado con éxito', response);
+                    Swal.fire({
+                        title: 'Acta generada correctamente',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Aceptar',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.router.navigate(['/secretaria-historial-actas']);
+                        }
+                    });
+                },
+                (error) => {
+                    console.error('Error al enviar el PDF', error);
+                }
+            );
+        });
     }
 }

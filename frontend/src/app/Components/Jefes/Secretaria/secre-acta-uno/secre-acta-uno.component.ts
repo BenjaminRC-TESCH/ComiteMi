@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { DataService } from '../../../../Services/data.service';
+
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
@@ -13,12 +14,30 @@ export class SecreActaUnoComponent implements OnInit {
     tipoSesion: string = '';
     public palabras: string = '';
     public romano: string = '';
- 
+    participantes: any[] = [];
+
     constructor(private router: Router, private dataService: DataService) {
         this.currentDateAndTime = this.getCurrentDateTimeFormatted();
     }
+
     ngOnInit(): void {
         this.obtenerInformacionActa();
+        this.getAsistentes();
+    }
+
+    getAsistentes() {
+        this.dataService.getParticipantes().subscribe(
+            (participantes) => {
+                this.participantes = participantes.map((participante) => ({
+                    ...participante,
+                    presente: false,
+                }));
+                console.log(this.participantes);
+            },
+            (error) => {
+                console.error(error);
+            }
+        );
     }
 
     obtenerInformacionActa() {
@@ -44,6 +63,7 @@ export class SecreActaUnoComponent implements OnInit {
             hour: 'numeric',
             minute: 'numeric',
         };
+
         const date = new Date();
         const formattedDate = date.toLocaleDateString('es-MX', optionsDate);
         const formattedTime = date.toLocaleTimeString('es-MX', optionsTime);
@@ -55,63 +75,26 @@ export class SecreActaUnoComponent implements OnInit {
         return new Date();
     }
 
-    asistentes = [
-        {
-            nombre: 'M. en C. Roberto Leguízamo Jiménez',
-            cargo: 'Director Académico',
-            cargoSec: 'Presidente del Comité Académico',
-            presente: false,
-        },
-        {
-            nombre: 'C.D. Vicente Fernando Carbajal Gutiérrez',
-            cargo: 'Subdirector de Servicios Escolares',
-            presente: false,
-        },
-        {
-            nombre: 'Ing. Máximo Livera Leónides',
-            cargo: 'Jefe de División de Ingeniería Electromecánica',
-            presente: false,
-        },
-        {
-            nombre: 'Lic. Marino Zúñiga Domínguez',
-            cargo: 'Jefe de División de Ingeniería Informática',
-            presente: false,
-        },
-        {
-            nombre: 'M. en T.I. Blanca Inés Valencia Vázquez',
-            cargo: 'Jefa de División de Ingeniería en Sistemas Computacionales',
-            presente: false,
-        },
-        {
-            nombre: 'Lic. Verónica Sánchez Lara',
-            cargo: 'Jefa de Departamento de Control Escolar',
-            presente: false,
-        },
-        {
-            nombre: 'Ing. Rene Rivera Roldan',
-            cargo: ' Jefe de División de Ingeniería Electrónica',
-            presente: false,
-        },
-        {
-            nombre: 'M.R.I. Vianca Lisseth Pérez Cruz',
-            cargo: 'Jefa de División de Ingeniería Industrial',
-            cargoSec: 'Secretaria de Comité Académico',
-            presente: false,
-        },
-    ];
-
     Pdatos(): void {
-        const asistenteRoberto = this.asistentes.find((asistente) => asistente.cargoSec === 'Presidente del Comité Académico');
-        const asistenteSecretaria = this.asistentes.find((asistente) => asistente.cargoSec === 'Secretaria de Comité Académico');
+        const asistentePresidente = this.participantes.find((asistente) => asistente.roles.includes('Presidente del Comité Académico'));
+        const asistenteSecretaria = this.participantes.find((asistente) => asistente.roles.includes('Secretaria de Comité'));
 
-        if (!asistenteRoberto || !asistenteRoberto.presente || !asistenteSecretaria || !asistenteSecretaria.presente) {
+        console.log('Presidente:' + asistentePresidente, 'Secretaria: ' + asistenteSecretaria);
+
+        if (!asistentePresidente || !asistentePresidente.presente || !asistenteSecretaria || !asistenteSecretaria.presente) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
                 text: 'Debes marcar la casilla de asistencia del Director Académico y Secretaria de Comité Académico antes de continuar.',
             });
+        } else if (!this.tipoSesion) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Debes seleccionar el tipo de sesión.',
+            });
         } else {
-            const asistentesSeleccionados = this.asistentes.filter((asistente) => asistente.presente);
+            const asistentesSeleccionados = this.participantes.filter((asistente) => asistente.presente);
             this.dataService.setAsistentesSeleccionados(asistentesSeleccionados);
             this.dataService.setTipoSesion(this.tipoSesion);
 

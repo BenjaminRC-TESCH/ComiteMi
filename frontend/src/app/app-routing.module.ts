@@ -34,6 +34,7 @@ import { SecreActaDosComponent } from './Components/Jefes/Secretaria/secre-acta-
 import { SecreActaUnoComponent } from './Components/Jefes/Secretaria/secre-acta-uno/secre-acta-uno.component';
 import { SecreHistorialComponent } from './Components/Jefes/Secretaria/secre-historial/secre-historial.component';
 import { SecreRevisionAlumnoComponent } from './Components/Jefes/Secretaria/secre-revision-alumno/secre-revision-alumno.component';
+import { SecreHistorialActasComponent } from './Components/Jefes/Secretaria/secre-historial-actas/secre-historial-actas.component';
 
 const routes: Routes = [
     /* Rutas que cualquiera puede ver */
@@ -189,6 +190,14 @@ const routes: Routes = [
     {
         path: 'secretaria-revision-alumno',
         component: SecreRevisionAlumnoComponent,
+        canActivate: [authGuard],
+        data: {
+            expectedRole: ['1001'],
+        },
+    },
+    {
+        path: 'secretaria-historial-actas',
+        component: SecreHistorialActasComponent,
         canActivate: [authGuard],
         data: {
             expectedRole: ['1001'],

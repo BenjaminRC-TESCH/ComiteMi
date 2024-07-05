@@ -1,22 +1,19 @@
 <app-nav-secretaria></app-nav-secretaria>
 
 <main>
-    <div class="container row justify-content-between">
+    <div class="container row justify-content-center">
         <div class="card1" #Text1>
-            ACTA DE LA {{palabras}} SESION {{tipoSesion}} DEL COMITE ACADEMICO DEL TECNOLOGICO DE ESTUDIOS SUPERIORES DE
-            CHALCO
-            TESCHA/ACTA.COM.ACAD./{{ getCurrentDate() | date: 'dd-MM-yyyy' }}/{{romano}}
+            ACTA DE LA {{palabras}} SESIÓN {{tipoSesion}} DEL COMITE ACADEMICO DEL TECNOLOGICO DE ESTUDIOS SUPERIORES DE
+            CHALCO TESCHA/ACTA.COM.ACAD./{{ getCurrentDate() | date: 'dd-MM-yyyy' }}/{{romano}}
         </div>
         <div class="card" #Text2>
             En la Sala de Juntas de la Dirección Académica del Edificio Bicentenario de la Independencia del Tecnológico
-            de
-            Estudios Superiores de Chalco “TESCHA”, ubicado en la Carretera Federal México-Cuautla s/n y Carretera
+            de Estudios Superiores de Chalco “TESCHA”, ubicado en la Carretera Federal México-Cuautla s/n y Carretera
             Chalco-Miraflores, La Candelaria Tlapala, Chalco, Estado de México, siendo las {{currentDateAndTime.time }}
-            del dia
-            {{ currentDateAndTime.date }} se reunieron de manera virtual en segunda convocatoria, a fin de celebrar la
+            del dia {{ currentDateAndTime.date }} se reunieron de manera virtual en segunda convocatoria, a fin de celebrar la
             {{romano}} Sesión {{tipoSesion}} del Comité Académico del Tecnológico de Estudios Superiores de Chalco:
             {{ getFormattedAsistentes()}}
-        </div>
+        </div> 
 
         <p class="card"> La sesión se efectuó conforme al siguiente:</p>
         <p class="p">ORDEN DEL DIA </p>
@@ -63,7 +60,7 @@
             </table>
         </div>
         <div style="display: flex; justify-content: center;">
-            <button (click)="ReAlumn()" style="width: auto;">REVISION POR ALUMNO INDIVIDUALMENTE </button>
+            <button class="btn btn-warning" (click)="ReAlumn()" style="width: auto;">REVISION POR ALUMNO INDIVIDUALMENTE </button>
         </div>
         <div class="card">
             <p>4. Asuntos generales</p>
@@ -72,79 +69,92 @@
         </div>
         <div class="card">
             <p>1.LISTA DE ASISTENCIA Y DECLARATORIA DE QUÓRUM.</p>
-            <p #Text3>Para dar inicio formal a la {{romano}} Sesión {{tipoSesion}} del Comité Académico del Tecnológico
-                de
-                Estudios Superiores de Chalco, el {{ getPresidente()}} solicito a {{getSecret()}}, hacer el pase de
-                lista,
-                informándose que existe quórum legal para la realización de la Sesión, declarándose formalmente
-                instalada en
-                Segunda Convocatoria. </p>
+            <p #Text3>
+                Para dar inicio formal a la {{romano}} Sesión {{tipoSesion}} del Comité Académico del Tecnológico
+                de Estudios Superiores de Chalco, el {{ getPresidente()}} solicito a {{getSecret()}}, hacer el pase de
+                lista, informándose que existe quórum legal para la realización de la Sesión, declarándose formalmente
+                instalada en Segunda Convocatoria. 
+            </p>
         </div>
         <div class="card">
-            <p>2. LECTURA Y APROBACIÓN DEL ORDE DEL DÍA.</p>
-            <p #Text4>Para dar inicio formal a la {{romano}} Sesión {{tipoSesion}} del Comité Académico del Tecnológico
-                de
-                Estudios Superiores de Chalco, el {{getPresidente()}} solicito a {{getSecret()}}, hacer el desahogo de
-                la sesión,
-                misma dio lectura al orden del dia; concluida ésta; el {{getPresidente()}}, preguntó si existen
-                comentarios a la
-                misma. </p>
-            <p #Text5>No habiendo comentarios a la misma, se pide expresen el sentido de su voto, quedando aprobado,
-                manifestándose en el acuerdo siguiente.</p>
-            <p #Text6>TESCHA.COM.ACAD/{{ getCurrentDate() | date: 'yyyy' }}/{{romano}}/001</p>
-            <P #Text7>El Comité Académico aprobó el orden del dia {{ getCurrentDate() | date: 'dd' }} de {{
-                getCurrentDate() |
-                date: 'MMMM' }} de la {{romano}} Sesión {{tipoSesion}} </P>
+            <p>
+                2. LECTURA Y APROBACIÓN DEL ORDE DEL DÍA.
+            </p>
+            <p #Text4>
+                Para dar inicio formal a la {{romano}} Sesión {{tipoSesion}} del Comité Académico del Tecnológico
+                de Estudios Superiores de Chalco, el {{getPresidente()}} solicito a {{getSecret()}}, hacer el desahogo de
+                la sesión, misma dio lectura al orden del dia; concluida ésta; el {{getPresidente()}}, preguntó si existen
+                comentarios a la misma.
+            </p>
+            <p #Text5>
+                No habiendo comentarios a la misma, se pide expresen el sentido de su voto, quedando aprobado,
+                manifestándose en el acuerdo siguiente.
+            </p>
+            <p #Text6>
+                TESCHA.COM.ACAD/{{ getCurrentDate() | date: 'yyyy' }}/{{romano}}/001
+            </p>
+            <P #Text7>
+                El Comité Académico aprobó el orden del dia {{ getFormattedCurrentDate() }} de la {{romano}} Sesión {{tipoSesion}} 
+            </P>
         </div>
         <div class="card">
-            <p>3.DISCUSIÓN Y RESOLUCIÓN DE LOS ASUNTOS PARA LOS QUE FUE CITADO EL COMITÉ ACADÉMICO.</p>
-            <p>3.1 PRESENTACIÓN Y ANÁLISIS DE LOS CASOS DE ESTUDIANTES PARA LOS QUE FUE CITADO EL COMITÉ ACADÉMICO</p>
-            <p #Text8>El {{getPresidente()}}, comento que con fundamento legal en lo dispuesto articulo 5, Fracción V;
-                articulo
-                14, del Decreto del Ejecutivo del Estado de México de fecha 08 de diciembre de 1998 por el que se crea
-                el
-                Organismo Publico Descentralizado de Carácter Estatal denominado Tecnológico de Estudios Superiores de
-                Chalco; los
-                Lineamientos Académicos Administrativos emitidos por el TecNM para los planes 2004, 2010 y 2015 y el
-                Reglamento de
-                Estudiantes del TESCHA autorizado por la Junta Directiva en la CXII Sesión Ordinaria, celebrada el dia
-                06 de
-                agosto del 2018, se lleva a cabo la siguiente sesión {{ getCurrentDate() | date: 'yyyy' }}</p>
-            <p #Text9>El {{getPresidente()}} pide a {{getSecret()}} de lectura a los casos para los que se cito para su
-                análisis. </p>
+            <p>
+                3.DISCUSIÓN Y RESOLUCIÓN DE LOS ASUNTOS PARA LOS QUE FUE CITADO EL COMITÉ ACADÉMICO.
+            </p>
+            <p>
+                3.1 PRESENTACIÓN Y ANÁLISIS DE LOS CASOS DE ESTUDIANTES PARA LOS QUE FUE CITADO EL COMITÉ ACADÉMICO
+            </p>
+            <p #Text8>
+                El {{getPresidente()}}, comento que con fundamento legal en lo dispuesto articulo 5, Fracción V;
+                articulo 14, del Decreto del Ejecutivo del Estado de México de fecha 08 de diciembre de 1998 por el que se crea
+                el Organismo Publico Descentralizado de Carácter Estatal denominado Tecnológico de Estudios Superiores de
+                Chalco; los Lineamientos Académicos Administrativos emitidos por el TecNM para los planes 2004, 2010 y 2015 y el
+                Reglamento de Estudiantes del TESCHA autorizado por la Junta Directiva en la CXII Sesión Ordinaria, celebrada el dia
+                06 de agosto del 2018, se lleva a cabo la siguiente sesión {{ getCurrentDate() | date: 'yyyy' }}
+            </p>
+            <p #Text9>
+                El {{getPresidente()}} pide a {{getSecret()}} de lectura a los casos para los que se cito para su
+                análisis.
+            </p>
         </div>
         <div class="card">
-            <p>4.ASUNTOS GENERALES.</p>
-            <p>El {{getPresidente()}} solicitó a {{getSecret()}} informar sobre el periodo de recepción de <input
-                    type="text" [(ngModel)]="periodo"> y agendar fecha para celebrar la proxima Sesión <input
-                    type="text" [(ngModel)]="sesion">
+            <p>
+                4.ASUNTOS GENERALES.
+            </p>
+            <p>
+                El {{getPresidente()}} solicitó a {{getSecret()}} informar sobre el periodo de recepción de 
+                <input type="text" [(ngModel)]="periodo"> y agendar fecha para celebrar la proxima Sesión 
+                <input type="text" [(ngModel)]="sesion">
             </p>
             <p></p>
-            <p>La {{getSecret()}} informa lo siguiente:</p>
-            <input type="text" [(ngModel)]="inputValue1">
-            <input type="text" [(ngModel)]="inputValue2">
-            <p>El {{getPresidente()}} preguntó si existen comentarios al respecto. No habiendo comentarios , se da por
-                concluido.</p>
+            <p>
+                La {{getSecret()}} informa lo siguiente:
+            </p>
+                <input type="text" [(ngModel)]="inputValue1">
+                <input type="text" [(ngModel)]="inputValue2">
+            <p>
+                El {{getPresidente()}} preguntó si existen comentarios al respecto. No habiendo comentarios , se da por
+                concluido.
+            </p>
             <p></p> 
-            <p>Una vez agotados los puntos de la {{romano}} sesión {{tipoSesion}} del Comité Académico del Tecnológico
-                de
-                Estudios Superiores de Chalco, siendo las {{currentDateAndTime.time }} horas, del día {{
-                getCurrentDate() | date:
-                'dd' }} de {{ getCurrentDate() | date: 'MMMM' }} del {{ getCurrentDate() | date: 'YYYY' }}, se da por
-                concluida
+            <p>
+                Una vez agotados los puntos de la {{romano}} sesión {{tipoSesion}} del Comité Académico del Tecnológico
+                de Estudios Superiores de Chalco, siendo las {{currentDateAndTime.time }} horas, del día {{ currentDateAndTime.date }}, se da por concluida
             </p>
         </div>
         <div class="card">
             <table>
                 <tr *ngFor="let grupo of chunk(asistentesSeleccionados, 2)">
-                    <td *ngFor="let asistente of grupo" style="width: 100px; height: 230px;">
-                        <p class="p" style="margin-bottom: 5px;">{{ asistente.nombre }}</p>
-                        <p class="p" style="margin-top: 5px;">{{ asistente.cargo }} y {{ asistente.cargoSec }}</p>
+                    <td *ngFor="let asistente of grupo" style="width: 100px; height: 230px; text-align: center; vertical-align: middle;">
+                        <p class="p" style="margin-bottom: 5px;">{{ asistente.name }}</p>
+                        <p *ngFor="let role of asistente.roles; let last = last" class="p" style="margin-top: 5px; display: inline;">
+                            {{ role }}<span *ngIf="!last"> y </span>
+                        </p>
                     </td>
                 </tr>
             </table>
         </div>
-        <button (click)="generatePDF()">Generar PDF</button>
+        <button class="btn btn-primary" (click)="generatePDF()">Generar PDF</button>
 
     </div>
 </main>

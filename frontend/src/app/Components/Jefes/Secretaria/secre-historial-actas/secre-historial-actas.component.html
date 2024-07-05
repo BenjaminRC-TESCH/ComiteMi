@@ -1,0 +1,44 @@
+<app-nav-secretaria></app-nav-secretaria>
+
+<main>
+
+    <div>
+        <div class="align-text-center d-flex flex-column align-items-center">
+            <img src="assets/images/Aceptado.png" alt="Imagen de bienvenida" width="70" height="60"
+                style="display: inline-block;">
+            <h1 style="display: inline-block;">ACEPTADOS</h1>
+        </div>
+
+    </div>
+
+    <div class="header_fixed">
+        <div class="search-table-container">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="8" style="text-align: left; font-size: 20px;">ACTAS GENERADAS</th>
+                    </tr>
+                    <tr>
+                        <th>Número Acta</th>
+                        <th>Número Ordinal</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr *ngFor="let acta of actas">
+                        <td>{{ acta.number }}</td>
+                        <td>{{ acta.ordinal }}</td>
+                        <td>
+                            <button (click)="viewPDF(acta._id)">Ver PDF</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</main>
+
+<app-footer></app-footer>

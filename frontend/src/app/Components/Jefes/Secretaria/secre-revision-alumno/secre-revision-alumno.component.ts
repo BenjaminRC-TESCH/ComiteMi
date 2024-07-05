@@ -40,7 +40,7 @@ export class SecreRevisionAlumnoComponent {
     }
 
     obtenerAlumnosAceptados() {
-        this.SecretariaTsService.getAlumnosAceptados().subscribe(
+        this.SecretariaTsService.getAlumnosAceptadosComite().subscribe(
             (data: any[]) => {
                 this.alumnosAceptados = data;
             },
@@ -49,12 +49,12 @@ export class SecreRevisionAlumnoComponent {
             }
         );
     }
- 
+
     Guardar() {
         this.dataService.setDGeneral(this.DGeneral);
         this.dataService.setSolucion(this.Solucion);
         console.log(this.DGeneral);
         console.log(this.Solucion);
-        this.router.navigate(['/secre-acta-dos']);
+        this.router.navigate(['/secretaria-acta-dos']);
     }
 }

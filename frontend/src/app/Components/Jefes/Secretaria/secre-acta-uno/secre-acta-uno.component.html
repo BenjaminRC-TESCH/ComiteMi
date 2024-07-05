@@ -1,9 +1,9 @@
 <app-nav-secretaria></app-nav-secretaria>
 
 <main>
-    <div class="container row justify-content-between">
+    <div class="container row justify-content-center">
         <div class="card1">
-            ACTA DE LA {{palabras}} SESION
+            ACTA DE LA {{palabras}} SESIÓN
             <select id="tipoSesion" [(ngModel)]="tipoSesion">
                 <option value="ORDINARIA">ORDINARIA</option>
                 <option value="EXTRAORDINARIA">EXTRAORDINARIA</option>
@@ -21,11 +21,12 @@
             del dia
             {{ currentDateAndTime.date }} se reunieron de manera virtual en segunda convocatoria, a fin de celebrar la
             {{romano}} Sesión {{tipoSesion}} del Comité Académico del Tecnológico de Estudios Superiores de Chalco:
-            <div *ngFor="let asistente of asistentes">
+
+            <!-- Remplazar aqui con lo que se trae de la base de datos -->
+            <div *ngFor="let asistente of participantes">
                 <label>
-                    <input type="checkbox" [(ngModel)]="asistente.presente"> {{ asistente.nombre }},
-                    {{ asistente.cargo }} <span *ngIf="asistente.cargo && asistente.cargoSec">y</span> {{
-                    asistente.cargoSec }}
+                    <input type="checkbox" [(ngModel)]="asistente.presente"> {{ asistente.name }},
+                    <span *ngFor="let role of asistente.roles; let last = last">{{ role }}<span *ngIf="!last"> y </span></span>
                 </label>
             </div>
             <p> La sesión se efectuó conforme al siguiente:</p>
@@ -62,7 +63,7 @@
             </label>
         </div>
 
-        <button (click)="Pdatos()">SIGUIENTE</button>
+        <button class="btn btn-primary" (click)="Pdatos()">SIGUIENTE</button>
     </div>
 </main>
 

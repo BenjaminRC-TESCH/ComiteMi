@@ -103,10 +103,6 @@ adminCtrl.updateUser = async (req, res) => {
             return res.status(400).json({ message: 'Por favor completa todos los campos.' });
         }
 
-        if (roles.length == 0) {
-            return res.status(400).json({ message: 'No puedes dejar los roles vacios.' });
-        }
-
         const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s.'\-]+$/;
         if (!nameRegex.test(name)) {
             return res.status(400).json({ message: 'Por favor ingresa un nombre válido.' });
@@ -122,7 +118,6 @@ adminCtrl.updateUser = async (req, res) => {
         let updateUser = {
             name,
             email,
-            roles,
         };
 
         if (password) {
@@ -132,7 +127,12 @@ adminCtrl.updateUser = async (req, res) => {
         }
 
         if (roles) {
-            updateUser.roles = roles;
+            // Filtrar roles vacíos
+            const filteredRoles = roles.filter((role) => role.trim() !== '');
+            if (filteredRoles.length === 0) {
+                return res.status(400).json({ message: 'Los roles no pueden estar vacíos.' });
+            }
+            updateUser.roles = filteredRoles;
         }
 
         const user = await User.findByIdAndUpdate(id, updateUser, { new: true });

@@ -67,24 +67,7 @@
  }
 
 
-
-
- footer {
-     background-color: #000000;
-     color: #fff;
-     text-align: center;
-     padding: 1px;
-     width: 100%;
-     font-size: 11px;
-     /* Ajusta el tamaño de la fuente según tus preferencias */
- }
-
-
- body {
-     background-image: url('/assets/images/Plantillav.jpg');
-     background-repeat: no-repeat;
-     background-size: 30%;
-     /* Ajusta el tamaño de la imagen según tus preferencias */
-     background-position: top right;
-     /* Ajusta la posición de la imagen a la esquina superior derecha */
- }
+.btn {
+    margin: 5% 0 3% 0;
+    width: 1000px;
+}

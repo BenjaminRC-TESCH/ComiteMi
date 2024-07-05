@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AdminService } from '../Services/admin.service';
 
 @Injectable({
     providedIn: 'root',
@@ -13,10 +14,19 @@ export class DataService {
 
     private URL = 'http://localhost:4000/api';
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private adminService: AdminService) {}
 
     obtenerInformacionActa(): Observable<any> {
-        return this.http.get<any>(this.URL + '/acta/number');
+        return this.http.get<any>(this.URL + '/get/acta/number');
+    }
+
+    createActaNumber(acta: FormData): Observable<any> {
+        const headers = new HttpHeaders().append('Accept', 'application/json, multipart/form-data');
+        return this.http.post<any>(this.URL + '/create/acta/number', acta, { headers });
+    }
+
+    getParticipantes(): Observable<any> {
+        return this.http.get<any>(this.URL + '/get/participantes/acta');
     }
 
     setTipoSesion(tipoSesion: string): void {
@@ -51,7 +61,12 @@ export class DataService {
         return this.Solucion;
     }
 
-    updateActaNumber(): Observable<any> {
-        return this.http.put<any>(this.URL + '/acta/number', {});
+    /*metodos para obtener las actas */
+    getActas(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.URL}/actas`);
+    }
+
+    getActaPDF(id: string): Observable<Blob> {
+        return this.http.get(`${this.URL}/actas/${id}/pdf`, { responseType: 'blob' });
     }
 }

@@ -163,10 +163,10 @@ tr:nth-child(odd) {
     background-color: #edeef1;
 }
 
-tr:hover td {
+tr:hover {
     color: #050505;
     cursor: pointer;
-    background-color: #ffffff;
+    background-color: #8BC34A;
 }
 
 td button {

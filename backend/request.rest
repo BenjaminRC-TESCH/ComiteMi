@@ -38,3 +38,9 @@ GET http://127.0.0.1:4000/api/get/secretaria/aceptador/comite
 
 ###
 GET http://127.0.0.1:4000/api/acta/number
+
+###
+GET http://127.0.0.1:4000/api/get/participantes/acta
+
+###
+GET http://127.0.0.1:4000/api/get/acta/number

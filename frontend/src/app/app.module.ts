@@ -50,6 +50,7 @@ import { SecreHistorialComponent } from './Components/Jefes/Secretaria/secre-his
 import { SecreActaUnoComponent } from './Components/Jefes/Secretaria/secre-acta-uno/secre-acta-uno.component';
 import { SecreActaDosComponent } from './Components/Jefes/Secretaria/secre-acta-dos/secre-acta-dos.component';
 import { SecreRevisionAlumnoComponent } from './Components/Jefes/Secretaria/secre-revision-alumno/secre-revision-alumno.component';
+import { SecreHistorialActasComponent } from './Components/Jefes/Secretaria/secre-historial-actas/secre-historial-actas.component';
 
 @NgModule({
     declarations: [
@@ -79,6 +80,7 @@ import { SecreRevisionAlumnoComponent } from './Components/Jefes/Secretaria/secr
         SecreActaUnoComponent,
         SecreActaDosComponent,
         SecreRevisionAlumnoComponent,
+        SecreHistorialActasComponent,
     ],
     imports: [
         BrowserModule,
