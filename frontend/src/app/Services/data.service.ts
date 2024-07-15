@@ -11,6 +11,13 @@ export class DataService {
     private asistentesSeleccionados: any[] = [];
     private DGeneral: string[] = [];
     private Solucion: string[] = [];
+    private dia: string = '';
+    private mes: string = '';
+    private anio: string = '';
+    private hora: string = '';
+    private minuto: string = '';
+
+    private direccionGeneral: string = '';
 
     private URL = 'http://localhost:4000/api';
 
@@ -45,18 +52,22 @@ export class DataService {
         return this.asistentesSeleccionados;
     }
 
+    //establece la descripcion general del caso
     setDGeneral(value: string[]): void {
         this.DGeneral = value;
     }
 
+    //obtiene la descripcion general del caso
     getDGeneral(): string[] {
         return this.DGeneral;
     }
 
+    //establece la resolucion general del caso
     setSolucion(value: string[]): void {
         this.Solucion = value;
     }
 
+    //obtiene la resolucion general del caso
     getSolucion(): string[] {
         return this.Solucion;
     }
@@ -68,5 +79,60 @@ export class DataService {
 
     getActaPDF(id: string): Observable<Blob> {
         return this.http.get(`${this.URL}/actas/${id}/pdf`, { responseType: 'blob' });
+    }
+
+    //Establece el nombre de la directora de la lista de usuarios
+    setDirecionGeneral(direccionGeneral: string): void {
+        this.direccionGeneral = direccionGeneral;
+    }
+
+    getDirecionGeneral(): string {
+        return this.direccionGeneral;
+    }
+
+    /*Metodos para obtener la fecha y hora*/
+    //dia
+    setDia(dia: string): void {
+        this.dia = dia;
+    }
+
+    getdia(): string {
+        return this.dia;
+    }
+
+    //mes
+    setMes(mes: string): void {
+        this.mes = mes;
+    }
+
+    getMes(): string {
+        return this.mes;
+    }
+
+    //anio
+    setAnios(anio: string): void {
+        this.anio = anio;
+    }
+
+    getAnio(): string {
+        return this.anio;
+    }
+
+    //hora
+    setHora(hora: string): void {
+        this.hora = hora;
+    }
+
+    getHora(): string {
+        return this.hora;
+    }
+
+    //minutos
+    setMinuto(minuto: string): void {
+        this.minuto = minuto;
+    }
+
+    getMinuto(): string {
+        return this.minuto;
     }
 }

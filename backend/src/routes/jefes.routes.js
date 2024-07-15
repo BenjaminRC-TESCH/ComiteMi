@@ -41,7 +41,7 @@ router.get('/get/jefes/comite/aceptados/:token', getAlumnosAceptados); //Ruta pa
 /********************************/
 /***Rutas para la secretaria****/
 /******************************/
-router.get('/get/secretaria/comite/aceptados', getAceptadosSecretaria); //Ruta para obtener los alumnos
+router.get('/get/secretaria/comite/aceptados', getAceptadosSecretaria); //Ruta para obtener los alumnos por los jefes
 router.put('/aceptar/secretaria/comite/:id', aceptarSecre); //Aceptar los casos por la secretaria
 router.put('/rechazar/secretaria/comite/:id', rechazarSecre); //Rechazar los casos por las secretaria
 router.get('/historial/secretaria/comite', getHistorialSecre); //Obtener el historial de casos aceptados

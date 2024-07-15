@@ -9,8 +9,7 @@
         <div class="card" #Text2>
             En la Sala de Juntas de la Dirección Académica del Edificio Bicentenario de la Independencia del Tecnológico
             de Estudios Superiores de Chalco “TESCHA”, ubicado en la Carretera Federal México-Cuautla s/n y Carretera
-            Chalco-Miraflores, La Candelaria Tlapala, Chalco, Estado de México, siendo las {{currentDateAndTime.time }}
-            del dia {{ currentDateAndTime.date }} se reunieron de manera virtual en segunda convocatoria, a fin de celebrar la
+            Chalco-Miraflores, La Candelaria Tlapala, Chalco, Estado de México, siendo las {{getHora()}}:{{getMinutos()}} horas del día {{getDia()}} de {{getMes()}} de {{getAnio()}} se reunieron de manera virtual en segunda convocatoria, a fin de celebrar la
             {{romano}} Sesión {{tipoSesion}} del Comité Académico del Tecnológico de Estudios Superiores de Chalco:
             {{ getFormattedAsistentes()}}
         </div> 
@@ -26,19 +25,19 @@
         <div class="form-check">
             <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
             <label class="form-check-label" for="flexCheckChecked">
-                2. Lectura y aprovacion del Orden del dia.
+                2. Lectura y aprobación del Orden del día.
             </label>
         </div>
         <div class="form-check">
             <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
             <label class="form-check-label" for="flexCheckChecked">
-                3. Discución y resolución de los asuntos para los que fue citado el Comite Académico.
+                3. Discusión y resolución de los asuntos para los que fue citado el Comité Académico.
             </label>
         </div>
         <div class="form-check1">
             <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
             <label class="form-check-label" for="flexCheckDefault">
-                3.1 Presentación y análisis de los casos de estudiantes para los que fue citado el Comité Academico.
+                3.1 Presentación y análisis de los casos de estudiantes para los que fue citado el Comité Académico.
             </label>
         </div>
         <div class="card">
@@ -57,10 +56,10 @@
                         <td>{{ alumno.carrera }}</td>
                     </tr>
                 </tbody>
-            </table>
+            </table> 
         </div>
         <div style="display: flex; justify-content: center;">
-            <button class="btn btn-warning" (click)="ReAlumn()" style="width: auto;">REVISION POR ALUMNO INDIVIDUALMENTE </button>
+            <button class="btn btn-warning" (click)="ReAlumn()" style="width: auto;">REVISIÓN POR ALUMNO INDIVIDUALMENTE </button>
         </div>
         <div class="card">
             <p>4. Asuntos generales</p>
@@ -68,7 +67,7 @@
 
         </div>
         <div class="card">
-            <p>1.LISTA DE ASISTENCIA Y DECLARATORIA DE QUÓRUM.</p>
+            <p>1. LISTA DE ASISTENCIA Y DECLARATORIA DE QUÓRUM.</p>
             <p #Text3>
                 Para dar inicio formal a la {{romano}} Sesión {{tipoSesion}} del Comité Académico del Tecnológico
                 de Estudios Superiores de Chalco, el {{ getPresidente()}} solicito a {{getSecret()}}, hacer el pase de
@@ -78,12 +77,12 @@
         </div>
         <div class="card">
             <p>
-                2. LECTURA Y APROBACIÓN DEL ORDE DEL DÍA.
+                2. LECTURA Y APROBACIÓN DEL ORDEN DEL DÍA.
             </p>
             <p #Text4>
                 Para dar inicio formal a la {{romano}} Sesión {{tipoSesion}} del Comité Académico del Tecnológico
                 de Estudios Superiores de Chalco, el {{getPresidente()}} solicito a {{getSecret()}}, hacer el desahogo de
-                la sesión, misma dio lectura al orden del dia; concluida ésta; el {{getPresidente()}}, preguntó si existen
+                la sesión, misma dio lectura al orden del día; concluida está; el {{getPresidente()}}, preguntó si existen
                 comentarios a la misma.
             </p>
             <p #Text5>
@@ -94,36 +93,35 @@
                 TESCHA.COM.ACAD/{{ getCurrentDate() | date: 'yyyy' }}/{{romano}}/001
             </p>
             <P #Text7>
-                El Comité Académico aprobó el orden del dia {{ getFormattedCurrentDate() }} de la {{romano}} Sesión {{tipoSesion}} 
+                El Comité Académico aprobó el orden del día {{getDia()}} de {{getMes()}} de {{getAnio()}} de la {{romano}} Sesión {{tipoSesion}} 
             </P>
         </div>
         <div class="card">
             <p>
-                3.DISCUSIÓN Y RESOLUCIÓN DE LOS ASUNTOS PARA LOS QUE FUE CITADO EL COMITÉ ACADÉMICO.
+                3. DISCUSIÓN Y RESOLUCIÓN DE LOS ASUNTOS PARA LOS QUE FUE CITADO EL COMITÉ ACADÉMICO.
             </p>
             <p>
-                3.1 PRESENTACIÓN Y ANÁLISIS DE LOS CASOS DE ESTUDIANTES PARA LOS QUE FUE CITADO EL COMITÉ ACADÉMICO
+                3.1 PRESENTACIÓN Y ANÁLISIS DE LOS CASOS DE ESTUDIANTES PARA LOS QUE FUE CITADO EL COMITÉ ACADÉMICO.
             </p>
             <p #Text8>
-                El {{getPresidente()}}, comento que con fundamento legal en lo dispuesto articulo 5, Fracción V;
-                articulo 14, del Decreto del Ejecutivo del Estado de México de fecha 08 de diciembre de 1998 por el que se crea
-                el Organismo Publico Descentralizado de Carácter Estatal denominado Tecnológico de Estudios Superiores de
-                Chalco; los Lineamientos Académicos Administrativos emitidos por el TecNM para los planes 2004, 2010 y 2015 y el
-                Reglamento de Estudiantes del TESCHA autorizado por la Junta Directiva en la CXII Sesión Ordinaria, celebrada el dia
-                06 de agosto del 2018, se lleva a cabo la siguiente sesión {{ getCurrentDate() | date: 'yyyy' }}
+                El {{getPresidente()}}, comento que con fundamento legal en lo dispuesto artículo 5, Fracción V; artículo 14, del
+                Decreto del Ejecutivo del Estado de México de fecha 08 de diciembre de 1998 por el que se crea el Organismo Público
+                Descentralizado de Carácter Estatal denominado Tecnológico de Estudios Superiores de Chalco; los Lineamientos Académicos
+                Administrativos emitidos por el TecNM para los planes 2004, 2010 y 2015 y el Reglamento de Estudiantes del TESCHA
+                autorizado por la Junta Directiva en la CXII Sesión Ordinaria, celebrada el día 06 de agosto del 2018, se lleva a cabo
+                la siguiente sesión.
             </p>
             <p #Text9>
-                El {{getPresidente()}} pide a {{getSecret()}} de lectura a los casos para los que se cito para su
-                análisis.
+                El {{getPresidente()}} pide a {{getSecret()}} de lectura a los casos para los que se citó para su análisis.
             </p>
         </div>
         <div class="card">
             <p>
-                4.ASUNTOS GENERALES.
+                4. ASUNTOS GENERALES.
             </p>
             <p>
                 El {{getPresidente()}} solicitó a {{getSecret()}} informar sobre el periodo de recepción de 
-                <input type="text" [(ngModel)]="periodo"> y agendar fecha para celebrar la proxima Sesión 
+                <input type="text" [(ngModel)]="periodo"> y agendar fecha para celebrar la próxima Sesión 
                 <input type="text" [(ngModel)]="sesion">
             </p>
             <p></p>
@@ -133,13 +131,13 @@
                 <input type="text" [(ngModel)]="inputValue1">
                 <input type="text" [(ngModel)]="inputValue2">
             <p>
-                El {{getPresidente()}} preguntó si existen comentarios al respecto. No habiendo comentarios , se da por
-                concluido.
+                El {{getPresidente()}} preguntó si existen comentarios al respecto. No habiendo comentarios, se da por concluido.
             </p>
             <p></p> 
             <p>
-                Una vez agotados los puntos de la {{romano}} sesión {{tipoSesion}} del Comité Académico del Tecnológico
-                de Estudios Superiores de Chalco, siendo las {{currentDateAndTime.time }} horas, del día {{ currentDateAndTime.date }}, se da por concluida
+                Una vez agotados los puntos de la {{romano}} sesión {{tipoSesion}} del Comité Académico del Tecnológico de Estudios
+                Superiores de Chalco, siendo las {{currentDateAndTime.time }} horas, del día {{ currentDateAndTime.date }}, se da por
+                concluida.
             </p>
         </div>
         <div class="card">

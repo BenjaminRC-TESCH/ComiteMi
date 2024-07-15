@@ -41,6 +41,12 @@ export class SecreActaDosComponent implements OnInit {
     asistentesSeleccionados: any[] = [];
     alumnosAceptados: any[] = [];
 
+    dia: string = '';
+    mes: string = '';
+    anio: string = '';
+    hora: string = '';
+    minuto: string = '';
+
     constructor(private router: Router, private dataService: DataService, private SecretariaTsService: SecretariaTsService) {
         this.currentDateAndTime = this.getCurrentDateTimeFormatted();
     }
@@ -53,6 +59,13 @@ export class SecreActaDosComponent implements OnInit {
         this.DGeneral = this.dataService.getDGeneral();
         this.Solucion = this.dataService.getSolucion();
         this.getAsistentes();
+
+        this.getHora();
+        this.getMinutos();
+
+        this.getDia();
+        this.getMes();
+        this.getAnio();
     }
 
     getAsistentes() {
@@ -67,12 +80,38 @@ export class SecreActaDosComponent implements OnInit {
         );
     }
 
+    getHora() {
+        return this.dataService.getHora();
+    }
+
+    getMinutos() {
+        return this.dataService.getMinuto();
+    }
+
+    getDia() {
+        return this.dataService.getdia();
+    }
+
+    getMes() {
+        return this.dataService.getMes();
+    }
+
+    getAnio() {
+        return this.dataService.getAnio();
+    }
+
     chunk(arr: any[], size: number) {
         return arr.reduce((acc, _, i) => (i % size ? acc : [...acc, arr.slice(i, i + size)]), []);
     }
 
     getDGenerals(): string[] {
         return this.DGeneral;
+    }
+
+    //Obtiene a la directora general
+    getDireccionGeneral(): string | undefined {
+        const direccionGeneral = this.dataService.getDirecionGeneral();
+        return direccionGeneral ? direccionGeneral.toUpperCase() : undefined;
     }
 
     getSolucion(): string[] {
@@ -93,6 +132,7 @@ export class SecreActaDosComponent implements OnInit {
             .join(', ');
     }
 
+    //Obtiene al presidente
     getPresidente(): string | undefined {
         const presidente = this.participantes.find((asistente) => asistente.roles.includes('Presidente del Comité Académico'));
 
@@ -103,6 +143,7 @@ export class SecreActaDosComponent implements OnInit {
         }
     }
 
+    //Obtiene a la secretaria
     getSecret(): string | undefined {
         const Secret = this.participantes.find((asistente) => asistente.roles.includes('Secretaria de Comité'));
 
@@ -285,7 +326,7 @@ export class SecreActaDosComponent implements OnInit {
                                 { text: 'Sesión de Comité:' },
                                 { text: this.romano },
                                 { text: 'Fecha de la sesión:' },
-                                { text: this.getFormattedCurrentDateWithYear() },
+                                { text: this.getDia() + '-' + this.getMes() + '-' + this.getAnio() },
                             ],
                             [{ text: 'Número del Caso' }, { text: '3.3.' + (index + 1), colSpan: 3 }],
                             [{ text: 'Carrera de Ingeniería' }, { text: alumno.carrera, colSpan: 3 }],
@@ -294,19 +335,13 @@ export class SecreActaDosComponent implements OnInit {
                                 {
                                     text: 'Descripción General del Caso:' + '\n' + this.DGeneral[index],
                                     colSpan: 4,
-                                },
-                            ],
-                            [
-                                {
-                                    text: 'Resolución del Comité Académico:',
-                                    colSpan: 4,
-                                },
-                            ],
-                            [
-                                {
-                                    text: this.Solucion[index],
-                                    colSpan: 4,
                                     alignment: 'justify',
+                                },
+                            ],
+                            [
+                                {
+                                    text: 'Resolución del Comité Académico:' + '\n' + this.Solucion[index],
+                                    colSpan: 4,
                                 },
                             ],
                             [
@@ -324,7 +359,7 @@ export class SecreActaDosComponent implements OnInit {
                             [{ text: '', colSpan: 4, height: 120 }],
                             [
                                 {
-                                    text: this.getPresidente() + '\nDIRECCIÓN GENERAL' + '\nTESCHA',
+                                    text: this.getDireccionGeneral() + '\nDIRECCIÓN GENERAL' + '\nTESCHA',
                                     colSpan: 4,
                                     alignment: 'center',
                                 },
@@ -397,7 +432,7 @@ export class SecreActaDosComponent implements OnInit {
                 {
                     type: 'none',
                     ol: [
-                        { text: '4. Asuntos generales' },
+                        { text: '4. Asuntos generales.' },
                         { text: '\n' },
                         {
                             text: '',
@@ -411,29 +446,27 @@ export class SecreActaDosComponent implements OnInit {
                     type: 'none',
                     ol: [
                         {
-                            text: '1.LISTA DE ASISTENCIA Y DECLARATORIA DE QUÓRUM.',
+                            text: '1. LISTA DE ASISTENCIA Y DECLARATORIA DE QUÓRUM.',
                         },
                         {
                             text: '\n',
                         },
                         {
-                            text: '',
-                            type: 'none',
-                            ol: [{ text: text3, alignment: 'justify' }],
+                            text: text3,
+                            alignment: 'justify',
                         },
                         {
                             text: '\n\n',
                         },
                         {
-                            text: '2. LECTURA Y APROBACIÓN DEL ORDE DEL DÍA.',
+                            text: '2. LECTURA Y APROBACIÓN DEL ORDEN DEL DÍA.',
                         },
                         {
                             text: '\n',
                         },
                         {
-                            text: '',
-                            type: 'none',
-                            ol: [{ text: text4, alignment: 'justify' }, { text: '\n' }, { text: text5, alignment: 'justify' }],
+                            text: text4 + '\n' + text5,
+                            alignment: 'justify',
                         },
                         {
                             text: '\n',
@@ -506,7 +539,7 @@ export class SecreActaDosComponent implements OnInit {
                                 this.getSecret() +
                                 ' informar sobre el periodo de recepción de ' +
                                 this.periodo +
-                                ' y agendar fecha para celebrar la proxima Sesión ' +
+                                ' y agendar fecha para celebrar la próxima Sesión ' +
                                 this.sesion,
                             alignment: 'justify',
                         },

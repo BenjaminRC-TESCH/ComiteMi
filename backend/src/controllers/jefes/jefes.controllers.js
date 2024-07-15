@@ -20,7 +20,7 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 
 //Importa archivo de constantes
-const { Estados, Carreras, Roles, IdRoles } = require('../../config/statuses');
+const { Estados, Carreras, Roles, IdRoles, Mensajes } = require('../../config/statuses');
 
 // Utilizamos promisify para convertir fs.unlink en una función que devuelve una promesa
 const unlinkAsync = require('util').promisify(fs.unlink);
@@ -114,11 +114,11 @@ alumnoCtrl.aceptarSolicitudJefe = async (req, res) => {
         }
 
         if (alumno.casoEsta === Estados.ACEPTADO_JEFA_CARRERA) {
-            return res.status(400).json({ message: 'El caso está en revisión por la secretaria del comité académico.' });
+            return res.status(400).json({ message: Mensajes.ERROR_REV_SECRE });
         }
 
         if (alumno.casoEsta === Estados.RECHAZADO_JEFA_CARRERA) {
-            return res.status(400).json({ message: 'El caso ya ha sido rechazado.' });
+            return res.status(400).json({ message: Mensajes.ERROR_REJECTED_JEFE });
         }
 
         let jefeNombre, passJefe;
@@ -197,11 +197,11 @@ alumnoCtrl.rechazarSolicitudJefe = async (req, res) => {
         const alumno = await Comite.findById(id);
 
         if (alumno.casoEsta === Estados.ACEPTADO_JEFA_CARRERA) {
-            return res.status(400).json({ message: 'El caso está en revisión por la secretaria del comité académico.' });
+            return res.status(400).json({ message: Mensajes.ERROR_REV_SECRE });
         }
 
         if (alumno.casoEsta === Estados.RECHAZADO_JEFA_CARRERA) {
-            return res.status(400).json({ message: 'El caso ya ha sido rechazado.' });
+            return res.status(400).json({ message: Mensajes.ERROR_REJECTED_JEFE });
         }
 
         if (!alumno) {
@@ -283,11 +283,11 @@ alumnoCtrl.moverReciclajeJefe = async (req, res) => {
         const alumnoExistente = await Comite.findById(id);
 
         if (alumnoExistente.casoEsta === Estados.ACEPTADO_JEFA_CARRERA) {
-            return res.status(400).json({ message: 'El caso está en revisión por la secretaria del comité académico.' });
+            return res.status(400).json({ message: Mensajes.ERROR_REV_SECRE });
         }
 
         if (alumnoExistente.casoEsta === Estados.RECHAZADO_JEFA_CARRERA) {
-            return res.status(400).json({ message: 'El caso ya ha sido rechazado.' });
+            return res.status(400).json({ message: Mensajes.ERROR_REJECTED_JEFE });
         }
 
         // Verificar si el alumno existe
@@ -545,8 +545,6 @@ alumnoCtrl.getAlumnosAceptados = async (req, res) => {
         const tokenDecoded = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
         const idCarreraDecoded = tokenDecoded.rol;
         const idCarrera = Array.isArray(idCarreraDecoded) ? idCarreraDecoded[0] : idCarreraDecoded;
-
-        console.log('id carrera: ' + idCarrera);
 
         let carrera;
 

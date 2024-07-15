@@ -25,6 +25,7 @@ export class SecreRevisionAlumnoComponent {
         this.tipoSesion = this.dataService.getTipoSesion();
         this.DGeneral = new Array(this.alumnosAceptados.length).fill('');
         this.Solucion = new Array(this.alumnosAceptados.length).fill('');
+        this.getDireccionGeneral;
     }
 
     obtenerInformacionActa() {
@@ -39,10 +40,17 @@ export class SecreRevisionAlumnoComponent {
         );
     }
 
+    //Obtiene a la directora general
+    getDireccionGeneral(): string | undefined {
+        const direccionGeneral = this.dataService.getDirecionGeneral();
+        return direccionGeneral ? direccionGeneral.toUpperCase() : undefined;
+    }
+
     obtenerAlumnosAceptados() {
         this.SecretariaTsService.getAlumnosAceptadosComite().subscribe(
             (data: any[]) => {
                 this.alumnosAceptados = data;
+                console.log(data);
             },
             (error) => {
                 console.error('Error al obtener los datos:', error);

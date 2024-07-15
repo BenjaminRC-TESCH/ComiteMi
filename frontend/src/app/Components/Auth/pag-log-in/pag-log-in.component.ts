@@ -42,9 +42,7 @@ export class PagLogInComponent implements OnInit {
     }
 
     getRoleName(id_rol: string | number): string {
-        console.log(id_rol);
         const role = this.roles.find((r) => r === id_rol.toString());
-        console.log(role);
         return role ? this.getRoleDisplayName(role) : 'N/A';
     }
 

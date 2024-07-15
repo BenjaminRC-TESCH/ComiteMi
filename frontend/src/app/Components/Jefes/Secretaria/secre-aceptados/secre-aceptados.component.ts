@@ -99,7 +99,7 @@ export class SecreAceptadosComponent implements OnInit {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'Hubo un error al aceptar al alumno por la secretaria del comite . Por favor, inténtalo de nuevo.',
+                            text: error.error.message,
                         });
                         console.error('Error al aceptar alumno :', error);
                     }
@@ -144,7 +144,7 @@ export class SecreAceptadosComponent implements OnInit {
                             },
                             (error) => {
                                 console.error('Error al rechazar la solicitud', error);
-                                Swal.fire('Error', 'Error al rechazar la solicitud', 'error');
+                                Swal.fire('Error', error.error.message, 'error');
                             }
                         );
                     }

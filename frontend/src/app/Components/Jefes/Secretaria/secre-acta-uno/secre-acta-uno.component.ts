@@ -1,6 +1,5 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { DataService } from '../../../../Services/data.service';
-
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
@@ -11,10 +10,13 @@ import Swal from 'sweetalert2';
 })
 export class SecreActaUnoComponent implements OnInit {
     currentDateAndTime: { date: string; time: string };
+    currentTime: { hour: string; minute: string } = { hour: '', minute: '' };
+    currentDate: { day: string; month: string; year: string } = { day: '', month: '', year: '' };
     tipoSesion: string = '';
     public palabras: string = '';
     public romano: string = '';
     participantes: any[] = [];
+    direccionGeneral: any[] = [];
 
     constructor(private router: Router, private dataService: DataService) {
         this.currentDateAndTime = this.getCurrentDateTimeFormatted();
@@ -23,6 +25,7 @@ export class SecreActaUnoComponent implements OnInit {
     ngOnInit(): void {
         this.obtenerInformacionActa();
         this.getAsistentes();
+        console.log(this.getDireccionGeneral());
     }
 
     getAsistentes() {
@@ -33,6 +36,33 @@ export class SecreActaUnoComponent implements OnInit {
                     presente: false,
                 }));
                 console.log(this.participantes);
+            },
+            (error) => {
+                console.error(error);
+            }
+        );
+    }
+
+    getDireccionGeneral() {
+        this.dataService.getParticipantes().subscribe(
+            (participantes) => {
+                // Filtrar participantes que sean Director(a) General o Director(a) General
+                this.direccionGeneral = participantes
+                    .filter(
+                        (participante) =>
+                            participante.roles.includes('Directora General') || participante.roles.includes('Director General')
+                    )
+                    .map((participante) => ({
+                        ...participante,
+                        presente: false,
+                    }));
+
+                // Agregar solo la propiedad 'name' de los Directores Generales al arreglo DGeneral
+                this.direccionGeneral.forEach((participante) => {
+                    if (participante.roles.includes('Directora General') || participante.roles.includes('Director General')) {
+                        this.dataService.setDirecionGeneral(participante.name);
+                    }
+                });
             },
             (error) => {
                 console.error(error);
@@ -97,6 +127,17 @@ export class SecreActaUnoComponent implements OnInit {
             const asistentesSeleccionados = this.participantes.filter((asistente) => asistente.presente);
             this.dataService.setAsistentesSeleccionados(asistentesSeleccionados);
             this.dataService.setTipoSesion(this.tipoSesion);
+
+            this.dataService.setDia(this.currentDate.day);
+            this.dataService.setMes(this.currentDate.month);
+            this.dataService.setAnios(this.currentDate.year);
+
+            console.log(this.currentDate.day + ' de ' + this.currentDate.month + ' de ' + this.currentDate.year);
+
+            this.dataService.setHora(this.currentTime.hour);
+            this.dataService.setMinuto(this.currentTime.minute);
+
+            console.log(this.currentTime.hour + ':' + this.currentTime.minute + ' horas');
 
             // Realizar la navegación solo si la condición se cumple
             this.router.navigate(['/secretaria-acta-dos']);

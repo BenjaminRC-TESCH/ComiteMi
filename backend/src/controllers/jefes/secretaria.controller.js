@@ -23,7 +23,7 @@ const mongoose = require('mongoose');
 const unlinkAsync = require('util').promisify(fs.unlink);
 
 //Importa archivo de constantes
-const { Estados, Carreras, Roles, IdRoles } = require('../../config/statuses');
+const { Estados, Carreras, Roles, IdRoles, Mensajes } = require('../../config/statuses');
 
 // Método para obtener los alumnos aceptados
 secreCtrl.getAceptadosSecretaria = async (req, res) => {
@@ -116,14 +116,12 @@ secreCtrl.aceptarSecre = async (req, res) => {
                 break;
         }
 
-        if (alumno.casoEsta === 'Aceptado por la jefa de carrera') {
-            nuevoEstado = 'Aceptado por la Secretaría del comité académico';
-            nuevoMotivo = 'Aceptado por la Secretaría del comité académico';
-            asuntoCorreo = 'Tu solicitud ha sido aceptada por la Secretaría del comité académico';
-        } else if (alumno.casoEsta === 'Aceptado por la Secretaría del comité académico') {
-            nuevoEstado = 'Aceptado por el comité académico';
-            nuevoMotivo = 'Aceptado por el comité académico';
-            asuntoCorreo = 'Tu solicitud ha sido aceptada por el comité académico';
+        if (alumno.casoEsta === Estados.ACEPTADO_JEFA_CARRERA) {
+            nuevoEstado = Estados.ACEPTADO_SECRETARIA;
+            nuevoMotivo = Estados.ACEPTADO_SECRETARIA;
+            asuntoCorreo = SUCCESS_ACEPT_SECRE;
+        } else if (alumno.casoEsta === Estados.ACEPTADO_SECRETARIA) {
+            return res.status(400).json({ message: Mensajes.ERROR_REV_COMITE });
         } else {
             return res.status(400).json({ message: 'El estado del caso no permite esta acción' });
         }
@@ -209,14 +207,12 @@ secreCtrl.rechazarSecre = async (req, res) => {
                 break;
         }
 
-        if (alumno.casoEsta === 'Aceptado por la jefa de carrera') {
-            nuevoEstado = 'Rechazado por la Secretaría del comité académico';
+        if (alumno.casoEsta === Estados.ACEPTADO_JEFA_CARRERA) {
+            nuevoEstado = Estados.RECHAZADO_SECRETARIA;
             nuevoMotivo = motivoRechazo || 'Motivo no especificado';
-            asuntoCorreo = 'Solicitud Rechazada por la Secretaría del comité académico';
-        } else if (alumno.casoEsta === 'Aceptado por la Secretaría del comité académico') {
-            nuevoEstado = 'Rechazado por el comité académico';
-            nuevoMotivo = motivoRechazo || 'Motivo no especificado';
-            asuntoCorreo = 'Solicitud Rechazada por el comité académico';
+            asuntoCorreo = Mensajes.REJECTED_SECRE;
+        } else if (alumno.casoEsta === Estados.ACEPTADO_SECRETARIA) {
+            return res.status(400).json({ message: Mensajes.ERROR_REV_COMITE });
         } else {
             return res.status(400).json({ message: 'El estado del caso no permite esta acción' });
         }
@@ -257,9 +253,9 @@ secreCtrl.getHistorialSecre = async (req, res) => {
         // Buscar alumnos en la colección Comite con los estados especificados
         const alumnos = await Comite.find({
             $or: [
-                { casoEsta: 'Aceptado por el comité académico' },
-                { casoEsta: 'Rechazado por el comité académico' },
-                { casoEsta: 'Rechazado por la Secretaría del comité académico' },
+                { casoEsta: Estados.ACEPTADO_COMITE },
+                { casoEsta: Estados.RECHAZADO_COMITE },
+                { casoEsta: Estados.RECHAZADO_SECRETARIA },
             ],
         });
 
@@ -302,11 +298,9 @@ secreCtrl.getHistorialSecre = async (req, res) => {
 //Metodo para obtener los alumnos aceptados
 secreCtrl.getAlumnosAceptadosComite = async (req, res) => {
     try {
-        // Obtener todos los alumnos de la base de datos cuyo casoEsta sea igual a "AceptadoJefes"
-        const alumnos = await Comite.find({ casoEsta: Estados.ACEPTADO_COMITE });
+        const alumnos = await Comite.find({ casoEsta: Estados.ACEPTADO_SECRETARIA });
 
-        // Obtener todos los reciclajes de la base de datos cuyo casoEsta sea igual a "AceptadoJefes"
-        const reciclajes = await Reciclaje.find({ casoEsta: Estados.ACEPTADO_COMITE });
+        const reciclajes = await Reciclaje.find({ casoEsta: Estados.ACEPTADO_SECRETARIA });
 
         // Combinar los resultados de ambas consultas
         const todosLosAlumnos = [...alumnos, ...reciclajes];
@@ -347,6 +341,8 @@ secreCtrl.getAlumnosAceptadosComite = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener los alumnos.' });
     }
 };
+
+secreCtrl.get;
 
 module.exports = secreCtrl;
 module.exports.fileUploadMiddleware = fileUpload;

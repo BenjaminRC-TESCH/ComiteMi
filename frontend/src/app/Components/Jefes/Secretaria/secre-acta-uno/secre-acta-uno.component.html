@@ -12,21 +12,30 @@
             getCurrentDate() |
             date: 'dd-MM-yyyy' }}/{{romano}}
         </div>
-
+ 
         <div class="card">
             En la Sala de Juntas de la Dirección Académica del Edificio Bicentenario de la Independencia del Tecnológico
             de
             Estudios Superiores de Chalco “TESCHA”, ubicado en la Carretera Federal México-Cuautla s/n y Carretera
-            Chalco-Miraflores, La Candelaria Tlapala, Chalco, Estado de México, siendo las {{currentDateAndTime.time }}
-            del dia
-            {{ currentDateAndTime.date }} se reunieron de manera virtual en segunda convocatoria, a fin de celebrar la
+            Chalco-Miraflores, La Candelaria Tlapala, Chalco, Estado de México, siendo las
+            <input type="number" [(ngModel)]="currentTime.hour" placeholder="13" style="width: 80px;">
+            :
+            <input type="number" [(ngModel)]="currentTime.minute" placeholder="25" style="width: 80px;">
+            del día
+            <input type="number" [(ngModel)]="currentDate.day" placeholder="15" style="width: 80px;">
+            de
+            <input type="text" [(ngModel)]="currentDate.month" placeholder="junio" style="width: 80px;">
+            de
+            <input type="number" [(ngModel)]="currentDate.year" placeholder="2024" style="width: 80px;">
+            se reunieron de manera virtual en segunda convocatoria, a fin de celebrar la
             {{romano}} Sesión {{tipoSesion}} del Comité Académico del Tecnológico de Estudios Superiores de Chalco:
 
             <!-- Remplazar aqui con lo que se trae de la base de datos -->
             <div *ngFor="let asistente of participantes">
                 <label>
                     <input type="checkbox" [(ngModel)]="asistente.presente"> {{ asistente.name }},
-                    <span *ngFor="let role of asistente.roles; let last = last">{{ role }}<span *ngIf="!last"> y </span></span>
+                    <span *ngFor="let role of asistente.roles; let last = last">{{ role }}<span *ngIf="!last"> y
+                        </span></span>
                 </label>
             </div>
             <p> La sesión se efectuó conforme al siguiente:</p>
