@@ -1,8 +1,11 @@
 const actaCtrl = {};
 const Acta = require('../../models/Acta.js');
 const User = require('../../models/User');
+const { Comite, Reciclaje } = require('../../models/Comites.js');
 const Roles = require('../../models/Roles.js');
 const fs = require('fs');
+
+const { Estados, Carreras, IdRoles, Mensajes } = require('../../config/statuses');
 
 //Metodo para convertir a ordinales
 const convertToWords = (number) => {
@@ -270,6 +273,40 @@ actaCtrl.getActaById = async (req, res) => {
         res.send(acta.evidencia.data);
     } catch (error) {
         res.status(500).json({ message: 'Error al obtener el PDF' });
+    }
+};
+
+//Metodo para actualizar el estado de los alumnos a Aceptados o rechazados por el comite cuando se genere el pdf
+actaCtrl.updateAlumnosAceptados = async (req, res) => {
+    try {
+        const estadosAlumnos = req.body; // Los estados llegan en el cuerpo de la solicitud
+
+        if (!estadosAlumnos || estadosAlumnos.length === 0) {
+            return res.status(400).json({ message: 'No se proporcionaron estados válidos.' });
+        }
+
+        // Iterar sobre cada estado recibido
+        for (const estado of estadosAlumnos) {
+            const { id, Estado } = estado;
+
+            // Validar que el estado sea '1' o '0'
+            if (Estado === '1') {
+                // Actualizar estado a 'Aceptado por el comité académico'
+                await Comite.findOneAndUpdate({ _id: id }, { casoEsta: Estados.ACEPTADO_COMITE }, { new: true });
+                await Reciclaje.findOneAndUpdate({ _id: id }, { casoEsta: Estados.ACEPTADO_COMITE }, { new: true });
+            } else if (Estado === '0') {
+                // Actualizar estado a 'Rechazado por el comité académico'
+                await Comite.findOneAndUpdate({ _id: id }, { casoEsta: Estados.RECHAZADO_COMITE }, { new: true });
+                await Reciclaje.findOneAndUpdate({ _id: id }, { casoEsta: Estados.RECHAZADO_COMITE }, { new: true });
+            } else {
+                console.warn(`Estado inválido recibido para el alumno con ID ${id}: ${Estado}`);
+            }
+        }
+
+        res.status(200).json({ message: 'Estados actualizados exitosamente.' });
+    } catch (error) {
+        console.error('Error al actualizar estados:', error);
+        res.status(500).json({ message: 'Error al actualizar estados de los alumnos.' });
     }
 };
 

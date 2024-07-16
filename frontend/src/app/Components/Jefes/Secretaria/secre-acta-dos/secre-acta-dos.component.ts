@@ -60,15 +60,14 @@ export class SecreActaDosComponent implements OnInit {
         this.Solucion = this.dataService.getSolucion();
         this.getAsistentes();
 
-        this.getHora();
-        this.getMinutos();
-
-        this.getDia();
-        this.getMes();
-        this.getAnio();
+        const hora = this.getHora();
+        const minutos = this.getMinutos();
+        const dia = this.getDia();
+        const mes = this.getMes();
+        const mesNumero = this.getMesNumero();
     }
 
-    getAsistentes() {
+    getAsistentes(): void {
         this.dataService.getParticipantes().subscribe(
             (participantes) => {
                 this.participantes = participantes.map((participante) => ({
@@ -80,24 +79,65 @@ export class SecreActaDosComponent implements OnInit {
         );
     }
 
-    getHora() {
+    getHora(): any {
         return this.dataService.getHora();
     }
 
-    getMinutos() {
+    getMinutos(): any {
         return this.dataService.getMinuto();
     }
 
-    getDia() {
+    getDia(): any {
         return this.dataService.getdia();
     }
 
-    getMes() {
+    getMes(): any {
         return this.dataService.getMes();
     }
 
-    getAnio() {
+    getAnio(): any {
         return this.dataService.getAnio();
+    }
+
+    getMesNumero(): any {
+        const meses = {
+            enero: '01',
+            febrero: '02',
+            marzo: '03',
+            abril: '04',
+            mayo: '05',
+            junio: '06',
+            julio: '07',
+            agosto: '08',
+            septiembre: '09',
+            octubre: '10',
+            noviembre: '11',
+            diciembre: '12',
+        };
+
+        let mesWord = this.dataService.getMes();
+        if (mesWord) {
+            mesWord = mesWord.toLowerCase();
+
+            if (meses[mesWord] !== undefined) {
+                return meses[mesWord];
+            } else {
+                Swal.fire({
+                    title: 'Mes No Válido',
+                    text: 'El mes proporcionado no es válido',
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.router.navigate(['/secretaria-acta-uno']);
+                    }
+                });
+                return null; // Retorna null si el mes no es válido
+            }
+        } else {
+            return null;
+            // Manejo cuando no se recibe ningún mes
+        }
     }
 
     chunk(arr: any[], size: number) {
@@ -236,7 +276,18 @@ export class SecreActaDosComponent implements OnInit {
             confirmButtonText: 'Sí, generar PDF',
             cancelButtonText: 'Cancelar',
         }).then((result) => {
-            this.generatePDF1();
+            if (result.isConfirmed) {
+                const estadosAlumnos = JSON.parse(localStorage.getItem('EstadosAlumnos') || '[]');
+                this.dataService.enviarEstadosAlumnos(estadosAlumnos).subscribe(
+                    (response) => {
+                        console.log('Estados de alumnos enviados exitosamente:', response);
+                        this.generatePDF1();
+                    },
+                    (error) => {
+                        console.error('Error al enviar los estados de alumnos:', error);
+                    }
+                );
+            }
         });
     }
 

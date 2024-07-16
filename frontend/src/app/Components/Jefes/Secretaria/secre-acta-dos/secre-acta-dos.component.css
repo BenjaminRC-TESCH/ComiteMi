@@ -67,7 +67,8 @@
  }
 
 
-.btn {
-    margin: 5% 0 3% 0;
-    width: 1000px;
-}
+ .full-width-textarea {
+     width: 100%;
+     box-sizing: border-box;
+     /* Esto asegura que el padding y border se incluyan en el ancho total */
+ }

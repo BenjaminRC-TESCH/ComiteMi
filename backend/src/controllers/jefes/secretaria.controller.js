@@ -119,7 +119,7 @@ secreCtrl.aceptarSecre = async (req, res) => {
         if (alumno.casoEsta === Estados.ACEPTADO_JEFA_CARRERA) {
             nuevoEstado = Estados.ACEPTADO_SECRETARIA;
             nuevoMotivo = Estados.ACEPTADO_SECRETARIA;
-            asuntoCorreo = SUCCESS_ACEPT_SECRE;
+            asuntoCorreo = Mensajes.SUCCESS_ACEPT_SECRE;
         } else if (alumno.casoEsta === Estados.ACEPTADO_SECRETARIA) {
             return res.status(400).json({ message: Mensajes.ERROR_REV_COMITE });
         } else {

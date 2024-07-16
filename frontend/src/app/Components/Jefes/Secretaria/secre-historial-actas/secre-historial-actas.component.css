@@ -9,7 +9,7 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-x: auto;
+    overflow-x: hidden;
     overflow-y: auto;
     padding: 1rem;
     max-width: 100vw;
@@ -25,16 +25,11 @@ table {
 .table-container {
     max-width: 80%;
     margin: 20px 0;
-    overflow-x: auto;
     padding: 20px;
 }
 
-
-
 .header_fixed {
-    max-height: 100vh;
     width: 100%;
-    overflow: auto;
     border: 1px solid #fffcfc;
 }
 
@@ -97,40 +92,30 @@ td button {
 
 .search {
     background-color: #b8b3b3;
-    border: 1cap solid #fffbfb;
+    border: 1px solid #fffbfb;
     border-radius: 5px;
     padding: 3px;
     width: 100%;
-    /* Ajusta el ancho a tu preferencia */
     display: flex;
     align-items: center;
     flex-direction: row-reverse;
-    /* Invierte la dirección de los elementos */
 }
 
-/* Estilo para el icono de búsqueda */
 .search::before {
     content: '\f002';
-    /* Código Unicode del icono de búsqueda (puedes cambiarlo) */
     font-family: 'Font Awesome 5 Free';
-    /* Fuente de Font Awesome */
     font-weight: 600;
     font-size: 16px;
     color: #fdf8f8;
-    /* Color del icono */
     margin-left: 5px;
-    /* Cambiamos margin-right a margin-left */
 }
 
 .search input[type="text"] {
     border: none;
     outline: none;
     width: 100%;
-    /* Esto hará que el input ocupe todo el ancho del contenedor */
     margin-left: 5px;
-    /* Puedes ajustar el margen según sea necesario */
     padding: 5px;
-    /* Puedes ajustar el padding según sea necesario */
 }
 
 .search-button {
@@ -140,7 +125,6 @@ td button {
     padding: 0px;
     border: 0px solid #ccc;
     width: 800px;
-    /* Ajusta el ancho a tu preferencia */
     border-radius: 5px;
     transition: background-color 0.3s;
 }
@@ -149,141 +133,60 @@ td button {
     background-color: #ccc;
 }
 
-
-
-/* Estilos personalizados para el botón y el menú desplegable */
 .Jefe .btn-secondary {
     background-color: transparent !important;
-    /* Fondo transparente */
     border: none !important;
-    /* Sin borde */
     color: black !important;
-    /* Color de texto en negro */
     font-weight: bold !important;
-    /* Texto en negritas */
 }
 
 .Jefe .dropdown-menu {
     background-color: transparent !important;
-    /* Fondo transparente */
     border: none !important;
-    /* Sin borde */
 }
 
-/* Cambio de estilo al pasar el ratón por encima (opcional) */
 .Jefe .btn-secondary:hover {
     background-color: rgb(128, 125, 125) !important;
-    /* Fondo transparente al pasar el ratón */
 }
 
 .Jefe .dropdown-item:hover {
     background-color: transparent !important;
-    /* Fondo transparente al pasar el ratón */
     color: black !important;
-    /* Color de texto en negro al pasar el ratón */
 }
 
-/* Agrega estilos para los botones en tu componente */
-
-/* Estilos generales para todos los botones */
-table tr td .Aceptar {
+table tr td .Aceptar,
+table tr td .rechazar,
+table tr td .pape,
+table tr td .info {
     width: 40px;
-    /* Ancho deseado */
     height: 40px;
-    /* Alto deseado */
     padding: 0;
-    /* Elimina el relleno interno */
     border: 2px solid black;
-    /* Elimina el borde */
-    background-color: rgb(11, 255, 153);
-    /* Cambia el color de fondo del botón según tus preferencias */
-    color: #000000;
-    /* Cambia el color del texto del botón según tus preferencias */
     border-radius: 50%;
-    /* Hace que el botón sea circular */
     cursor: pointer;
-    /* Cambia el cursor al pasar el ratón */
     display: flex;
-    /* Utiliza el modelo de caja flexible */
     justify-content: center;
-    /* Centra horizontalmente el contenido del botón */
     align-items: center;
-    /* Centra verticalmente el contenido del botón */
+}
+
+table tr td .Aceptar {
+    background-color: rgb(11, 255, 153);
+    color: #000000;
 }
 
 table tr td .rechazar {
-    width: 40px;
-    /* Ancho deseado */
-    height: 40px;
-    /* Alto deseado */
-    padding: 0;
-    /* Elimina el relleno interno */
-    border: 2px solid black;
-    /* Elimina el borde */
     background-color: rgb(255, 27, 27);
-    /* Cambia el color de fondo del botón según tus preferencias */
     color: #070707;
-    /* Cambia el color del texto del botón según tus preferencias */
-    border-radius: 50%;
-    /* Hace que el botón sea circular */
-    cursor: pointer;
-    /* Cambia el cursor al pasar el ratón */
-    display: flex;
-    /* Utiliza el modelo de caja flexible */
-    justify-content: center;
-    /* Centra horizontalmente el contenido del botón */
-    align-items: center;
-    /* Centra verticalmente el contenido del botón */
 }
 
 table tr td .pape {
-    width: 40px;
-    /* Ancho deseado */
-    height: 40px;
-    /* Alto deseado */
-    padding: 0;
-    /* Elimina el relleno interno */
-    border: 2px solid black;
-    /* Elimina el borde */
     background-color: rgb(241, 238, 46);
-    /* Cambia el color de fondo del botón según tus preferencias */
     color: #070707;
-    /* Cambia el color del texto del botón según tus preferencias */
-    border-radius: 50%;
-    /* Hace que el botón sea circular */
-    cursor: pointer;
-    /* Cambia el cursor al pasar el ratón */
-    display: flex;
-    /* Utiliza el modelo de caja flexible */
-    justify-content: center;
-    /* Centra horizontalmente el contenido del botón */
-    align-items: center;
-    /* Centra verticalmente el contenido del botón */
 }
 
 table tr td .info {
-    width: 40px;
-    /* Ancho deseado */
-    height: 40px;
-    /* Alto deseado */
-    padding: 0;
-    /* Elimina el relleno interno */
-    border: 2px solid black;
-    /* Elimina el borde */
     background-color: rgb(225, 230, 223);
-    /* Cambia el color de fondo del botón según tus preferencias */
     color: #070707;
-    /* Cambia el color del texto del botón según tus preferencias */
-    border-radius: 50%;
-    /* Hace que el botón sea circular */
-    cursor: pointer;
-    /* Cambia el cursor al pasar el ratón */
-    display: flex;
-    /* Utiliza el modelo de caja flexible */
-    justify-content: center;
-    /* Centra horizontalmente el contenido del botón */
-    align-items: center;
-    /* Centra verticalmente el contenido del botón */
 }
 
 table tr td i {
@@ -294,5 +197,4 @@ table tr td i {
 .botones-container {
     display: flex;
     gap: 10px;
-    /* Agrega un espacio de 10px entre los botones */
 }

@@ -38,13 +38,13 @@
 
 table {
     width: 100%;
+    border: 1px solid black;
 }
 
 th,
 td {
     padding: 10px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
 }
 
 th {
@@ -57,4 +57,14 @@ input[type="text"] {
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 3px;
+}
+
+.full-width-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    /* Esto asegura que el padding y border se incluyan en el ancho total */
+}
+
+select{
+    border: 1px solid #000;
 }

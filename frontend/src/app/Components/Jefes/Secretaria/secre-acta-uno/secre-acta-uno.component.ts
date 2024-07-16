@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataService } from '../../../../Services/data.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -13,8 +13,8 @@ export class SecreActaUnoComponent implements OnInit {
     currentTime: { hour: string; minute: string } = { hour: '', minute: '' };
     currentDate: { day: string; month: string; year: string } = { day: '', month: '', year: '' };
     tipoSesion: string = '';
-    public palabras: string = '';
-    public romano: string = '';
+    palabras: string = '';
+    romano: string = '';
     participantes: any[] = [];
     direccionGeneral: any[] = [];
 
@@ -25,8 +25,9 @@ export class SecreActaUnoComponent implements OnInit {
     ngOnInit(): void {
         this.obtenerInformacionActa();
         this.getAsistentes();
-        console.log(this.getDireccionGeneral());
     }
+
+    meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
     getAsistentes() {
         this.dataService.getParticipantes().subscribe(
@@ -36,33 +37,6 @@ export class SecreActaUnoComponent implements OnInit {
                     presente: false,
                 }));
                 console.log(this.participantes);
-            },
-            (error) => {
-                console.error(error);
-            }
-        );
-    }
-
-    getDireccionGeneral() {
-        this.dataService.getParticipantes().subscribe(
-            (participantes) => {
-                // Filtrar participantes que sean Director(a) General o Director(a) General
-                this.direccionGeneral = participantes
-                    .filter(
-                        (participante) =>
-                            participante.roles.includes('Directora General') || participante.roles.includes('Director General')
-                    )
-                    .map((participante) => ({
-                        ...participante,
-                        presente: false,
-                    }));
-
-                // Agregar solo la propiedad 'name' de los Directores Generales al arreglo DGeneral
-                this.direccionGeneral.forEach((participante) => {
-                    if (participante.roles.includes('Directora General') || participante.roles.includes('Director General')) {
-                        this.dataService.setDirecionGeneral(participante.name);
-                    }
-                });
             },
             (error) => {
                 console.error(error);
@@ -101,15 +75,13 @@ export class SecreActaUnoComponent implements OnInit {
         return { date: formattedDate, time: formattedTime };
     }
 
-    getCurrentDate(): Date {
-        return new Date();
-    }
-
     Pdatos(): void {
+        if (!this.validarHora() || !this.validarMinutos() || !this.validarDia() || !this.validaranio()) {
+            return; // Si la validación falla, salir sin continuar
+        }
+
         const asistentePresidente = this.participantes.find((asistente) => asistente.roles.includes('Presidente del Comité Académico'));
         const asistenteSecretaria = this.participantes.find((asistente) => asistente.roles.includes('Secretaria de Comité'));
-
-        console.log('Presidente:' + asistentePresidente, 'Secretaria: ' + asistenteSecretaria);
 
         if (!asistentePresidente || !asistentePresidente.presente || !asistenteSecretaria || !asistenteSecretaria.presente) {
             Swal.fire({
@@ -142,5 +114,113 @@ export class SecreActaUnoComponent implements OnInit {
             // Realizar la navegación solo si la condición se cumple
             this.router.navigate(['/secretaria-acta-dos']);
         }
+    }
+
+    validarHora(): boolean {
+        const hour = parseInt(this.currentTime.hour, 10);
+
+        if (isNaN(hour)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Los campos de hora debe ser numérica.',
+            });
+            return false;
+        }
+
+        if (hour < 0 || hour > 23) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'La hora debe estar entre 00 y 23.',
+            });
+            return false;
+        }
+
+        return true;
+    }
+
+    validarMinutos(): boolean {
+        const minute = parseInt(this.currentTime.minute, 10);
+
+        if (isNaN(minute)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Los minutos deben ser numéricos.',
+            });
+            return false;
+        }
+
+        if (minute < 0 || minute > 59) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Los minutos entre 00 y 59.',
+            });
+            return false;
+        }
+
+        return true;
+    }
+
+    validarDia(): boolean {
+        const day = parseInt(this.currentDate.day, 10);
+
+        if (isNaN(day)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Los días deben ser numéricos.',
+            });
+            return false;
+        }
+
+        if (day < 1 || day > 31) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Los días deben estar entre 01 y 31.',
+            });
+            return false;
+        }
+
+        return true;
+    }
+
+    validaranio(): boolean {
+        const year = this.currentDate.year;
+
+        // Verificar que year tenga exactamente cuatro dígitos
+        if (!/^\d{4}$/.test(year)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'El año debe tener cuatro dígitos numéricos.',
+            });
+            return false;
+        }
+
+        const yearNumber = parseInt(this.currentDate.year, 10);
+
+        if (isNaN(yearNumber)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'El año deben ser numérico.',
+            });
+            return false;
+        }
+
+        if (yearNumber < 2024 || yearNumber > 2099) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error en el año',
+            });
+            return false;
+        }
+
+        return true;
     }
 }

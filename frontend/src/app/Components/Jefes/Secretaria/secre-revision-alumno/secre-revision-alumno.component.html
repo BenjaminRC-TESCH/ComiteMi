@@ -12,7 +12,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr> 
+                <tr>
                     <td>Número del Caso:</td>
                     <td colspan="3">{{'3.3.' + (i + 1 )}}</td>
                 </tr>
@@ -25,16 +25,31 @@
                     <td colspan="3">{{ alumno.nombreCom }}</td>
                 </tr>
                 <tr>
+                    <td>Estado del Alumno:</td>
+                    <td colspan="3">
+                        <select [(ngModel)]="alumnoEstados[alumno._id]" (ngModelChange)="handleInputChange()">
+                            <option [value]="1">Aceptado por el comité académico</option>
+                            <option [value]="0">Rechazado por el comité académico</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
                     <td colspan="4">Descripción General del Caso:</td>
                 </tr>
                 <tr>
-                    <td colspan="4"><input type="text" [(ngModel)]="DGeneral[i]"></td>
+                    <td colspan="4">
+                        <textarea [(ngModel)]="DGeneral[alumno._id]" (ngModelChange)="handleInputChange()" rows="6"
+                            class="full-width-textarea"></textarea>
+                    </td>
                 </tr>
                 <tr>
-                    <td colspan="4">Resulución del Comité Académico:</td>
+                    <td colspan="4">Resolución del Comité Académico:</td>
                 </tr>
                 <tr>
-                    <td colspan="4"><input type="text" [(ngModel)]="Solucion[i]"></td>
+                    <td colspan="4">
+                        <textarea [(ngModel)]="Solucion[alumno._id]" (ngModelChange)="handleInputChange()" rows="6"
+                            class="full-width-textarea"></textarea>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="2">Visto Bueno Director General del TESCHA</td>
@@ -61,7 +76,7 @@
             </tbody>
         </table>
     </div>
-    <button  (click)="Guardar()">Generar PDF</button>
+    <button class="btn btn-primary" (click)="Guardar()">Generar PDF</button>
 </main>
 
 <app-footer></app-footer>

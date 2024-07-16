@@ -135,4 +135,9 @@ export class DataService {
     getMinuto(): string {
         return this.minuto;
     }
+
+    // Método para enviar los estados de los alumnos
+    enviarEstadosAlumnos(estadosAlumnos: { id: string; Estado: number }[]): Observable<any> {
+        return this.http.put(`${this.URL}/estados-alumnos`, estadosAlumnos);
+    }
 }
