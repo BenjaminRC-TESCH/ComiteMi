@@ -25,6 +25,7 @@ export class SecreActaUnoComponent implements OnInit {
     ngOnInit(): void {
         this.obtenerInformacionActa();
         this.getAsistentes();
+        this.getDireccionGeneral();
     }
 
     meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
@@ -52,6 +53,33 @@ export class SecreActaUnoComponent implements OnInit {
             },
             (error) => {
                 console.error('Error al obtener la información del acta:', error);
+            }
+        );
+    }
+
+    getDireccionGeneral() {
+        this.dataService.getParticipantes().subscribe(
+            (participantes) => {
+                // Filtrar participantes que sean Director(a) General o Director(a) General
+                this.direccionGeneral = participantes
+                    .filter(
+                        (participante) =>
+                            participante.roles.includes('Directora General') || participante.roles.includes('Director General')
+                    )
+                    .map((participante) => ({
+                        ...participante,
+                        presente: false,
+                    }));
+
+                // Agregar solo la propiedad 'name' de los Directores Generales al arreglo DGeneral
+                this.direccionGeneral.forEach((participante) => {
+                    if (participante.roles.includes('Directora General') || participante.roles.includes('Director General')) {
+                        this.dataService.setDirecionGeneral(participante.name);
+                    }
+                });
+            },
+            (error) => {
+                console.error(error);
             }
         );
     }

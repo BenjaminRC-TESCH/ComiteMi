@@ -27,7 +27,7 @@
                 <tr>
                     <td>Estado del Alumno:</td>
                     <td colspan="3">
-                        <select [(ngModel)]="alumnoEstados[alumno._id]" (ngModelChange)="handleInputChange()">
+                        <select [(ngModel)]="alumnoEstados[alumno._id]" (ngModelChange)="handleInputChange()" class="form-control form-control-sm d-inline w-auto">
                             <option [value]="1">Aceptado por el comité académico</option>
                             <option [value]="0">Rechazado por el comité académico</option>
                         </select>
@@ -69,14 +69,14 @@
                 <tr>
                     <td colspan="4" style="text-align: center;">
                         {{getDireccionGeneral()}} <br>
-                        DIRECTOR GENERAL <br>
+                        DIRECTORA GENERAL <br>
                         TESCHA
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <button class="btn btn-primary" (click)="Guardar()">Generar PDF</button>
+    <button class="btn btn-primary" (click)="Guardar()">Guardar</button>
 </main>
 
 <app-footer></app-footer>

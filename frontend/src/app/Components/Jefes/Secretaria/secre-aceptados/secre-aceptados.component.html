@@ -2,25 +2,23 @@
 
 <main>
     <div>
-        <div class="align-text-center d-flex flex-column align-items-center">
-            <img src="assets/images/Aceptado.png" alt="Imagen de bienvenida" width="70" height="60"
-                style="display: inline-block;">
-            <h1 style="display: inline-block;">ACEPTADOS</h1>
+        <div class="align-text-center">
+            <img src="assets/images/Aceptado.png" alt="Imagen de bienvenida" class="welcome-image">
+            <h1 class="welcome-title">ACEPTADOS</h1>
         </div>
         <div class="search-button mt-3">
             <div class="search">
-                <input type="text" placeholder="Buscar..." (keyup)="buscarPorMatricula($event)">
+                <input type="text" placeholder="Buscar..." (keyup)="buscarAlumno($event)">
                 <i class="fas fa-search"></i>
             </div>
         </div>
     </div>
     <div class="header_fixed">
         <div class="search-table-container">
-
             <table>
                 <thead>
                     <tr>
-                        <th colspan="8" style="text-align: left; font-size: 20px;">SEGUIMIENTO</th>
+                        <th colspan="8" class="table-header">SEGUIMIENTO</th>
                     </tr>
                     <tr>
                         <th>MATRICULA</th>
@@ -47,7 +45,7 @@
                                     <i class="material-icons">message</i>
                                 </button>
                             </div>
-                        </td>
+                        </td> 
                         <td>
                             <div class="botones-container">
                                 <button class="pape" (click)="verPDF(alumno.pdfPath)">
@@ -59,13 +57,11 @@
                                 <button class="rechazar" (click)="rechazarAlumno(alumno._id, alumno.nombreCom)">
                                     <i class="material-icons">cancel</i>
                                 </button>
-
                             </div>
                         </td>
                     </tr>
                 </tbody>
             </table>
-
         </div>
     </div>
 </main>

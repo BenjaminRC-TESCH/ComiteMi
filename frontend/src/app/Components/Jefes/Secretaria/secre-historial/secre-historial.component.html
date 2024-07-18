@@ -1,52 +1,50 @@
 <app-nav-secretaria></app-nav-secretaria>
 
 <main>
-    <div class="align-text-center d-flex flex-column align-items-center">
-        <div class="d-flex align-items-center">
-            <img src="assets/images/history.png" alt="Imagen de bienvenida" width="60" height="90">
-            <h1 class="ml-3">HISTORIAL DE SEGUIMIENTO</h1>
+    <div>
+        <div class="align-text-center d-flex flex-column align-items-center">
+            <img src="assets/images/history.png" alt="Imagen de bienvenida" class="welcome-image">
+            <h1 class="welcome-title">HISTORIAL DE SEGUIMIENTO</h1>
         </div>
         <div class="search-button mt-3">
             <div class="search">
-                <input type="text" class="form-control" placeholder="Buscar..." (keyup)="buscarPorMatricula($event)">
+                <input type="text" placeholder="Buscar..." (keyup)="buscarAlumno($event)">
+                <i class="fas fa-search"></i>
             </div>
-            <i class=""></i>
-        </div>
+        </div> 
     </div>
-    <div class="header_fixed mt-4">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th colspan="6" style="text-align: center; font-size: 24px;">Historial</th>
-                </tr>
-                <tr>
-                    <th>MATRICULA</th>
-                    <th>NOMBRE COMPLETO</th>
-                    <th>CARRERA</th>
-                    <th>TIPO DE CASO</th>
-                    <th>EVIDENCIA</th>
-                    <th>ESTADO</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="trTableHisto" *ngFor="let alumno of Alumno">
-                    <td>{{ alumno.matricula }}</td>
-                    <td>{{ alumno.nombreCom }}</td>
-                    <td>{{ alumno.carrera }}</td>
-                    <td>{{ alumno.casoTipo }}</td>
-                    <td>
-                        <button class="btn btn-secondary rounded-circle mr-2" (click)="verPDF(alumno.pdfPath)">
-                            <i class="fas fa-file-alt"></i> Ver PDF
-                        </button>
-                    </td>
-                    <td>{{ alumno.casoEsta }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <!-- Utiliza un enlace para abrir el PDF al hacer clic 
-    <button id="vaciarDatos" class="btn btn-primary custom-button">
-      <i class="fas fa-folder"></i> Vaciar Datos
-    </button> -->
+    <div class="header_fixed">
+        <div class="search-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="8" class="table-header">Historial</th>
+                    </tr>
+                    <tr>
+                        <th>MATRICULA</th>
+                        <th>NOMBRE COMPLETO</th>
+                        <th>CARRERA</th>
+                        <th>TIPO DE CASO</th>
+                        <th>EVIDENCIA</th>
+                        <th>ESTADO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let alumno of Alumno">
+                        <td>{{ alumno.matricula }}</td>
+                        <td>{{ alumno.nombreCom }}</td>
+                        <td>{{ alumno.carrera }}</td>
+                        <td>{{ alumno.casoTipo }}</td>
+                        <td>
+                            <button class="btn btn-dark rounded-circle mr-2" (click)="verPDF(alumno.pdfPath)">
+                                <i class="fas fa-file-alt"></i> Ver PDF
+                            </button>
+                        </td>
+                        <td>{{ alumno.casoEsta }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </main>
 

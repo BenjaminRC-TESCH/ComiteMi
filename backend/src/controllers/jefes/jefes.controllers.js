@@ -494,14 +494,16 @@ alumnoCtrl.historialJefe = async (req, res) => {
                 carrera = 'N/A';
         }
 
-        const alumnos = await Comite.find({
-            carrera,
-            $or: [
-                { casoEsta: Estados.ACEPTADO_COMITE },
-                { casoEsta: Estados.RECHAZADO_COMITE },
-                { casoEsta: Estados.RECHAZADO_SECRETARIA },
-            ],
-        });
+        // Definir los estados aceptados
+        const estadosAceptados = [
+            Estados.ACEPTADO_COMITE,
+            Estados.RECHAZADO_COMITE,
+            Estados.RECHAZADO_SECRETARIA,
+            Estados.ACEPTADO_SECRETARIA,
+        ];
+
+        // Obtener todos los alumnos de la base de datos cuyo casoEsta esté en los estados aceptados
+        const alumnos = await Comite.find({ casoEsta: { $in: estadosAceptados } });
 
         const alumnosConEvidencia = alumnos.map((alumno) => {
             return {

@@ -1,138 +1,75 @@
+/* Estilo para el host principal */
 :host {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
+/* Estilo para el elemento principal */
 main {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-x: auto;
-    overflow-y: auto;
     padding: 1rem;
     max-width: 100vw;
     font-family: 'Roboto', sans-serif;
     margin-top: 60px;
 }
 
-.menu {
+/* Estilo para la alineación de texto e imagen */
+.align-text-center {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
 }
 
-.menu .search input {
-    padding: 5px;
-    border: none;
-    border-radius: 5px;
-
-}
-
-.menu .dropdown {
-    position: relative;
-}
-
-.menu .dropdown button {
-    background-color: #000000;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-.menu-title {
-    background-color: rgb(3, 180, 3);
-    color: rgb(0, 0, 0);
-    padding: 5px 10px;
+/* Estilo para el contenedor de bienvenida */
+.welcome-container {
     display: flex;
-    /* Usamos flexbox para centrar verticalmente */
-    justify-content: center;
-    /* Centramos horizontalmente */
     align-items: center;
-    /* Centramos verticalmente */
-    height: 40px;
-    /* Altura deseada para el título */
-    border-radius: 10px;
 }
 
-.menu .dropdown-content {
-    display: none;
-    position: absolute;
-    background-size: cover;
-    background-position: center bottom;
-    /* Centra la imagen horizontalmente y la coloca un poco más abajo */
-    background-color: #ffffff;
-    /* Establece el color de fondo del menú desplegable */
-    min-width: 200px;
-    /* Aumenta este valor para hacer el menú más ancho */
-    min-height: 300px;
-    /* Aumenta este valor para colocar la imagen más abajo */
-    padding: px;
-    border: 2px solid black;
-    border-radius: 10px;
-    z-index: 1;
-    right: 0;
-    /* Coloca el menú a la izquierda */
-    font-weight: bold;
-
+/* Estilo para la imagen de bienvenida */
+.welcome-image {
+    width: 130px;
+    height: 90px;
 }
 
-/* Cambio de estilo para las opciones del menú */
-.dropdown-content a {
-    color: black !important;
-    /* Cambia el color del texto a negro */
-    text-decoration: none;
-    display: block;
-    padding: 5px 0;
+/* Estilo para el título de bienvenida */
+.welcome-title {
+    margin-left: 1rem;
 }
 
-.dropdown-content a:hover {
-    background-color: #ebdbdb;
-}
-
-
-.menu .dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.menu h1 {
-    text-align: center;
-    margin: 20px 0;
-}
-
+/* Estilo para la tabla */
 table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.table-container {
-    max-width: 80%;
-    margin: 20px 0;
-    overflow-x: auto;
-    padding: 20px;
-}
-
+/* Estilo para el contenedor de encabezado fijo */
 .header_fixed {
-    max-height: 100vh;
     width: 100%;
-    overflow: auto;
-    border: 1px solid #ffffff;
+    border: 1px solid #fffcfc;
 }
 
+/* Estilo para las celdas de encabezado de la tabla */
 .header_fixed thead th {
     position: sticky;
+    text-align: center;
     top: 0;
-    background-color: #f3f2f2;
+    background-color: rgb(211, 200, 200);
     color: #070707;
     font-size: 15px;
 }
 
-table {
-    width: 100%;
-    overflow-x: auto;
+/* Estilo específico para el encabezado de la tabla */
+#table-header {
+    text-align: center;
+    font-size: 24px;
 }
 
+/* Estilo general para celdas de la tabla */
 th,
 td {
     border-bottom: 1px solid #dddddd;
@@ -140,27 +77,24 @@ td {
     font-size: 14px;
 }
 
-td img {
-    height: 60px;
-    width: 60px;
-    border-radius: 100%;
-    border: 5px solid #e6e7e8;
-}
-
+/* Estilo para filas pares de la tabla */
 tr:nth-child(even) {
     background-color: #dddddd;
 }
 
+/* Estilo para filas impares de la tabla */
 tr:nth-child(odd) {
     background-color: #edeef1;
 }
 
-tr:hover td {
-    color: #44b478;
+/* Estilo para filas al pasar el cursor */
+tr:hover {
+    color: #050505;
     cursor: pointer;
-    background-color: #ffffff;
+    background-color: #8BC34A;
 }
 
+/* Estilo para botones en las celdas de la tabla */
 td button {
     border: none;
     padding: 7px 20px;
@@ -169,100 +103,34 @@ td button {
     color: #e6e7e8;
 }
 
-::-webkit-scrollbar {
-    width: 6px;
-}
-
-::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(207, 66, 66, 0.3);
-}
-
-::-webkit-scrollbar-thumb {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
-
-/* Estilos personalizados para el botón */
-#vaciarDatos.custom-button {
-    background-color: white;
-    border-radius: 8px;
-    color: #000;
-    border: 1px solid #ccc;
-    padding: 5px 10px;
-    margin-top: 20px;
-    /* Agrega un espacio vertical entre el botón y la tabla */
-    font-weight: bold;
-    /* Hace que el texto sea negritas */
-    display: flex;
-    /* Utiliza el modelo de caja flexible */
-    justify-content: space-between;
-    /* Distribuye los elementos con espacio entre ellos */
-    align-items: center;
-    /* Centra verticalmente los elementos */
-    flex-direction: row-reverse;
-    /* Invierte la dirección de los elementos */
-}
-
-/* Estilo para el icono dentro del botón */
-#vaciarDatos.custom-button i {
-    margin-left: 9px;
-    /* Agrega un margen a la derecha del icono */
-    opacity: 0.5;
-    /* Establece la transparencia del icono (0.7 = 70% de opacidad) */
-}
-
-/* Cambio de estilo al pasar el ratón por encima (opcional) */
-#vaciarDatos.custom-button:hover {
-    background-color: #f0f0f0;
-}
-
-/* Estilo para el contenedor de búsqueda */
 /* Estilo para el contenedor de búsqueda */
 .search {
     background-color: #b8b3b3;
-    border: 1cap solid #fffbfb;
+    border: 1px solid #fffbfb;
     border-radius: 5px;
     padding: 3px;
     width: 100%;
-    /* Ajusta el ancho a tu preferencia */
     display: flex;
     align-items: center;
     flex-direction: row-reverse;
-    /* Invierte la dirección de los elementos */
 }
 
-/* Estilo para el icono de búsqueda */
-.search::before {
-    content: '\f002';
-    /* Código Unicode del icono de búsqueda (puedes cambiarlo) */
-    font-family: 'Font Awesome 5 Free';
-    /* Fuente de Font Awesome */
-    font-weight: 600;
-    font-size: 16px;
-    color: #fdf8f8;
-    /* Color del icono */
-    margin-left: 5px;
-    /* Cambiamos margin-right a margin-left */
-}
-
+/* Estilo para el input de búsqueda */
 .search input[type="text"] {
     border: none;
     outline: none;
     width: 100%;
-    /* Esto hará que el input ocupe todo el ancho del contenedor */
     margin-left: 5px;
-    /* Puedes ajustar el margen según sea necesario */
     padding: 5px;
-    /* Puedes ajustar el padding según sea necesario */
 }
 
+/* Estilo para el botón de búsqueda */
 .search-button {
     display: inline-flex;
     align-items: center;
     cursor: pointer;
-    padding: 0px;
-    border: 0px solid #ccc;
+    padding: 0;
     width: 800px;
-    /* Ajusta el ancho a tu preferencia */
     border-radius: 5px;
     transition: background-color 0.3s;
 }
@@ -271,205 +139,59 @@ td button {
     background-color: #ccc;
 }
 
-.accion-button {
-    width: 40px;
-    /* Ancho deseado */
-    height: 40px;
-    /* Alto deseado */
-    padding: 0;
-    /* Elimina el relleno interno */
-    border: none;
-    /* Elimina el borde */
-    background-color: transparent;
-    /* Fondo transparente */
-    cursor: pointer;
-    /* Cambia el cursor al pasar el ratón */
-}
-
-.accion-button i {
-    font-size: 20px;
-    /* Tamaño del icono */
-    color: #000;
-    /* Color del icono */
-}
-
-/* Estilos personalizados para el botón y el menú desplegable */
-.Jefe .btn-secondary {
-    background-color: transparent !important;
-    /* Fondo transparente */
-    border: none !important;
-    /* Sin borde */
-    color: black !important;
-    /* Color de texto en negro */
-    font-weight: bold !important;
-    /* Texto en negritas */
-}
-
-.Jefe .dropdown-menu {
-    background-color: transparent !important;
-    /* Fondo transparente */
-    border: none !important;
-    /* Sin borde */
-}
-
-/* Cambio de estilo al pasar el ratón por encima (opcional) */
-.Jefe .btn-secondary:hover {
-    background-color: rgb(128, 125, 125) !important;
-    /* Fondo transparente al pasar el ratón */
-}
-
-.Jefe .dropdown-item:hover {
-    background-color: transparent !important;
-    /* Fondo transparente al pasar el ratón */
-    color: black !important;
-    /* Color de texto en negro al pasar el ratón */
-}
-
-@media screen and (max-width: 768px) {
-
-    /* Add your responsive styles here */
-    body {
-        font-size: 14px;
-    }
-}
-
-img {
-    max-width: 100%;
-    height: auto;
-}
-
-table tr td .Aceptar {
-    width: 40px;
-    /* Ancho deseado */
-    height: 40px;
-    /* Alto deseado */
-    padding: 0;
-    /* Elimina el relleno interno */
-    border: 2px solid black;
-    /* Elimina el borde */
-    background-color: rgb(11, 255, 153);
-    /* Cambia el color de fondo del botón según tus preferencias */
-    color: #000000;
-    /* Cambia el color del texto del botón según tus preferencias */
-    border-radius: 50%;
-    /* Hace que el botón sea circular */
-    cursor: pointer;
-    /* Cambia el cursor al pasar el ratón */
-    display: flex;
-    /* Utiliza el modelo de caja flexible */
-    justify-content: center;
-    /* Centra horizontalmente el contenido del botón */
-    align-items: center;
-    /* Centra verticalmente el contenido del botón */
-}
-
-table tr td .rechazar {
-    width: 40px;
-    /* Ancho deseado */
-    height: 40px;
-    /* Alto deseado */
-    padding: 0;
-    /* Elimina el relleno interno */
-    border: 2px solid black;
-    /* Elimina el borde */
-    background-color: rgb(255, 27, 27);
-    /* Cambia el color de fondo del botón según tus preferencias */
-    color: #070707;
-    /* Cambia el color del texto del botón según tus preferencias */
-    border-radius: 50%;
-    /* Hace que el botón sea circular */
-    cursor: pointer;
-    /* Cambia el cursor al pasar el ratón */
-    display: flex;
-    /* Utiliza el modelo de caja flexible */
-    justify-content: center;
-    /* Centra horizontalmente el contenido del botón */
-    align-items: center;
-    /* Centra verticalmente el contenido del botón */
-}
-
-table tr td .pape {
-    width: 40px;
-    /* Ancho deseado */
-    height: 40px;
-    /* Alto deseado */
-    padding: 0;
-    /* Elimina el relleno interno */
-    border: 2px solid black;
-    /* Elimina el borde */
-    background-color: rgb(73, 255, 27);
-    /* Cambia el color de fondo del botón según tus preferencias */
-    color: #070707;
-    /* Cambia el color del texto del botón según tus preferencias */
-    border-radius: 50%;
-    /* Hace que el botón sea circular */
-    cursor: pointer;
-    /* Cambia el cursor al pasar el ratón */
-    display: flex;
-    /* Utiliza el modelo de caja flexible */
-    justify-content: center;
-    /* Centra horizontalmente el contenido del botón */
-    align-items: center;
-    /* Centra verticalmente el contenido del botón */
-}
-
-table tr td .info {
-    width: 40px;
-    /* Ancho deseado */
-    height: 40px;
-    /* Alto deseado */
-    padding: 0;
-    /* Elimina el relleno interno */
-    border: 2px solid black;
-    /* Elimina el borde */
-    background-color: rgb(225, 230, 223);
-    /* Cambia el color de fondo del botón según tus preferencias */
-    color: #070707;
-    /* Cambia el color del texto del botón según tus preferencias */
-    border-radius: 50%;
-    /* Hace que el botón sea circular */
-    cursor: pointer;
-    /* Cambia el cursor al pasar el ratón */
-    display: flex;
-    /* Utiliza el modelo de caja flexible */
-    justify-content: center;
-    /* Centra horizontalmente el contenido del botón */
-    align-items: center;
-    /* Centra verticalmente el contenido del botón */
-}
-
+/* Estilo para iconos dentro de celdas de la tabla */
 table tr td i {
     display: flex;
     gap: 10px;
 }
 
+/* Estilo para contenedor de botones */
 .botones-container {
     display: flex;
     gap: 10px;
-    /* Agrega un espacio de 10px entre los botones */
 }
 
-.user-dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 8px;
-    z-index: 1000;
-}
-
-.user-dropdown-menu button {
-    display: block;
-    width: 100%;
-    text-align: left;
-    padding: 8px 16px;
-    border: none;
-    background-color: transparent;
+/* Estilos específicos para botones */
+table tr td .Aceptar,
+table tr td .rechazar,
+table tr td .pape,
+table tr td .info {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 2px solid black;
+    border-radius: 50%;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.user-dropdown-menu button:hover {
-    background-color: #8d0000;
+table tr td .Aceptar {
+    background-color: rgb(11, 255, 153);
+    color: #000000;
+}
+
+table tr td .rechazar {
+    background-color: rgb(255, 27, 27);
+    color: #070707;
+}
+
+table tr td .pape {
+    background-color: rgb(241, 238, 46);
+    color: #070707;
+}
+
+table tr td .info {
+    background-color: rgb(225, 230, 223);
+    color: #070707;
+}
+
+/* Estilo para el botón Ver PDF */
+.view-pdf {
+    border: none;
+    padding: 7px 20px;
+    border-radius: 20px;
+    background-color: black;
+    color: #e6e7e8;
 }

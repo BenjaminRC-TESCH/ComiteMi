@@ -136,8 +136,25 @@ export class DataService {
         return this.minuto;
     }
 
-    // Método para enviar los estados de los alumnos
-    enviarEstadosAlumnos(estadosAlumnos: { id: string; Estado: number }[]): Observable<any> {
-        return this.http.put(`${this.URL}/estados-alumnos`, estadosAlumnos);
+    // Método para enviar los estados de los alumnos y asistentes seleccionados
+    enviarEstadosAlumnos(
+        estadosAlumnos: { id: string; Estado: number }[],
+        asistentes: { id: string; email: string }[],
+        datosActa
+    ): Observable<any> {
+        return this.http.put(`${this.URL}/estados-alumnos`, { estadosAlumnos, asistentes, datosActa });
+    }
+
+    resetDatos(): void {
+        this.tipoSesion = '';
+        this.asistentesSeleccionados = [];
+        this.DGeneral = [];
+        this.Solucion = [];
+        this.dia = '';
+        this.mes = '';
+        this.anio = '';
+        this.hora = '';
+        this.minuto = '';
+        this.direccionGeneral = '';
     }
 }

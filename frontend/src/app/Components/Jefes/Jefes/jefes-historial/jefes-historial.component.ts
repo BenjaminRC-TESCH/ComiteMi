@@ -84,12 +84,20 @@ export class JefesHistorialComponent implements OnInit {
         window.open(pdfPath, '_blank');
     }
 
-    buscarPorMatricula(event: Event) {
-        const matricula = (event.target as HTMLInputElement).value;
-        if (matricula === '') {
-            this.obtenerHistorialJefe(this.userToken); // Si el campo está vacío, mostrar todos los alumnos
+    //Metodo para buscar alumno por matricula, carrera, nombre y tipo de caso
+    buscarAlumno(event: Event) {
+        const query = (event.target as HTMLInputElement).value.toLowerCase();
+        if (query === '') {
+            this.obtenerHistorialJefe(this.userToken);
         } else {
-            this.Alumno = this.Alumno.filter((alumno) => alumno.matricula.toString().includes(matricula));
+            this.Alumno = this.Alumno.filter(
+                (alumno) =>
+                    alumno.matricula.toString().includes(query) ||
+                    alumno.nombreCom.toLowerCase().includes(query) ||
+                    alumno.carrera.toLowerCase().includes(query) ||
+                    alumno.casoTipo.toLowerCase().includes(query) ||
+                    alumno.casoEsta.toLowerCase().includes(query)
+            );
         }
     }
 }

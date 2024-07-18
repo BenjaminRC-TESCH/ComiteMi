@@ -41,6 +41,7 @@ const IdRoles = {
 
 const Mensajes = {
     SUCCESS_ACEPT_SECRE: 'Tu solicitud ha sido aceptada por la Secretaría del comité académico',
+    SUCCESS_ACEPT_COMI: 'Tu solicitud ha sido aceptada por el comité académico',
     REJECTED_SECRE: 'Solicitud Rechazada por la Secretaría del comité académico',
     ERROR_REV_COMITE: 'El caso está en revisión por el comité académico.',
     ERROR_REV_SECRE: 'El caso está en revisión por la secretaria del comité académico.',

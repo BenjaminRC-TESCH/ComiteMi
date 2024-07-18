@@ -1,9 +1,11 @@
+/* Estilo para el host principal */
 :host {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
+/* Estilo para el elemento principal */
 main {
     flex: 1;
     display: flex;
@@ -17,10 +19,10 @@ main {
     margin-top: 60px;
 }
 
+/* Estilo para el contenedor principal */
 .container {
     box-shadow: 0 0 10px rgba(0, 0, 0.1, 0.1);
     width: 100%;
-    box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -28,6 +30,7 @@ main {
     margin: 0 auto;
 }
 
+/* Estilo para la tarjeta de sesión */
 .card1 {
     margin: 0 10%;
     width: 80%;
@@ -37,6 +40,7 @@ main {
     margin-top: 25px;
 }
 
+/* Estilo para la tarjeta de información */
 .card {
     margin: 0 10%;
     width: 80%;
@@ -45,31 +49,37 @@ main {
     margin-bottom: 20px;
 }
 
-.card input{
+/* Estilo para los inputs dentro de la tarjeta */
+.card input {
     display: inline-block;
 }
 
+/* Estilo para el párrafo */
 .p {
     text-align: center;
     margin-top: 30px;
 }
 
+/* Estilo para los elementos de formulario con clase form-check */
 .form-check {
     width: 90%;
     margin-left: 10%;
 }
 
+/* Estilo para los elementos de formulario con clase form-check1 */
 .form-check1 {
     width: 80%;
     margin-left: 12%;
 }
 
+/* Estilo para los campos editables */
 .editableFiled {
     background-color: black;
     color: white;
 }
 
-.btn{
+/* Estilo para los botones */
+.btn {
     margin: 5% 0 3% 0;
     width: 1000px;
 }

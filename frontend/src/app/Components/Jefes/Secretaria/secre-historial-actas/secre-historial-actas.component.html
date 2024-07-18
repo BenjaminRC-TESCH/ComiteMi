@@ -1,23 +1,25 @@
 <app-nav-secretaria></app-nav-secretaria>
 
 <main>
-
     <div>
-        <div class="align-text-center d-flex flex-column align-items-center">
-            <img src="assets/images/Aceptado.png" alt="Imagen de bienvenida" width="70" height="60"
-                style="display: inline-block;">
-            <h1 style="display: inline-block;">ACEPTADOS</h1>
+        <div class="align-text-center">
+            <img src="assets/images/book.png" alt="Imagen de bienvenida" class="welcome-image">
+            <h1 class="welcome-title">HISTORIAL DE ACTAS</h1>
         </div>
-
+        <div class="search-button mt-3">
+            <div class="search">
+                <input type="text" placeholder="Buscar..." (keyup)="buscarActa($event)">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
     </div>
 
     <div class="header_fixed">
         <div class="search-table-container">
-
             <table>
                 <thead>
                     <tr>
-                        <th colspan="8" style="text-align: left; font-size: 20px;">ACTAS GENERADAS</th>
+                        <th colspan="8" class="table-header">ACTAS GENERADAS</th>
                     </tr>
                     <tr>
                         <th>Número Acta</th>
@@ -35,10 +37,8 @@
                     </tr>
                 </tbody>
             </table>
-
         </div>
     </div>
-
 </main>
 
 <app-footer></app-footer>

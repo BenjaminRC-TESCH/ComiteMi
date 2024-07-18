@@ -31,6 +31,16 @@ export class SecreRevisionAlumnoComponent implements OnInit {
         this.obtenerAlumnosAceptados();
         this.tipoSesion = this.dataService.getTipoSesion();
         this.loadFromLocalStorage();
+
+        const hora = this.dataService.getHora();
+        const minutos = this.dataService.getMinuto();
+        const dia = this.dataService.getdia();
+        const mes = this.dataService.getMes();
+        const anio = this.dataService.getAnio();
+
+        if (!this.tipoSesion || !this.getDireccionGeneral()) {
+            this.router.navigate(['/secretaria-acta-uno']);
+        }
     }
 
     obtenerInformacionActa() {

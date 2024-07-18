@@ -37,10 +37,13 @@ GET http://127.0.0.1:4000/api/get/secretaria/aceptador/comite
 
 
 ###
-GET http://127.0.0.1:4000/api/acta/number
+GET http://127.0.0.1:4000/api/get/acta/number
+
+###
+GET http://127.0.0.1:4000/api/actas
 
 ###
 GET http://127.0.0.1:4000/api/get/participantes/acta
 
 ###
-GET http://127.0.0.1:4000/api/get/acta/number
+GET http://127.0.0.1:4000/api/historial/jefes/comite/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWRmYjJlMmRhNzE3M2JjMmE5ZDgzMTkiLCJyb2wiOiIxOTk4MiIsImlhdCI6MTcyMTI4ODI5M30.WCjVl1xDO7gTz-rPoZUvhyMoMgGVTlT1Vrs6ZDxFq2U

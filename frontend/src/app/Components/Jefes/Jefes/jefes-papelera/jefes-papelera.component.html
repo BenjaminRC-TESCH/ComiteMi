@@ -1,56 +1,58 @@
 <app-nav-jefes></app-nav-jefes>
 
 <main>
-    <div class="align-text-center d-flex flex-column align-items-center">
-        <div class="d-flex align-items-center">
-            <img src="assets/images/Papelera.png" alt="Imagen de bienvenida" width="70" height="60">
-            <h1 class="ml-2">PAPELERA</h1>
+    <div class="align-text-center">
+        <div class="welcome-container">
+            <img src="assets/images/Papelera.png" alt="Imagen de bienvenida" class="welcome-image">
+            <h1 class="welcome-title">PAPELERA</h1>
         </div>
         <div class="search-button mt-3">
             <div class="search">
-                <input type="text" class="form-control" placeholder="Buscar...">
+                <input type="text" placeholder="Buscar...">
                 <i class="fas fa-search"></i>
             </div>
         </div>
     </div>
 
     <div class="header_fixed">
-        <table class="table table-striped mt-3">
-            <thead>
-                <tr>
-                    <th colspan="7" style="text-align: left; font-size: 20px;">CASOS ELIMINADOS</th>
-                </tr>
-                <tr>
-                    <th>MATRICULA</th>
-                    <th>NOMBRE COMPLETO</th>
-                    <th>CARRERA</th>
-                    <th>TIPO DE CASO</th>
-                    <th>ESTADO</th>
-                    <th>FECHA DE CREACION</th>
-                    <th>ACCIONES</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let alumno of alumnosReciclaje">
-                    <td>{{ alumno.matricula }}</td>
-                    <td>{{ alumno.nombreCom }}</td>
-                    <td>{{ alumno.carrera }}</td>
-                    <td>{{ alumno.casoTipo }}</td>
-                    <td>{{ alumno.casoEsta }}</td>
-                    <td>{{ alumno.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
-                    <td>
-                        <div class="botones-container">
-                            <button class="btn btn-primary mr-2" (click)="restablecerAlumno(alumno._id)">
-                                <i class="fas fa-undo"></i> Restablecer
-                            </button>
-                            <button class="btn btn-danger" (click)="eliminarAlumnoReciclado(alumno._id)">
-                                <i class="fas fa-trash-alt"></i> Eliminar
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="search-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="8" id="table-header">CASOS ELIMINADOS</th>
+                    </tr>
+                    <tr>
+                        <th>MATRÍCULA</th>
+                        <th>NOMBRE COMPLETO</th>
+                        <th>CARRERA</th>
+                        <th>TIPO DE CASO</th>
+                        <th>ESTADO</th>
+                        <th>FECHA DE CREACION</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let alumno of alumnosReciclaje">
+                        <td>{{ alumno.matricula }}</td>
+                        <td>{{ alumno.nombreCom }}</td>
+                        <td>{{ alumno.carrera }}</td>
+                        <td>{{ alumno.casoTipo }}</td>
+                        <td>{{ alumno.casoEsta }}</td>
+                        <td>{{ alumno.updatedAt | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                        <td>
+                            <div class="botones-container ">
+                                <button class="resta" (click)="restablecerAlumno(alumno._id)">
+                                    <i class="material-icons">undo</i>
+                                </button>
+                                <button class="delete" (click)="eliminarAlumnoReciclado(alumno._id)">
+                                    <i class="material-icons">delete</i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </main>
 

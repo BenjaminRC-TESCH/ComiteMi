@@ -47,6 +47,9 @@ export class SecreActaDosComponent implements OnInit {
     hora: string = '';
     minuto: string = '';
 
+    numeroSesionRomano: string = '';
+    numeroSesionWord: string = '';
+
     constructor(private router: Router, private dataService: DataService, private SecretariaTsService: SecretariaTsService) {
         this.currentDateAndTime = this.getCurrentDateTimeFormatted();
     }
@@ -65,6 +68,10 @@ export class SecreActaDosComponent implements OnInit {
         const dia = this.getDia();
         const mes = this.getMes();
         const mesNumero = this.getMesNumero();
+
+        if (!this.tipoSesion || !this.asistentesSeleccionados) {
+            this.router.navigate(['/secretaria-acta-uno']);
+        }
     }
 
     getAsistentes(): void {
@@ -199,6 +206,8 @@ export class SecreActaDosComponent implements OnInit {
             (data) => {
                 this.palabras = data.words;
                 this.romano = data.roman;
+                this.numeroSesionRomano = data.roman;
+                this.numeroSesionWord = data.words;
             },
             (error) => {
                 console.error('Error al obtener la información del acta:', error);
@@ -278,9 +287,24 @@ export class SecreActaDosComponent implements OnInit {
         }).then((result) => {
             if (result.isConfirmed) {
                 const estadosAlumnos = JSON.parse(localStorage.getItem('EstadosAlumnos') || '[]');
-                this.dataService.enviarEstadosAlumnos(estadosAlumnos).subscribe(
+                const asistentes = this.asistentesSeleccionados.map((asistente) => ({
+                    id: asistente.id,
+                    email: asistente.email,
+                }));
+
+                const datosActa = {
+                    hora: this.dataService.getHora(),
+                    minutos: this.dataService.getMinuto(),
+                    dia: this.dataService.getdia(),
+                    mes: this.dataService.getMes(),
+                    anio: this.dataService.getAnio(),
+                    tipoSesion: this.dataService.getTipoSesion(),
+                    numeroRomano: this.numeroSesionRomano,
+                    numeroWord: this.numeroSesionWord,
+                };
+
+                this.dataService.enviarEstadosAlumnos(estadosAlumnos, asistentes, datosActa).subscribe(
                     (response) => {
-                        console.log('Estados de alumnos enviados exitosamente:', response);
                         this.generatePDF1();
                     },
                     (error) => {
@@ -407,7 +431,7 @@ export class SecreActaDosComponent implements OnInit {
                                 { text: '(X)', alignment: 'center' },
                             ],
                             [{}, {}, { text: 'NO', alignment: 'center' }, { text: '(X)', alignment: 'center' }],
-                            [{ text: '', colSpan: 4, height: 120 }],
+                            [{ text: '\n\n\n\n', colSpan: 4, height: 120 }],
                             [
                                 {
                                     text: this.getDireccionGeneral() + '\nDIRECCIÓN GENERAL' + '\nTESCHA',
@@ -659,6 +683,7 @@ export class SecreActaDosComponent implements OnInit {
                         confirmButtonText: 'Aceptar',
                     }).then((result) => {
                         if (result.isConfirmed) {
+                            localStorage.clear();
                             this.router.navigate(['/secretaria-historial-actas']);
                         }
                     });

@@ -4,6 +4,12 @@ const User = require('../../models/User');
 const { Comite, Reciclaje } = require('../../models/Comites.js');
 const Roles = require('../../models/Roles.js');
 const fs = require('fs');
+const Alumno = require('../../models/Students.js');
+
+const PASS_COMI = process.env.PASS_COMI;
+const EMAIL_COMI = process.env.EMAIL_COMI;
+
+const nodemailer = require('nodemailer');
 
 const { Estados, Carreras, IdRoles, Mensajes } = require('../../config/statuses');
 
@@ -221,7 +227,7 @@ actaCtrl.Act = async (req, res) => {
 // Metodo para obtener los participantes (Excepcion al administrador)
 actaCtrl.getPart = async (req, res) => {
     try {
-        const users = await User.find({}, 'name roles');
+        const users = await User.find({}, 'name email roles');
 
         const filteredUsers = users.filter((user) => !user.roles.includes('1000'));
 
@@ -236,6 +242,7 @@ actaCtrl.getPart = async (req, res) => {
             const userRoles = user.roles.map((roleId) => rolesMap[roleId]);
             return {
                 name: user.name,
+                email: user.email,
                 roles: userRoles,
             };
         });
@@ -277,19 +284,60 @@ actaCtrl.getActaById = async (req, res) => {
 };
 
 //Metodo para actualizar el estado de los alumnos a Aceptados o rechazados por el comite cuando se genere el pdf
+//Y para mandar correos a alumnos que han sido aceptados y para dar aviso a administrativos
 actaCtrl.updateAlumnosAceptados = async (req, res) => {
     try {
-        const estadosAlumnos = req.body; // Los estados llegan en el cuerpo de la solicitud
+        const { estadosAlumnos, asistentes, datosActa } = req.body;
 
         if (!estadosAlumnos || estadosAlumnos.length === 0) {
             return res.status(400).json({ message: 'No se proporcionaron estados válidos.' });
         }
 
-        // Iterar sobre cada estado recibido
+        // Configuración del transporte de correo
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: EMAIL_COMI,
+                pass: PASS_COMI,
+            },
+        });
+
+        // Enviar correos a los asistentes
+        if (asistentes && asistentes.length > 0) {
+            for (const asistente of asistentes) {
+                const mailPart = {
+                    from: EMAIL_COMI,
+                    to: asistente.email,
+                    subject: 'Comité académico TESCHA - Aviso de Convocatoria',
+                    text: `Por medio de la presente, se convoca a todos los miembros a la ${datosActa.numeroWord} (${datosActa.numeroRomano}) sesión ${datosActa.tipoSesion}  , que se llevará a cabo el dia ${datosActa.dia} de ${datosActa.mes} de ${datosActa.anio}, a las ${datosActa.hora}:${datosActa.minutos} horas en la sala de juntas de la Dirección Académica del edificio Bicentenario de la Independencia del Tecnológico de Estudios Superiores de Chalco “TESCHA”`,
+                };
+
+                await transporter.sendMail(mailPart);
+            }
+        }
+
+        // Iterar sobre cada estado recibido para los alumnos
         for (const estado of estadosAlumnos) {
             const { id, Estado } = estado;
 
-            // Validar que el estado sea '1' o '0'
+            // Buscar el correo del alumno por su ID
+            const alumno = await Comite.findById(id);
+            if (!alumno) {
+                console.warn(`No se encontró un alumno con el ID ${id}`);
+                continue;
+            }
+
+            // Enviar correo al alumno
+            const mailAlum = {
+                from: EMAIL_COMI,
+                to: alumno.correo,
+                subject: Mensajes.SUCCESS_ACEPT_COMI,
+                text: `Aviso para los alumnos`,
+            };
+
+            await transporter.sendMail(mailAlum);
+
+            // Validar y actualizar el estado del alumno
             if (Estado === '1') {
                 // Actualizar estado a 'Aceptado por el comité académico'
                 await Comite.findOneAndUpdate({ _id: id }, { casoEsta: Estados.ACEPTADO_COMITE }, { new: true });

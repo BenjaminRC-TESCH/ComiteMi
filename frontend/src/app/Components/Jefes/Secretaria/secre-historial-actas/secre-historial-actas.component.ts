@@ -12,6 +12,7 @@ export class SecreHistorialActasComponent implements OnInit {
     constructor(private actaService: DataService) {}
 
     ngOnInit(): void {
+        this.resetDatosService();
         this.getActas();
     }
 
@@ -37,5 +38,21 @@ export class SecreHistorialActasComponent implements OnInit {
                 console.error('Error al obtener el PDF', error);
             }
         );
+    }
+
+    resetDatosService(): void {
+        this.actaService.resetDatos();
+    }
+
+    //Metodo para buscar alumno por matricula, carrera, nombre y tipo de caso
+    buscarActa(event: Event) {
+        const query = (event.target as HTMLInputElement).value.toLowerCase();
+        if (query === '') {
+            this.getActas();
+        } else {
+            this.actas = this.actas.filter(
+                (alumno) => alumno.number.toString().includes(query) || alumno.ordinal.toLowerCase().includes(query)
+            );
+        }
     }
 }
