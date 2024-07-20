@@ -586,6 +586,7 @@ export class SecreActaDosComponent implements OnInit {
                             alignment: 'justify',
                         },
                     ],
+                    pageBreak: 'after',
                 },
                 { text: '\n\n' },
                 tableContent2,
