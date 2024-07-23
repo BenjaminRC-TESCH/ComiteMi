@@ -8,10 +8,11 @@ const Alumno = require('../../models/Students.js');
 
 const PASS_COMI = process.env.PASS_COMI;
 const EMAIL_COMI = process.env.EMAIL_COMI;
-
+const path = require('path');
 const nodemailer = require('nodemailer');
 
-const { Estados, Carreras, IdRoles, Mensajes } = require('../../config/statuses');
+const { Estados, Subject } = require('../../config/statuses');
+const templatesDir = path.resolve(__dirname, '../../templates'); //Exporta los templates para el envio de correos
 
 //Metodo para convertir a ordinales
 const convertToWords = (number) => {
@@ -293,7 +294,7 @@ actaCtrl.updateAlumnosAceptados = async (req, res) => {
             return res.status(400).json({ message: 'No se proporcionaron estados válidos.' });
         }
 
-        // Configuración del transporte de correo
+        // Configurar el transporte de nodemailer
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -302,14 +303,28 @@ actaCtrl.updateAlumnosAceptados = async (req, res) => {
             },
         });
 
+        // Cargar la plantilla de correo para la reunión desde el archivo
+        const templateMeeting = path.join(templatesDir, 'email_meeting.html');
+        const htmlMeeting = await fs.promises.readFile(templateMeeting, 'utf8');
+
+        const filledMeetingTemplate = htmlMeeting
+            .replace('{{numeroWord}}', datosActa.numeroWord)
+            .replace('{{numeroRomano}}', datosActa.numeroRomano)
+            .replace('{{tipoSesion}}', datosActa.tipoSesion)
+            .replace('{{dia}}', datosActa.dia)
+            .replace('{{mes}}', datosActa.mes)
+            .replace('{{anio}}', datosActa.anio)
+            .replace('{{hora}}', datosActa.hora)
+            .replace('{{minutos}}', datosActa.minutos);
+
         // Enviar correos a los asistentes
         if (asistentes && asistentes.length > 0) {
             for (const asistente of asistentes) {
                 const mailPart = {
                     from: EMAIL_COMI,
                     to: asistente.email,
-                    subject: 'Comité académico TESCHA - Aviso de Convocatoria',
-                    text: `Por medio de la presente, se convoca a todos los miembros a la ${datosActa.numeroWord} (${datosActa.numeroRomano}) sesión ${datosActa.tipoSesion}  , que se llevará a cabo el dia ${datosActa.dia} de ${datosActa.mes} de ${datosActa.anio}, a las ${datosActa.hora}:${datosActa.minutos} horas en la sala de juntas de la Dirección Académica del edificio Bicentenario de la Independencia del Tecnológico de Estudios Superiores de Chalco “TESCHA”`,
+                    subject: Subject.SUBJECT_COMITE_MEETING,
+                    html: filledMeetingTemplate,
                 };
 
                 await transporter.sendMail(mailPart);
@@ -327,28 +342,41 @@ actaCtrl.updateAlumnosAceptados = async (req, res) => {
                 continue;
             }
 
+            let templatePath;
+            let subjectMail;
+
+            // Seleccionar la plantilla y el asunto según el estado
+            if (Estado === '1') {
+                templatePath = path.join(templatesDir, 'email_comite_comi_accepted.html');
+                subjectMail = Subject.SUBJECT_COMITE_ACCEPTED;
+            } else if (Estado === '0') {
+                templatePath = path.join(templatesDir, 'email_comite_comi_rejected.html');
+                subjectMail = Subject.SUBJECT_COMITE_REJECTED; // Asegúrate de tener un mensaje para rechazo
+            } else {
+                console.warn(`Estado inválido recibido para el alumno con ID ${id}: ${Estado}`);
+                continue;
+            }
+
+            // Cargar la plantilla de correo desde el archivo
+            const htmlTemplate = await fs.promises.readFile(templatePath, 'utf8');
+
+            // Reemplazar placeholders en la plantilla
+            const filledTemplate = htmlTemplate.replace('{{nombre}}', alumno.nombreCom);
+
             // Enviar correo al alumno
             const mailAlum = {
                 from: EMAIL_COMI,
                 to: alumno.correo,
-                subject: Mensajes.SUCCESS_ACEPT_COMI,
-                text: `Aviso para los alumnos`,
+                subject: subjectMail,
+                html: filledTemplate, // Usar el contenido HTML rellenado
             };
 
             await transporter.sendMail(mailAlum);
 
-            // Validar y actualizar el estado del alumno
-            if (Estado === '1') {
-                // Actualizar estado a 'Aceptado por el comité académico'
-                await Comite.findOneAndUpdate({ _id: id }, { casoEsta: Estados.ACEPTADO_COMITE }, { new: true });
-                await Reciclaje.findOneAndUpdate({ _id: id }, { casoEsta: Estados.ACEPTADO_COMITE }, { new: true });
-            } else if (Estado === '0') {
-                // Actualizar estado a 'Rechazado por el comité académico'
-                await Comite.findOneAndUpdate({ _id: id }, { casoEsta: Estados.RECHAZADO_COMITE }, { new: true });
-                await Reciclaje.findOneAndUpdate({ _id: id }, { casoEsta: Estados.RECHAZADO_COMITE }, { new: true });
-            } else {
-                console.warn(`Estado inválido recibido para el alumno con ID ${id}: ${Estado}`);
-            }
+            // Actualizar el estado del alumno en la base de datos
+            const nuevoEstado = Estado === '1' ? Estados.ACEPTADO_COMITE : Estados.RECHAZADO_COMITE;
+            await Comite.findOneAndUpdate({ _id: id }, { casoEsta: nuevoEstado }, { new: true });
+            await Reciclaje.findOneAndUpdate({ _id: id }, { casoEsta: nuevoEstado }, { new: true });
         }
 
         res.status(200).json({ message: 'Estados actualizados exitosamente.' });

@@ -21,82 +21,84 @@ const PASS_INFORMATICA = process.env.PASS_INFORMATICA;
 const EMAIL_ADMINISTRACION = process.env.EMAIL_ADMINISTRACION;
 const PASS_ADMINISTRACION = process.env.PASS_ADMINISTRACION;
 
+const { Carreras, IdRoles, Subject, Auth_Messages, Auth_Routes } = require('../../config/statuses');
+
 //const templatesDir = path.resolve(__dirname, '../../email_templates');
-const templatesDir = path.resolve(__dirname, '../../templates');
+const templatesDir = path.resolve(__dirname, '../../templates'); //Exporta los templates para el envio de correos
 
 //Registro para estudiantes
 authCtrl.signupStudent = async (req, res) => {
     const { nombre, aPaterno, aMaterno, matricula, carrera, correo, password, confirmPassword } = req.body;
 
     if (!nombre || !aPaterno || !aMaterno || !matricula || !carrera || !correo || !password) {
-        return res.status(400).json({ message: 'Por favor completa todos los campos.' });
+        return res.status(400).json({ message: Auth_Messages.COMPLETE_FIELDS });
     }
 
     // Expresión regular para validar que el nombre y apellidos contengan solo letras
     const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
     if (!nameRegex.test(nombre)) {
-        return res.status(400).json({ message: 'Por favor ingresa un nombre válido.' });
+        return res.status(400).json({ message: Auth_Messages.INVALID_NAME });
     }
 
     if (!nameRegex.test(aPaterno)) {
-        return res.status(400).json({ message: 'Por favor ingresa un apellido paterno válido.' });
+        return res.status(400).json({ message: Auth_Messages.INVALID_PATERNAL_SURNAME });
     }
 
     if (!nameRegex.test(aMaterno)) {
-        return res.status(400).json({ message: 'Por favor ingresa un apellido materno válido.' });
+        return res.status(400).json({ message: Auth_Messages.INVALID_MATERNAL_SURNAME });
     }
 
     const parsedMatricula = parseInt(matricula, 10);
     if (isNaN(parsedMatricula) || parsedMatricula.toString().length !== 9) {
-        return res.status(400).json({ message: 'La matrícula debe tener exactamente 9 dígitos.' });
+        return res.status(400).json({ message: Auth_Messages.INVALID_MATRICULA });
     }
 
     const emailRegex = /^[a-zA-Z0-9._-]+@tesch\.edu\.mx$/;
     if (!emailRegex.test(correo)) {
-        return res.status(400).json({ message: 'El correo electrónico debe ser de dominio @tesch.edu.mx.' });
+        return res.status(400).json({ message: Auth_Messages.INVALID_EMAIL_DOMAIN });
     }
 
     if (confirmPassword != password) {
-        return res.status(400).json({ message: 'Las contraseñas no coinciden' });
+        return res.status(400).json({ message: Auth_Messages.PASSWORDS_NOT_MATCH });
     }
 
     // Verificar longitud y caracteres especiales de la contraseña
     const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,12})/;
     if (password && !passwordRegex.test(password)) {
         return res.status(400).json({
-            message: 'La contraseña debe tener entre 8 y 12 caracteres, al menos una letra mayúscula y un carácter especial.',
+            message: Auth_Messages.INVALID_PASSWORD,
         });
     }
 
     let jefeNombre, passJefe;
 
     switch (carrera) {
-        case 'Ingeniería en Sistemas Computacionales':
+        case Carreras.INGENIERIA_SISTEMAS:
             jefeNombre = EMAIL_SISTEMAS;
             passJefe = PASS_SISTEMAS;
             break;
 
-        case 'Ingeniería Industrial':
+        case Carreras.INGENIERIA_INDUSTRIAL:
             jefeNombre = EMAIL_INDUSTRIAL;
             passJefe = PASS_INDUSTRIAL;
             break;
 
-        case 'Ingeniería Electromecánica':
+        case Carreras.INGENIERIA_ELECTROMECANICA:
             jefeNombre = EMAIL_ELECTROMECANICA;
             passJefe = PASS_ELECTROMECANICA;
             break;
 
-        case 'Ingeniería Informática':
+        case Carreras.INGENIERIA_INFORMATICA:
             jefeNombre = EMAIL_INFORMATICA;
             passJefe = PASS_INFORMATICA;
             break;
 
-        case 'Ingeniería Electrónica':
+        case Carreras.INGENIERIA_ELECTRONICA:
             jefeNombre = EMAIL_ELECTRONICA;
             passJefe = PASS_ELECTRONICA;
             break;
 
-        case 'Ingeniería en Administración':
+        case Carreras.INGENIERIA_ADMINISTRACION:
             jefeNombre = EMAIL_ADMINISTRACION;
             passJefe = PASS_ADMINISTRACION;
             break;
@@ -109,12 +111,12 @@ authCtrl.signupStudent = async (req, res) => {
     try {
         const validateEmail = await Student.findOne({ correo: correo });
         if (validateEmail) {
-            return res.status(409).json({ message: 'El correo electrónico ya está en uso.' });
+            return res.status(409).json({ message: Auth_Messages.EMAIL_IN_USE });
         }
 
         const validateMatricula = await Student.findOne({ matricula: matricula });
         if (validateMatricula) {
-            return res.status(409).json({ message: 'La matrícula ya está en uso.' });
+            return res.status(409).json({ message: Auth_Messages.MATRICULA_IN_USE });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -133,7 +135,7 @@ authCtrl.signupStudent = async (req, res) => {
         });
 
         // Cargar la plantilla de correo desde el archivo
-        const templatePath = path.join(templatesDir, 'validacionCorreo.html');
+        const templatePath = path.join(templatesDir, 'email_validation.html');
         const html = await fs.readFile(templatePath, 'utf8');
 
         // Configuración del transporte para nodemailer (ajustar según tu proveedor de correo)
@@ -156,7 +158,7 @@ authCtrl.signupStudent = async (req, res) => {
         const mailOptions = {
             from: jefeNombre,
             to: correo,
-            subject: 'Código de verificación - Comité académico',
+            subject: Subject.SUBJECT_CODE_VALIDATION,
             html: filledTemplate,
         };
 
@@ -169,7 +171,7 @@ authCtrl.signupStudent = async (req, res) => {
 
         res.status(200).json({ token });
     } catch (error) {
-        res.status(500).json({ message: 'Error del servidor' + error });
+        res.status(500).json({ message: Auth_Messages.SERVER_ERROR + error });
     }
 };
 
@@ -178,7 +180,7 @@ authCtrl.signin = async (req, res) => {
     passport.authenticate('local', async (err, userObject, info) => {
         try {
             if (err) {
-                return res.status(500).json({ message: 'Internal Server Error' });
+                return res.status(500).json({ message: Auth_Messages.INTERNAL_SERVER_ERROR });
             }
 
             if (!userObject) {
@@ -201,7 +203,7 @@ authCtrl.signin = async (req, res) => {
             const redirectUrl = determineRedirectUrl(foundUser.roles[0]);
             return res.status(200).json({ success: true, token, redirect: redirectUrl });
         } catch (error) {
-            return res.status(500).json({ message: 'Error del servidor' });
+            return res.status(500).json({ message: Auth_Messages.SERVER_ERROR });
         }
     })(req, res);
 };
@@ -212,11 +214,11 @@ authCtrl.confirmRole = async (req, res) => {
     try {
         const foundUser = await User.findOne({ email });
         if (!foundUser) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
+            return res.status(404).json({ message: Auth_Messages.USER_NOT_FOUND });
         }
 
         if (!foundUser.roles.includes(role)) {
-            return res.status(400).json({ message: 'Rol no válido' });
+            return res.status(400).json({ message: Auth_Messages.INVALID_ROLE });
         }
 
         const token = jwt.sign({ _id: foundUser._id, rol: role }, 'secretkey');
@@ -224,19 +226,26 @@ authCtrl.confirmRole = async (req, res) => {
 
         return res.status(200).json({ success: true, token, redirect: redirectUrl });
     } catch (error) {
-        return res.status(500).json({ message: 'Error del servidor' });
+        return res.status(500).json({ message: Auth_Messages.SERVER_ERROR });
     }
 };
 
 const determineRedirectUrl = (role) => {
-    if (role === '20041' || role === '19981' || role === '19982' || role === '20042' || role === '20043' || role === '20201') {
-        return '/jefes-compendio';
-    } else if (role === '1001') {
-        return '/secretaria-aceptados';
-    } else if (role === '1000') {
-        return '/administrador';
+    if (
+        role === IdRoles.ID_ROL_ELECTROMECANICA ||
+        role === IdRoles.ID_ROL_INDUSTRIAL ||
+        role === IdRoles.ID_ROL_SISTEMAS ||
+        role === IdRoles.ID_ROL_ELECTRONICA ||
+        role === IdRoles.ID_ROL_INFORMATICA ||
+        role === IdRoles.ID_ROL_ADMINISTRACION
+    ) {
+        return Auth_Routes.JEFE_COMPENDIO;
+    } else if (role === IdRoles.ID_ROL_SECRETARIA) {
+        return Auth_Routes.SECRETARIA_ACEPTADOS;
+    } else if (role === IdRoles.ID_ROL_ADMINISTRADOR) {
+        return Auth_Routes.ADMINISTRADOR;
     } else {
-        return '/otra-ruta';
+        return Auth_Routes.OTRA_RUTA;
     }
 };
 
@@ -248,18 +257,18 @@ authCtrl.verifiedCode = async (req, res) => {
         const foundStudent = await Student.findOne({ correo: email });
 
         if (!foundStudent) {
-            return res.status(401).json({ message: 'Algo salió mal.' });
+            return res.status(401).json({ message: Auth_Messages.VERIFIED_CODE_ERROR });
         } else {
             const foundCode = await Student.findOne({ code: codigoVerificacion });
 
             if (!foundCode) {
-                return res.status(401).json({ message: 'Código erróneo. Ingresa el código correctamente.' });
+                return res.status(401).json({ message: Auth_Messages.INVALID_VERIFICATION_CODE });
             } else {
                 await Student.findOneAndUpdate({ correo: email }, { $set: { status: 'VERIFIED' } });
 
                 return res.status(200).json({
                     success: true,
-                    message: 'Código verificado correctamente. Tu cuenta ha sido verificada.',
+                    message: Auth_Messages.ACCOUNT_VERIFIED,
                 });
             }
         }

@@ -1,7 +1,5 @@
 const alumnoCtrl = {};
 const { Comite, Reciclaje } = require('../../models/Comites'); // Corrección en esta línea;
-const PASS_COMI = process.env.PASS_COMI;
-const EMAIL_COMI = process.env.EMAIL_COMI;
 const EMAIL_ELECTRONICA = process.env.EMAIL_ELECTRONICA;
 const PASS_ELECTRONICA = process.env.PASS_ELECTRONICA;
 const EMAIL_INDUSTRIAL = process.env.EMAIL_INDUSTRIAL;
@@ -18,9 +16,12 @@ const nodemailer = require('nodemailer');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
 const mongoose = require('mongoose');
+const path = require('path');
 
 //Importa archivo de constantes
-const { Estados, Carreras, Roles, IdRoles, Mensajes } = require('../../config/statuses');
+const { Estados, Carreras, IdRoles, Jefes_Mensajes, Subject } = require('../../config/statuses');
+
+const templatesDir = path.resolve(__dirname, '../../templates'); //Exporta los templates para el envio de correos
 
 // Utilizamos promisify para convertir fs.unlink en una función que devuelve una promesa
 const unlinkAsync = require('util').promisify(fs.unlink);
@@ -67,7 +68,7 @@ alumnoCtrl.getAlumnosJefes = async (req, res) => {
         });
 
         if (alumnos.length === 0) {
-            return res.status(404).json({ message: 'No se encontraron alumnos para esta carrera.' });
+            return res.status(404).json({ message: Jefes_Mensajes.ERROR_OBTAINING_STUDENTS });
         }
 
         const alumnosConEvidencia = alumnos.map((alumno) => {
@@ -98,7 +99,7 @@ alumnoCtrl.getAlumnosJefes = async (req, res) => {
         res.status(200).json(alumnosConEvidencia);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error al obtener los alumnos.' });
+        res.status(500).json({ message: Jefes_Mensajes.ERROR_OBTAINING_STUDENTS });
     }
 };
 
@@ -110,46 +111,46 @@ alumnoCtrl.aceptarSolicitudJefe = async (req, res) => {
         const alumno = await Comite.findById(id);
 
         if (!alumno) {
-            return res.status(404).json(`Alumno with id ${id} not found`);
+            return res.status(404).json({ message: Jefes_Mensajes.STUDENT_NOT_FOUND });
         }
 
         if (alumno.casoEsta === Estados.ACEPTADO_JEFA_CARRERA) {
-            return res.status(400).json({ message: Mensajes.ERROR_REV_SECRE });
+            return res.status(400).json({ message: Jefes_Mensajes.ERROR_REV_SECRE });
         }
 
         if (alumno.casoEsta === Estados.RECHAZADO_JEFA_CARRERA) {
-            return res.status(400).json({ message: Mensajes.ERROR_REJECTED_JEFE });
+            return res.status(400).json({ message: Jefes_Mensajes.ERROR_REJECTED_JEFE });
         }
 
         let jefeNombre, passJefe;
 
         switch (alumno.carrera) {
-            case 'Ingeniería en Sistemas Computacionales':
+            case Carreras.INGENIERIA_SISTEMAS:
                 jefeNombre = EMAIL_SISTEMAS;
                 passJefe = PASS_SISTEMAS;
                 break;
 
-            case 'Ingeniería Industrial':
+            case Carreras.INGENIERIA_INDUSTRIAL:
                 jefeNombre = EMAIL_INDUSTRIAL;
                 passJefe = PASS_INDUSTRIAL;
                 break;
 
-            case 'Ingeniería Electromecánica':
+            case Carreras.INGENIERIA_ELECTROMECANICA:
                 jefeNombre = EMAIL_ELECTROMECANICA;
                 passJefe = PASS_ELECTROMECANICA;
                 break;
 
-            case 'Ingeniería Informática':
+            case Carreras.INGENIERIA_INFORMATICA:
                 jefeNombre = EMAIL_INFORMATICA;
                 passJefe = PASS_INFORMATICA;
                 break;
 
-            case 'Ingeniería Electrónica':
+            case Carreras.INGENIERIA_ELECTRONICA:
                 jefeNombre = EMAIL_ELECTRONICA;
                 passJefe = PASS_ELECTRONICA;
                 break;
 
-            case 'Ingeniería en Administración':
+            case Carreras.INGENIERIA_ADMINISTRACION:
                 jefeNombre = EMAIL_ADMINISTRACION;
                 passJefe = PASS_ADMINISTRACION;
                 break;
@@ -163,6 +164,10 @@ alumnoCtrl.aceptarSolicitudJefe = async (req, res) => {
         alumno.motivoComi = Estados.ACEPTADO_JEFA_CARRERA;
         await alumno.save();
 
+        // Cargar la plantilla de correo desde el archivo
+        const templatePath = path.join(templatesDir, 'email_comite_jefe__accepted.html');
+        const html = await fs.promises.readFile(templatePath, 'utf8');
+
         // Envía correo electrónico de notificación de aceptación
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -171,13 +176,15 @@ alumnoCtrl.aceptarSolicitudJefe = async (req, res) => {
                 pass: passJefe,
             },
         });
+
+        // Reemplazar variables en la plantilla con los datos del estudiante
+        const filledTemplate = html.replace('{{nombre}}', alumno.nombreCom);
+
         const mailOptions = {
             from: jefeNombre,
             to: alumno.correo,
-            subject: 'Comité académico TESCHA',
-            text: `Hola ${alumno.nombreCom},\n\nTu solicitud ha sido aceptada por el jefe/a de carrera. 
-            Tu caso pasará al comité de casos especiales. Te pedimos estar atento a la resolución de 
-            tu caso.\n\nSaludos!!`,
+            subject: Subject.SUBJECT_COMITE,
+            html: filledTemplate,
         };
         await transporter.sendMail(mailOptions);
 
@@ -197,11 +204,11 @@ alumnoCtrl.rechazarSolicitudJefe = async (req, res) => {
         const alumno = await Comite.findById(id);
 
         if (alumno.casoEsta === Estados.ACEPTADO_JEFA_CARRERA) {
-            return res.status(400).json({ message: Mensajes.ERROR_REV_SECRE });
+            return res.status(400).json({ message: Jefes_Mensajes.ERROR_REV_SECRE });
         }
 
         if (alumno.casoEsta === Estados.RECHAZADO_JEFA_CARRERA) {
-            return res.status(400).json({ message: Mensajes.ERROR_REJECTED_JEFE });
+            return res.status(400).json({ message: Jefes_Mensajes.ERROR_REJECTED_JEFE });
         }
 
         if (!alumno) {
@@ -251,6 +258,10 @@ alumnoCtrl.rechazarSolicitudJefe = async (req, res) => {
         alumno.motivoComi = motivoRechazo || 'Motivo no especificado';
         await alumno.save();
 
+        // Cargar la plantilla de correo desde el archivo
+        const templatePath = path.join(templatesDir, 'email_comite_jefe__rejected.html');
+        const html = await fs.promises.readFile(templatePath, 'utf8');
+
         // Envía correo electrónico de notificación de rechazo
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -259,11 +270,15 @@ alumnoCtrl.rechazarSolicitudJefe = async (req, res) => {
                 pass: passJefe,
             },
         });
+
+        // Reemplazar variables en la plantilla con los datos del estudiante
+        const filledTemplate = html.replace('{{nombre}}', alumno.nombreCom).replace('{{motivoComi}}', alumno.motivoComi);
+
         const mailOptions = {
             from: jefeNombre,
             to: alumno.correo,
-            subject: 'Solicitud Rechazada por Jefe/a de Carrera',
-            text: `Hola ${alumno.nombreCom}.\nTu solicitud ha sido rechazada por el jefe/a de carrera. El motivo es: ${alumno.motivoComi}\n\nPonte en contacto con tu jefe/a de carrera para más información.\n\Saludos!!`,
+            subject: Subject.SUBJECT_COMITE,
+            html: filledTemplate,
         };
         await transporter.sendMail(mailOptions);
 
@@ -283,16 +298,16 @@ alumnoCtrl.moverReciclajeJefe = async (req, res) => {
         const alumnoExistente = await Comite.findById(id);
 
         if (alumnoExistente.casoEsta === Estados.ACEPTADO_JEFA_CARRERA) {
-            return res.status(400).json({ message: Mensajes.ERROR_REV_SECRE });
+            return res.status(400).json({ message: Jefes_Mensajes.ERROR_REV_SECRE });
         }
 
         if (alumnoExistente.casoEsta === Estados.RECHAZADO_JEFA_CARRERA) {
-            return res.status(400).json({ message: Mensajes.ERROR_REJECTED_JEFE });
+            return res.status(400).json({ message: Jefes_Mensajes.ERROR_REJECTED_JEFE });
         }
 
         // Verificar si el alumno existe
         if (!alumnoExistente) {
-            return res.status(404).json({ message: `Alumno con id ${id} no encontrado` });
+            return res.status(404).json({ message: Jefes_Mensajes.STUDENT_NOT_FOUND });
         }
 
         // Crear un nuevo documento en la colección de reciclaje con los datos del alumno
@@ -328,23 +343,23 @@ alumnoCtrl.getReciclajefe = async (req, res) => {
             case '1001':
                 carrera = 'Secretaría de Comité';
                 break;
-            case '19981':
-                carrera = 'Ingeniería Electromecánica';
+            case IdRoles.ID_ROL_ELECTROMECANICA:
+                carrera = Carreras.INGENIERIA_ELECTROMECANICA;
                 break;
-            case '19982':
-                carrera = 'Ingeniería Industrial';
+            case IdRoles.ID_ROL_INDUSTRIAL:
+                carrera = Carreras.INGENIERIA_INDUSTRIAL;
                 break;
-            case '20041':
-                carrera = 'Ingeniería en Sistemas Computacionales';
+            case IdRoles.ID_ROL_SISTEMAS:
+                carrera = Carreras.INGENIERIA_SISTEMAS;
                 break;
-            case '20042':
-                carrera = 'Ingeniería Electrónica';
+            case IdRoles.ID_ROL_ELECTRONICA:
+                carrera = Carreras.INGENIERIA_ELECTRONICA;
                 break;
-            case '20043':
-                carrera = 'Ingeniería Informática';
+            case IdRoles.ID_ROL_INFORMATICA:
+                carrera = Carreras.INGENIERIA_INFORMATICA;
                 break;
-            case '20201':
-                carrera = 'Ingeniería en Administración';
+            case IdRoles.ID_ROL_ADMINISTRACION:
+                carrera = Carreras.INGENIERIA_ADMINISTRACION;
                 break;
             default:
                 carrera = 'N/A';
@@ -355,7 +370,7 @@ alumnoCtrl.getReciclajefe = async (req, res) => {
 
         // Verificar si se encontraron reciclajes para esa carrera
         if (reciclajes.length === 0) {
-            return res.status(404).json({ message: 'No se encontraron alumnos para esta carrera.' });
+            return res.status(404).json({ message: Jefes_Mensajes.ERROR_OBTAINING_CARRERA });
         }
 
         // Mapear los reciclajes para ajustar la respuesta
@@ -389,7 +404,7 @@ alumnoCtrl.getReciclajefe = async (req, res) => {
         res.status(200).json(reciclajesConEvidencia);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error al obtener los reciclajes.' });
+        res.status(500).json({ message: Jefes_Mensajes.ERROR_OBTAINING_RECYCLING });
     }
 };
 
@@ -408,7 +423,7 @@ alumnoCtrl.restaurarReciclaJefe = async (req, res) => {
 
         // Verificar si el alumno existe en reciclaje
         if (!alumnoReciclado) {
-            return res.status(404).json(`Alumno in Reciclaje with id ${id} not found`);
+            return res.status(404).json({ message: Jefes_Mensajes.STUDENT_NOT_FOUND });
         }
 
         // Obtener el nombre del archivo
@@ -425,7 +440,7 @@ alumnoCtrl.restaurarReciclaJefe = async (req, res) => {
 
         res.status(200).json(alumnoRestaurado);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
+        res.status(500).json({ message: Jefes_Mensajes.SERVER_ERROR, error });
         console.error(error);
     }
 };
@@ -438,17 +453,17 @@ alumnoCtrl.deleteReciclajeJefe = async (req, res) => {
         // Verificar si el alumno existe
         const alumno = await Reciclaje.findById(alumnoId);
         if (!alumno) {
-            return res.status(404).json({ message: 'Alumno no encontrado.' });
+            return res.status(404).json({ message: Jefes_Mensajes.STUDENT_NOT_FOUND });
         }
 
         // Eliminar el alumno de la base de datos
         await Reciclaje.findByIdAndDelete(alumnoId);
 
         // Envía una respuesta de éxito
-        res.status(200).json({ message: 'Alumno eliminado correctamente.' });
+        res.status(200).json({ message: Jefes_Mensajes.DELETE_STUDENT });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error al eliminar el alumno.' });
+        res.status(500).json({ message: Jefes_Mensajes.SERVER_ERROR });
     }
 };
 
@@ -466,29 +481,23 @@ alumnoCtrl.historialJefe = async (req, res) => {
         let carrera;
 
         switch (idCarrera) {
-            case '1000':
-                carrera = 'Administrador';
+            case IdRoles.ID_ROL_ELECTROMECANICA:
+                carrera = Carreras.INGENIERIA_ELECTROMECANICA;
                 break;
-            case '1001':
-                carrera = 'Secretaría de Comité';
+            case IdRoles.ID_ROL_INDUSTRIAL:
+                carrera = Carreras.INGENIERIA_INDUSTRIAL;
                 break;
-            case '19981':
-                carrera = 'Ingeniería Electromecánica';
+            case IdRoles.ID_ROL_SISTEMAS:
+                carrera = Carreras.INGENIERIA_SISTEMAS;
                 break;
-            case '19982':
-                carrera = 'Ingeniería Industrial';
+            case IdRoles.ID_ROL_ELECTRONICA:
+                carrera = Carreras.INGENIERIA_ELECTRONICA;
                 break;
-            case '20041':
-                carrera = 'Ingeniería en Sistemas Computacionales';
+            case IdRoles.ID_ROL_INFORMATICA:
+                carrera = Carreras.INGENIERIA_INFORMATICA;
                 break;
-            case '20042':
-                carrera = 'Ingeniería Electrónica';
-                break;
-            case '20043':
-                carrera = 'Ingeniería Informática';
-                break;
-            case '20201':
-                carrera = 'Ingeniería en Administración';
+            case IdRoles.ID_ROL_ADMINISTRACION:
+                carrera = Carreras.INGENIERIA_ADMINISTRACION;
                 break;
             default:
                 carrera = 'N/A';
@@ -502,9 +511,11 @@ alumnoCtrl.historialJefe = async (req, res) => {
             Estados.ACEPTADO_SECRETARIA,
         ];
 
-        // Obtener todos los alumnos de la base de datos cuyo casoEsta esté en los estados aceptados
-        const alumnos = await Comite.find({ casoEsta: { $in: estadosAceptados } });
-
+        // Obtener todos los alumnos de la base de datos cuyo casoEsta esté en los estados aceptados y carrera seleccionada
+        const alumnos = await Comite.find({
+            casoEsta: { $in: estadosAceptados },
+            carrera: carrera,
+        });
         const alumnosConEvidencia = alumnos.map((alumno) => {
             return {
                 _id: alumno._id,
@@ -533,7 +544,7 @@ alumnoCtrl.historialJefe = async (req, res) => {
 
         res.status(200).json({ historialJefe: alumnosConEvidencia });
     } catch (error) {
-        console.error('Error al obtener el historial del jefe:', error);
+        console.error(Jefes_Mensajes.ERROR_OBTAINING_JEFE_HISTORY, error);
         res.status(500).json({ message: 'Error en el servidor' });
     }
 };
@@ -619,7 +630,7 @@ alumnoCtrl.getAlumnosAceptados = async (req, res) => {
         res.status(200).json(alumnosConEvidencia);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error al obtener los alumnos.' });
+        res.status(500).json({ message: Jefes_Mensajes.ERROR_OBTAINING_STUDENTS });
     }
 };
 
@@ -633,7 +644,7 @@ alumnoCtrl.getAlumno = async (req, res) => {
         const alumno = await Comite.findOne({ matricula: matricula });
 
         if (!alumno) {
-            return res.status(404).json(`Alumno with matricula ${matricula} not found`);
+            return res.status(404).json({ message: Jefes_Mensajes.STUDENT_NOT_FOUND });
         }
 
         res.status(200).json(alumno);
@@ -650,12 +661,12 @@ alumnoCtrl.getAlumnoPdf = async (req, res) => {
 
         // Verificar si el alumno existe
         if (!alumno) {
-            return res.status(404).json({ message: 'Alumno no encontrado.' });
+            return res.status(404).json({ message: Jefes_Mensajes.STUDENT_NOT_FOUND });
         }
 
         // Verificar si hay evidencia adjunta
         if (!alumno.evidencia || !alumno.evidencia.data) {
-            return res.status(404).json({ message: 'No hay evidencia adjunta para este alumno.' });
+            return res.status(404).json({ message: Jefes_Mensajes.ERROR_OBTAINING_EVIDENCE });
         }
 
         // Establecer encabezados para indicar que se está enviando un archivo PDF

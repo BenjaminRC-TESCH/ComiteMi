@@ -10,6 +10,7 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const { createSolutionBuilderWithWatch } = require('typescript');
 const unlinkAsync = require('util').promisify(fs.unlink);
+const path = require('path');
 
 const PASS_COMI = process.env.PASS_COMI;
 const EMAIL_COMI = process.env.EMAIL_COMI;
@@ -26,6 +27,10 @@ const PASS_INFORMATICA = process.env.PASS_INFORMATICA;
 const EMAIL_ADMINISTRACION = process.env.EMAIL_ADMINISTRACION;
 const PASS_ADMINISTRACION = process.env.PASS_ADMINISTRACION;
 
+const { Carreras, Subject, Students_Messages } = require('../../config/statuses');
+
+const templatesDir = path.resolve(__dirname, '../../templates'); //Exporta los templates para el envio de correos
+
 //Metodo para crear el comite del alumno
 studentCtrl.createComite = async (req, res) => {
     try {
@@ -41,7 +46,7 @@ studentCtrl.createComite = async (req, res) => {
         const student = await Student.findById(idAlumno).exec();
 
         if (!student) {
-            return res.status(404).json({ message: 'Estudiante no encontrado' });
+            return res.status(404).json({ message: Students_Messages.STUDENT_NOT_FOUND });
         }
 
         // Guardar la información del estudiante
@@ -52,32 +57,32 @@ studentCtrl.createComite = async (req, res) => {
         let jefeNombre, passJefe;
 
         switch (carrera) {
-            case 'Ingeniería en Sistemas Computacionales':
+            case Carreras.INGENIERIA_SISTEMAS:
                 jefeNombre = EMAIL_SISTEMAS;
                 passJefe = PASS_SISTEMAS;
                 break;
 
-            case 'Ingeniería Industrial':
+            case Carreras.INGENIERIA_INDUSTRIAL:
                 jefeNombre = EMAIL_INDUSTRIAL;
                 passJefe = PASS_INDUSTRIAL;
                 break;
 
-            case 'Ingeniería Electromecánica':
+            case Carreras.INGENIERIA_ELECTROMECANICA:
                 jefeNombre = EMAIL_ELECTROMECANICA;
                 passJefe = PASS_ELECTROMECANICA;
                 break;
 
-            case 'Ingeniería Informática':
+            case Carreras.INGENIERIA_INFORMATICA:
                 jefeNombre = EMAIL_INFORMATICA;
                 passJefe = PASS_INFORMATICA;
                 break;
 
-            case 'Ingeniería Electrónica':
+            case Carreras.INGENIERIA_ELECTRONICA:
                 jefeNombre = EMAIL_ELECTRONICA;
                 passJefe = PASS_ELECTRONICA;
                 break;
 
-            case 'Ingeniería en Administración':
+            case Carreras.INGENIERIA_ADMINISTRACION:
                 jefeNombre = EMAIL_ADMINISTRACION;
                 passJefe = PASS_ADMINISTRACION;
                 break;
@@ -89,7 +94,7 @@ studentCtrl.createComite = async (req, res) => {
 
         // Verificar si se ha subido un archivo
         if (!req.file) {
-            return res.status(400).json({ message: 'No se ha proporcionado un archivo de evidencia.' });
+            return res.status(400).json({ message: Students_Messages.EVIDENCE_NOT_FOUND });
         }
 
         // Leer el contenido del archivo PDF
@@ -123,6 +128,10 @@ studentCtrl.createComite = async (req, res) => {
         // Eliminar el archivo temporal después de leer su contenido (opcional)
         fs.unlinkSync(req.file.path);
 
+        // Cargar la plantilla de correo desde el archivo
+        const templatePath = path.join(templatesDir, 'email_comite_student.html');
+        const html = await fs.promises.readFile(templatePath, 'utf8');
+
         // Configuración del transporte para nodemailer (ajustar según tu proveedor de correo)
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -132,14 +141,15 @@ studentCtrl.createComite = async (req, res) => {
             },
         });
 
+        // Reemplazar variables en la plantilla con los datos del estudiante
+        const filledTemplate = html.replace('{{nombre}}', nombre).replace('{{aPaterno}}', aPaterno).replace('{{aMaterno}}', aMaterno);
+
         // Contenido del correo electrónico
         const mailOptions = {
             from: jefeNombre, // Cambia esto por tu correo electrónico
             to: correo,
-            subject: 'Solicitud recibida',
-            text: `Hola ${
-                nombre + ' ' + aPaterno + ' ' + aMaterno
-            }.\nTu solicitud ha sido enviada al Jefe/a de carrera con éxito. Gracias por enviarla.\n\nTe pedimos estar atento a la resolución de tu caso.\nSaludos!!`,
+            subject: Subject.SUBJECT_REQUEST_RECEIVED,
+            html: filledTemplate,
         };
 
         // Envía el correo electrónico
@@ -148,7 +158,7 @@ studentCtrl.createComite = async (req, res) => {
         res.status(201).json(newAlumno);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error al crear el alumno.' });
+        res.status(500).json({ message: Students_Messages.ERROR_CREATING_STUDENT });
     }
 };
 
@@ -168,7 +178,7 @@ studentCtrl.getComiteStudent = async (req, res) => {
 
         // Verificar si se encontraron alumnos para esa carrera
         if (alumnos.length === 0) {
-            return res.status(404).json({ message: 'No se encontraron alumnos para esta carrera.' });
+            return res.status(404).json({ message: Students_Messages.NO_STUDENTS_FOUND });
         }
 
         // Mapear los alumnos para ajustar la respuesta
@@ -201,7 +211,7 @@ studentCtrl.getComiteStudent = async (req, res) => {
         res.status(200).json(alumnosConEvidencia);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error al obtener los alumnos.' });
+        res.status(500).json({ message: Students_Messages.ERROR_OBTAINING_STUDENTS });
     }
 };
 
@@ -211,12 +221,12 @@ studentCtrl.getPdfStudent = async (req, res) => {
 
         // Verificar si el alumno existe
         if (!alumno) {
-            return res.status(404).json({ message: 'Alumno no encontrado.' });
+            return res.status(404).json({ message: Students_Messages.ALUMNO_NOT_FOUND });
         }
 
         // Verificar si hay evidencia adjunta
         if (!alumno.evidencia || !alumno.evidencia.data) {
-            return res.status(404).json({ message: 'No hay evidencia adjunta para este alumno.' });
+            return res.status(404).json({ message: Students_Messages.NO_EVIDENCE_FOUND });
         }
 
         // Establecer encabezados para indicar que se está enviando un archivo PDF
@@ -226,7 +236,7 @@ studentCtrl.getPdfStudent = async (req, res) => {
         res.send(alumno.evidencia.data);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error al obtener el archivo PDF del alumno.' });
+        res.status(500).json({ message: Students_Messages.ERROR_OBTAINING_PDF });
     }
 };
 
@@ -238,19 +248,16 @@ studentCtrl.getStudentProfile = async (req, res) => {
 
         const idAlumnoDecoded = tokenDecoded._id;
 
-        console.log('Este es el id: ' + idAlumnoDecoded);
-
         const student = await Student.findById(idAlumnoDecoded).exec();
 
         if (!student) {
-            return res.status(404).json({ message: 'Estudiante no encontrado' });
+            return res.status(404).json({ message: Students_Messages.STUDENT_NOT_FOUND });
         }
 
-        console.log(student.correo);
         res.status(200).json(student);
     } catch (error) {
-        console.error('Error al obtener el perfil del estudiante', error);
-        res.status(500).json({ message: 'Error al obtener el perfil del estudiante' });
+        console.error(Students_Messages.ERROR_OBTAINING_PROFILE, error);
+        res.status(500).json({ message: Students_Messages.ERROR_OBTAINING_PROFILE });
     }
 };
 
@@ -266,32 +273,27 @@ studentCtrl.updateStudentProfile = async (req, res) => {
         // Expresión regular para validar que el nombre y apellidos contengan solo letras
         const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
         if (!nameRegex.test(nombre)) {
-            return res.status(400).json({ message: 'Por favor ingresa un nombre válido.' });
+            return res.status(400).json({ message: Students_Messages.INVALID_NAME });
         }
 
         if (!nameRegex.test(aPaterno)) {
-            return res.status(400).json({ message: 'Por favor ingresa un apellido paterno válido.' });
+            return res.status(400).json({ message: Students_Messages.INVALID_PATERNAL_SURNAME });
         }
 
         if (!nameRegex.test(aMaterno)) {
-            return res.status(400).json({ message: 'Por favor ingresa un apellido materno válido.' });
+            return res.status(400).json({ message: Students_Messages.INVALID_MATERNAL_SURNAME });
         }
 
         const parsedMatricula = parseInt(matricula, 10);
         if (isNaN(parsedMatricula) || parsedMatricula.toString().length !== 9) {
-            return res.status(400).json({ message: 'La matrícula debe tener exactamente 9 dígitos.' });
-        }
-
-        const emailRegex = /^[a-zA-Z0-9._-]+@tesch\.edu\.mx$/;
-        if (!emailRegex.test(correo)) {
-            return res.status(400).json({ message: 'El correo electrónico debe ser de dominio @tesch.edu.mx.' });
+            return res.status(400).json({ message: Students_Messages.INVALID_MATRICULA });
         }
 
         // Verificar longitud y caracteres especiales de la contraseña
         const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,12})/;
         if (password && !passwordRegex.test(password)) {
             return res.status(400).json({
-                message: 'La contraseña debe tener entre 8 y 12 caracteres, al menos una letra mayúscula y un carácter especial.',
+                message: Students_Messages.INVALID_PASSWORD,
             });
         }
 
@@ -315,14 +317,14 @@ studentCtrl.updateStudentProfile = async (req, res) => {
         const student = await Student.findByIdAndUpdate(idAlumnoDecoded, updateStudent, { new: true });
 
         if (!student) {
-            return res.status(404).json({ message: 'Estudiante no encontrado' });
+            return res.status(404).json({ message: Students_Messages.STUDENT_NOT_FOUND });
         }
 
         // Enviar la respuesta con el estudiante actualizado
         res.status(200).json(student);
     } catch (error) {
-        console.error('Error al actualizar el perfil del estudiante', error);
-        res.status(500).json({ message: 'Error al actualizar el perfil del estudiante' });
+        console.error(Students_Messages.ERROR_UPDATING_PROFILE, error);
+        res.status(500).json({ message: Students_Messages.ERROR_UPDATING_PROFILE });
     }
 };
 

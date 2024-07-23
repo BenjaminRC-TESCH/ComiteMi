@@ -1,7 +1,5 @@
 const secreCtrl = {};
 const { Comite, Reciclaje } = require('../../models/Comites'); // Corrección en esta línea;
-const PASS_COMI = process.env.PASS_COMI;
-const EMAIL_COMI = process.env.EMAIL_COMI;
 const EMAIL_ELECTRONICA = process.env.EMAIL_ELECTRONICA;
 const PASS_ELECTRONICA = process.env.PASS_ELECTRONICA;
 const EMAIL_INDUSTRIAL = process.env.EMAIL_INDUSTRIAL;
@@ -18,12 +16,15 @@ const nodemailer = require('nodemailer');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
 const mongoose = require('mongoose');
+const path = require('path');
 
 // Utilizamos promisify para convertir fs.unlink en una función que devuelve una promesa
 const unlinkAsync = require('util').promisify(fs.unlink);
 
+const templatesDir = path.resolve(__dirname, '../../templates'); //Exporta los templates para el envio de correos
+
 //Importa archivo de constantes
-const { Estados, Carreras, Roles, IdRoles, Mensajes } = require('../../config/statuses');
+const { Estados, Carreras, Secretary_Mensajes, Subject } = require('../../config/statuses');
 
 // Método para obtener los alumnos aceptados
 secreCtrl.getAceptadosSecretaria = async (req, res) => {
@@ -62,7 +63,7 @@ secreCtrl.getAceptadosSecretaria = async (req, res) => {
         res.status(200).json(alumnosConEvidencia);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error al obtener los alumnos.' });
+        res.status(500).json({ message: Secretary_Mensajes.ERROR_OBTAINING_STUDENTS });
     }
 };
 
@@ -80,32 +81,32 @@ secreCtrl.aceptarSecre = async (req, res) => {
         let jefeNombre, passJefe, nuevoEstado, nuevoMotivo, asuntoCorreo;
 
         switch (alumno.carrera) {
-            case 'Ingeniería en Sistemas Computacionales':
+            case Carreras.INGENIERIA_SISTEMAS:
                 jefeNombre = EMAIL_SISTEMAS;
                 passJefe = PASS_SISTEMAS;
                 break;
 
-            case 'Ingeniería Industrial':
+            case Carreras.INGENIERIA_INDUSTRIAL:
                 jefeNombre = EMAIL_INDUSTRIAL;
                 passJefe = PASS_INDUSTRIAL;
                 break;
 
-            case 'Ingeniería Electromecánica':
+            case Carreras.INGENIERIA_ELECTROMECANICA:
                 jefeNombre = EMAIL_ELECTROMECANICA;
                 passJefe = PASS_ELECTROMECANICA;
                 break;
 
-            case 'Ingeniería Informática':
+            case Carreras.INGENIERIA_INFORMATICA:
                 jefeNombre = EMAIL_INFORMATICA;
                 passJefe = PASS_INFORMATICA;
                 break;
 
-            case 'Ingeniería Electrónica':
+            case Carreras.INGENIERIA_ELECTRONICA:
                 jefeNombre = EMAIL_ELECTRONICA;
                 passJefe = PASS_ELECTRONICA;
                 break;
 
-            case 'Ingeniería en Administración':
+            case Carreras.INGENIERIA_ADMINISTRACION:
                 jefeNombre = EMAIL_ADMINISTRACION;
                 passJefe = PASS_ADMINISTRACION;
                 break;
@@ -119,17 +120,21 @@ secreCtrl.aceptarSecre = async (req, res) => {
         if (alumno.casoEsta === Estados.ACEPTADO_JEFA_CARRERA) {
             nuevoEstado = Estados.ACEPTADO_SECRETARIA;
             nuevoMotivo = Estados.ACEPTADO_SECRETARIA;
-            asuntoCorreo = Mensajes.SUCCESS_ACEPT_SECRE;
+            asuntoCorreo = Secretary_Mensajes.SUCCESS_ACEPT_SECRE;
         } else if (alumno.casoEsta === Estados.ACEPTADO_SECRETARIA) {
-            return res.status(400).json({ message: Mensajes.ERROR_REV_COMITE });
+            return res.status(400).json({ message: Secretary_Mensajes.ERROR_REV_COMITE });
         } else {
-            return res.status(400).json({ message: 'El estado del caso no permite esta acción' });
+            return res.status(400).json({ message: Secretary_Mensajes.STATUS_ERROR });
         }
 
         alumno.casoEsta = nuevoEstado;
         alumno.motivoComi = nuevoMotivo;
 
         await alumno.save();
+
+        // Cargar la plantilla de correo desde el archivo
+        const templatePath = path.join(templatesDir, 'email_comite_secretary_accepted.html');
+        const html = await fs.promises.readFile(templatePath, 'utf8');
 
         // Envía correo electrónico de notificación de aceptación
         const transporter = nodemailer.createTransport({
@@ -140,18 +145,21 @@ secreCtrl.aceptarSecre = async (req, res) => {
             },
         });
 
+        // Reemplazar variables en la plantilla con los datos del estudiante
+        const filledTemplate = html.replace('{{nombre}}', alumno.nombreCom);
+
         const mailOptions = {
             from: jefeNombre,
             to: alumno.correo,
-            subject: 'Comité académico TESCHA',
-            text: `Hola ${alumno.nombreCom},\n\n${asuntoCorreo}`,
+            subject: Subject.SUBJECT_COMITE,
+            html: filledTemplate,
         };
 
         await transporter.sendMail(mailOptions);
 
         res.status(200).json(alumno);
     } catch (error) {
-        res.status(500).json({ message: 'Error del servidor' });
+        res.status(500).json({ message: Secretary_Mensajes.SERVER_ERROR });
         console.error(error);
     }
 };
@@ -171,32 +179,32 @@ secreCtrl.rechazarSecre = async (req, res) => {
         let jefeNombre, passJefe, nuevoEstado, nuevoMotivo, asuntoCorreo;
 
         switch (alumno.carrera) {
-            case 'Ingeniería en Sistemas Computacionales':
+            case Carreras.INGENIERIA_SISTEMAS:
                 jefeNombre = EMAIL_SISTEMAS;
                 passJefe = PASS_SISTEMAS;
                 break;
 
-            case 'Ingeniería Industrial':
+            case Carreras.INGENIERIA_INDUSTRIAL:
                 jefeNombre = EMAIL_INDUSTRIAL;
                 passJefe = PASS_INDUSTRIAL;
                 break;
 
-            case 'Ingeniería Electromecánica':
+            case Carreras.INGENIERIA_ELECTROMECANICA:
                 jefeNombre = EMAIL_ELECTROMECANICA;
                 passJefe = PASS_ELECTROMECANICA;
                 break;
 
-            case 'Ingeniería Informática':
+            case Carreras.INGENIERIA_INFORMATICA:
                 jefeNombre = EMAIL_INFORMATICA;
                 passJefe = PASS_INFORMATICA;
                 break;
 
-            case 'Ingeniería Electrónica':
+            case Carreras.INGENIERIA_ELECTRONICA:
                 jefeNombre = EMAIL_ELECTRONICA;
                 passJefe = PASS_ELECTRONICA;
                 break;
 
-            case 'Ingeniería en Administración':
+            case Carreras.INGENIERIA_ADMINISTRACION:
                 jefeNombre = EMAIL_ADMINISTRACION;
                 passJefe = PASS_ADMINISTRACION;
                 break;
@@ -210,11 +218,11 @@ secreCtrl.rechazarSecre = async (req, res) => {
         if (alumno.casoEsta === Estados.ACEPTADO_JEFA_CARRERA) {
             nuevoEstado = Estados.RECHAZADO_SECRETARIA;
             nuevoMotivo = motivoRechazo || 'Motivo no especificado';
-            asuntoCorreo = Mensajes.REJECTED_SECRE;
+            asuntoCorreo = Secretary_Mensajes.REJECTED_SECRE;
         } else if (alumno.casoEsta === Estados.ACEPTADO_SECRETARIA) {
-            return res.status(400).json({ message: Mensajes.ERROR_REV_COMITE });
+            return res.status(400).json({ message: Secretary_Mensajes.ERROR_REV_COMITE });
         } else {
-            return res.status(400).json({ message: 'El estado del caso no permite esta acción' });
+            return res.status(400).json({ message: Secretary_Mensajes.STATUS_ERROR });
         }
 
         alumno.casoEsta = nuevoEstado;
@@ -222,7 +230,11 @@ secreCtrl.rechazarSecre = async (req, res) => {
 
         await alumno.save();
 
-        // Envía correo electrónico de notificación de rechazo
+        // Cargar la plantilla de correo desde el archivo
+        const templatePath = path.join(templatesDir, 'email_comite_secretary_rejected.html');
+        const html = await fs.promises.readFile(templatePath, 'utf8');
+
+        // Envía correo electrónico de notificación de aceptación
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -231,18 +243,21 @@ secreCtrl.rechazarSecre = async (req, res) => {
             },
         });
 
+        // Reemplazar variables en la plantilla con los datos del estudiante
+        const filledTemplate = html.replace('{{nombre}}', alumno.nombreCom).replace('{{motivoComi}}');
+
         const mailOptions = {
             from: jefeNombre,
             to: alumno.correo,
-            subject: 'Comité académico TESCHA',
-            text: `Hola ${alumno.nombreCom},\n\n${asuntoCorreo}. El motivo es: ${nuevoMotivo}.\n\nPonte en contacto con el comité académico para más información.\n\nSaludos, ${jefeNombre}`,
+            subject: Subject.SUBJECT_COMITE,
+            html: filledTemplate,
         };
 
         await transporter.sendMail(mailOptions);
 
         res.status(200).json(alumno);
     } catch (error) {
-        res.status(500).json({ message: 'Error del servidor' });
+        res.status(500).json({ message: Secretary_Mensajes.SERVER_ERROR });
         console.error(error);
     }
 };
@@ -290,8 +305,8 @@ secreCtrl.getHistorialSecre = async (req, res) => {
         // Enviar la respuesta con el historial de casos
         res.status(200).json({ historialJefe: alumnosConEvidencia });
     } catch (error) {
-        console.error('Error al obtener el historial de casos:', error);
-        res.status(500).json({ message: 'Error en el servidor' });
+        console.error(Secretary_Mensajes.ERROR_OBTAINING_CASOS, error);
+        res.status(500).json({ message: Secretary_Mensajes.SERVER_ERROR });
     }
 };
 
@@ -332,13 +347,13 @@ secreCtrl.getAlumnosAceptadosComite = async (req, res) => {
 
         // Verificar si se encontraron alumnos con el estado "AceptadoJefes" en alguna de las colecciones
         if (alumnosConEvidencia.length === 0) {
-            return res.status(404).json({ message: 'No se encontraron alumnos con estado "AceptadoJefes".' });
+            return res.status(404).json({ message: Secretary_Mensajes.ERROR_CREATING_STUDENTS_ACEPT });
         }
 
         res.status(200).json(alumnosConEvidencia);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error al obtener los alumnos.' });
+        res.status(500).json({ message: Secretary_Mensajes.ERROR_OBTAINING_STUDENTS });
     }
 };
 
