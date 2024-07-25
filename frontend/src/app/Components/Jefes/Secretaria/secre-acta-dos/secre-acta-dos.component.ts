@@ -55,8 +55,9 @@ export class SecreActaDosComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.obtenerInformacionActa();
         this.obtenerAlumnosAceptados();
+        this.obtenerInformacionActa();
+
         this.tipoSesion = this.dataService.getTipoSesion();
         this.asistentesSeleccionados = this.dataService.getAsistentesSeleccionados();
         this.DGeneral = this.dataService.getDGeneral();
@@ -68,6 +69,8 @@ export class SecreActaDosComponent implements OnInit {
         const dia = this.getDia();
         const mes = this.getMes();
         const mesNumero = this.getMesNumero();
+
+        console.log(this.alumnosAceptados.length);
 
         if (!this.tipoSesion || !this.asistentesSeleccionados) {
             this.router.navigate(['/secretaria-acta-uno']);
@@ -266,9 +269,20 @@ export class SecreActaDosComponent implements OnInit {
         this.SecretariaTsService.getAlumnosAceptadosComite().subscribe(
             (data: any[]) => {
                 this.alumnosAceptados = data;
+                console.log(this.alumnosAceptados);
             },
             (error) => {
-                console.error('Error al obtener los datos:', error);
+                Swal.fire({
+                    title: 'No se encontraron alumnos aceptados por la secretaria del comité.',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Aceptar',
+                    cancelButtonText: 'Cancelar',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.router.navigate(['/secretaria-acta-uno']);
+                    }
+                });
             }
         );
     }

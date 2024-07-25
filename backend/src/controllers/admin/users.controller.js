@@ -3,6 +3,8 @@ const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
+const { IdRoles } = require('../../config/statuses');
+
 adminCtrl.signup = async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -64,9 +66,21 @@ adminCtrl.createUser = async (req, res) => {
 };
 
 // Obtener todos los usuarios
+//adminCtrl.getAllUsers = async (req, res) => {
+//try {
+//const users = await User.find();
+//res.status(200).json(users);
+//} catch (error) {
+//res.status(500).json({ message: 'Error del servidor' });
+//console.error(error);
+// }
+//};
+
+// Obtener todos los usuarios
 adminCtrl.getAllUsers = async (req, res) => {
     try {
-        const users = await User.find();
+        // Definir los estados aceptados
+        const users = await User.find({ roles: { $ne: IdRoles.ID_ROL_ADMINISTRADOR } });
         res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ message: 'Error del servidor' });
