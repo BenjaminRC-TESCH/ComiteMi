@@ -93,7 +93,7 @@ export class PagLogInComponent implements OnInit {
             },
             (error) => {
                 console.error('Error al resgistro:', error);
-                Swal.fire('Error', error.error.message || 'Error al registrar', 'error');
+                Swal.fire('Error', error.error.message || 'Error al registrar', 'question');
 
                 if (error.error.message === 'Por favor, verifica tu cuenta') {
                     this.mostrarFormularioVerificacion = true;
@@ -113,11 +113,13 @@ export class PagLogInComponent implements OnInit {
                     this.router.navigate([res.redirect]);
                 } else {
                     Swal.fire('Error', res.error.message || 'Error al registrar', 'error');
+                    window.location.reload();
                 }
             },
             (error) => {
                 this.ocultarLogin = true;
                 Swal.fire('Error', error.error.message, 'error');
+                window.location.reload();
             }
         );
     }

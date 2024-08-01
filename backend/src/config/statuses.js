@@ -98,6 +98,12 @@ const Students_Messages = {
     SERVER_ERROR: 'Error del servidor',
 };
 
+const Passport_Messages = {
+    VERIFIED_ACCOUNT: 'Por favor, verifica tu cuenta',
+    WRONG_PASSWORD: 'Contraseña incorrecta',
+    USER_NOT_FOUND: 'Usuario no encontrado',
+};
+
 const Auth_Messages = {
     COMPLETE_FIELDS: 'Por favor completa todos los campos.',
     INVALID_NAME: 'Por favor ingresa un nombre válido.',
@@ -116,6 +122,7 @@ const Auth_Messages = {
     INVALID_VERIFICATION_CODE: 'Código erróneo. Ingresa el código correctamente.',
     ACCOUNT_VERIFIED: 'Código verificado correctamente. Tu cuenta ha sido verificada.',
     INTERNAL_SERVER_ERROR: 'Internal Server Error',
+    NO_ROL: 'No tienes acceso >:C',
 };
 
 const Subject = {
@@ -123,8 +130,8 @@ const Subject = {
     SUBJECT_REQUEST_RECEIVED: 'Solicitud recibida',
     SUBJECT_COMITE: 'Comité académico TESCHA',
     SUBJECT_COMITE_MEETING: 'Comité académico TESCHA - Aviso de Convocatoria',
-    SUBJECT_COMITE_ACCEPTED: 'Tu solicitud ha sido aceptada por la Secretaría del comité académico',
-    SUBJECT_COMITE_REJECTED: 'Tu solicitud ha sido aceptada por el comité académico',
+    SUBJECT_COMITE_ACCEPTED: 'Tu solicitud ha sido aceptada por el comité académico',
+    SUBJECT_COMITE_REJECTED: 'Tu solicitud ha sido rechazada por el comité académico',
 };
 
 const Auth_Routes = {
@@ -145,4 +152,5 @@ module.exports = {
     Students_Messages,
     Auth_Messages,
     Auth_Routes,
+    Passport_Messages,
 };

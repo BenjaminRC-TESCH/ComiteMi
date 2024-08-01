@@ -245,7 +245,7 @@ const determineRedirectUrl = (role) => {
     } else if (role === IdRoles.ID_ROL_ADMINISTRADOR) {
         return Auth_Routes.ADMINISTRADOR;
     } else {
-        return Auth_Routes.OTRA_RUTA;
+        return res.status(500).json({ message: Auth_Messages.NO_ROL });
     }
 };
 

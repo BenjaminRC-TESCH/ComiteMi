@@ -4,6 +4,8 @@ const user = require('../models/User');
 const student = require('../models/Students');
 const jwt = require('jsonwebtoken');
 
+const { Passport_Messages } = require('../config/statuses');
+
 passport.use(
     new LocalStrategy(
         {
@@ -19,15 +21,15 @@ passport.use(
                     const foundStudent = await student.findOne({ correo: email });
 
                     if (!foundStudent) {
-                        return done(null, false, { message: 'Usuario no encontrado' });
+                        return done(null, false, { message: Passport_Messages.USER_NOT_FOUND });
                     } else {
                         const match = await foundStudent.matchPassword(password);
 
                         if (!match) {
-                            return done(null, false, { message: 'Contraseña incorrecta' });
+                            return done(null, false, { message: Passport_Messages.WRONG_PASSWORD });
                         } else {
                             if (foundStudent.status === 'UNVERIFIED') {
-                                return done(null, false, { message: 'Por favor, verifica tu cuenta' });
+                                return done(null, false, { message: Passport_Messages.VERIFIED_ACCOUNT });
                             } else {
                                 const token = jwt.sign({ _id: foundStudent._id, rol: foundStudent.rol }, 'secretkey');
                                 foundStudent.token = token;
@@ -46,7 +48,7 @@ passport.use(
                         foundUser.token = token;
                         return done(null, foundUser, { success: true });
                     } else {
-                        return done(null, false, { message: 'Contraseña incorrecta' });
+                        return done(null, false, { message: Passport_Messages.WRONG_PASSWORD });
                     }
                 }
             } catch (error) {

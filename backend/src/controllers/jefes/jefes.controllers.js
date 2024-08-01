@@ -165,7 +165,7 @@ alumnoCtrl.aceptarSolicitudJefe = async (req, res) => {
         await alumno.save();
 
         // Cargar la plantilla de correo desde el archivo
-        const templatePath = path.join(templatesDir, 'email_comite_jefe__accepted.html');
+        const templatePath = path.join(templatesDir, 'email_comite_jefe_accepted.html');
         const html = await fs.promises.readFile(templatePath, 'utf8');
 
         // Envía correo electrónico de notificación de aceptación
@@ -259,7 +259,7 @@ alumnoCtrl.rechazarSolicitudJefe = async (req, res) => {
         await alumno.save();
 
         // Cargar la plantilla de correo desde el archivo
-        const templatePath = path.join(templatesDir, 'email_comite_jefe__rejected.html');
+        const templatePath = path.join(templatesDir, 'email_comite_jefe_rejected.html');
         const html = await fs.promises.readFile(templatePath, 'utf8');
 
         // Envía correo electrónico de notificación de rechazo
