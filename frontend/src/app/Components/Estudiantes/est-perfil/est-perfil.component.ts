@@ -83,8 +83,17 @@ export class EstPerfilComponent implements OnInit {
     }
 
     // Metodo para cambiar entre modo vista y edición
+    //toggleEdit() {
+    //this.isEditing = !this.isEditing;
+    //}
+
     toggleEdit() {
-        this.isEditing = !this.isEditing;
+        if (this.isEditing) {
+            // Si estaba en modo de edición y se cancela, recargar la página
+            window.location.reload();
+        } else {
+            this.isEditing = true;
+        }
     }
 
     // Metodo para cambiar la visibilidad de la contraseña

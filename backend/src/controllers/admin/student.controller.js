@@ -1,5 +1,12 @@
 const studentCtrl = {};
+const bcrypt = require('bcryptjs');
 const Student = require('../../models/Students'); // Asegúrate de que la ruta es correcta
+const fileUpload = require('express-fileupload');
+const fs = require('fs');
+const mongoose = require('mongoose');
+const { createSolutionBuilderWithWatch } = require('typescript');
+const unlinkAsync = require('util').promisify(fs.unlink);
+const path = require('path');
 
 // Obtener todos los estudiantes
 studentCtrl.getEstudiantes = async (req, res) => {
@@ -16,7 +23,7 @@ studentCtrl.updateEstudiante = async (req, res) => {
     const { id } = req.params;
     const { password, nombre, aPaterno, aMaterno, matricula, carrera } = req.body;
     try {
-        if (!nombre || !aPaterno || !aMaterno || !matricula || !carrera || !correo || !password) {
+        if (!nombre || !aPaterno || !aMaterno || !matricula || !carrera) {
             return res.status(400).json({ message: 'Por favor completa todos los campos.' });
         }
 

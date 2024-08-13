@@ -6,7 +6,8 @@ const ActaSchema = new Schema(
         evidencia: { data: Buffer, contentType: String },
     },
     {
-        timestams: true,
+        timestamps: true,
+        versionKey: false,
     }
 );
 

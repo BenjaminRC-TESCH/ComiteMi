@@ -96,6 +96,7 @@ const Students_Messages = {
     INVALID_EMAIL_DOMAIN: 'El correo electrónico debe ser de dominio @tesch.edu.mx.',
     INVALID_PASSWORD: 'La contraseña debe tener entre 8 y 12 caracteres, al menos una letra mayúscula y un carácter especial.',
     SERVER_ERROR: 'Error del servidor',
+    UPDATE_NOT_ALLOWED: 'Solo puedes actualizar tu perfil cada 30 días. Ponte en contacto con el administrador de ser necesario.',
 };
 
 const Passport_Messages = {

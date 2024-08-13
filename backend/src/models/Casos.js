@@ -6,6 +6,7 @@ const casosSchema = new Schema(
     },
     {
         timestamps: true,
+        versionKey: false,
     }
 );
 

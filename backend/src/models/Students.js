@@ -15,7 +15,8 @@ const StudentSchema = new Schema(
         status: { type: String, require: true, default: 'UNVERIFIED' },
     },
     {
-        timestams: true,
+        timestamps: true,
+        versionKey: false,
     }
 );
 

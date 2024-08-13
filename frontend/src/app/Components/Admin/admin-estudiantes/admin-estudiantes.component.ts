@@ -69,6 +69,7 @@ export class AdminEstudiantesComponent implements OnInit {
                 (response) => {
                     Swal.fire('Éxito', 'Perfil actualizado correctamente', 'success');
                     this.isEditing = false;
+                    window.location.reload();
                     this.getStudents();
                 },
                 (error) => {

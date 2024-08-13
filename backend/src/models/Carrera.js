@@ -6,6 +6,7 @@ const carreraSchema = new Schema(
     },
     {
         timestamps: true,
+        versionKey: false,
     }
 );
 

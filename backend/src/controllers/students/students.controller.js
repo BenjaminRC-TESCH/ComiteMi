@@ -162,7 +162,7 @@ studentCtrl.createComite = async (req, res) => {
     }
 };
 
-//Metodo para obtener el comite segun el id del alumno
+//Metodo para obtener el historial de comite segun el id del alumno
 studentCtrl.getComiteStudent = async (req, res) => {
     try {
         const { id } = req.params; //Recibe token
@@ -270,6 +270,21 @@ studentCtrl.updateStudentProfile = async (req, res) => {
         const tokenDecoded = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
         const idAlumnoDecoded = tokenDecoded._id;
 
+        // Buscar el estudiante en la base de datos
+        const student = await Student.findById(idAlumnoDecoded);
+        if (!student) {
+            return res.status(404).json({ message: Students_Messages.STUDENT_NOT_FOUND });
+        }
+
+        // Verificar si han pasado 30 días desde la última actualización
+        const lastUpdate = new Date(student.updatedAt);
+        const now = new Date();
+        const daysDifference = Math.floor((now - lastUpdate) / (1000 * 60 * 60 * 24));
+
+        if (daysDifference < 30) {
+            return res.status(400).json({ message: Students_Messages.UPDATE_NOT_ALLOWED });
+        }
+
         // Expresión regular para validar que el nombre y apellidos contengan solo letras
         const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
         if (!nameRegex.test(nombre)) {
@@ -314,14 +329,10 @@ studentCtrl.updateStudentProfile = async (req, res) => {
         }
 
         // Actualizar el estudiante en la base de datos
-        const student = await Student.findByIdAndUpdate(idAlumnoDecoded, updateStudent, { new: true });
-
-        if (!student) {
-            return res.status(404).json({ message: Students_Messages.STUDENT_NOT_FOUND });
-        }
+        const updatedStudent = await Student.findByIdAndUpdate(idAlumnoDecoded, updateStudent, { new: true });
 
         // Enviar la respuesta con el estudiante actualizado
-        res.status(200).json(student);
+        res.status(200).json(updatedStudent);
     } catch (error) {
         console.error(Students_Messages.ERROR_UPDATING_PROFILE, error);
         res.status(500).json({ message: Students_Messages.ERROR_UPDATING_PROFILE });

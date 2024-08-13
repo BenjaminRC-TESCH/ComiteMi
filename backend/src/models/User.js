@@ -9,7 +9,8 @@ const UserSchema = new Schema(
         roles: [{ type: String }],
     },
     {
-        timestams: true,
+        timestamps: true,
+        versionKey: false,
     }
 );
 

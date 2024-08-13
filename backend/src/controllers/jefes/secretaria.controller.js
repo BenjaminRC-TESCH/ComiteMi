@@ -244,7 +244,7 @@ secreCtrl.rechazarSecre = async (req, res) => {
         });
 
         // Reemplazar variables en la plantilla con los datos del estudiante
-        const filledTemplate = html.replace('{{nombre}}', alumno.nombreCom).replace('{{motivoComi}}');
+        const filledTemplate = html.replace('{{nombre}}', alumno.nombreCom).replace('{{motivoComi}}', alumno.motivoComi);
 
         const mailOptions = {
             from: jefeNombre,
