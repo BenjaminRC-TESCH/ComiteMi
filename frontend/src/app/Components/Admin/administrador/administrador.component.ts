@@ -149,15 +149,6 @@ export class AdministradorComponent implements OnInit {
 
     cancelarAgregarUsuario(): void {
         this.showAddForm = false;
-
-        Swal.fire({
-            title: 'Cancelado',
-            text: 'La creación ha sido cancelada',
-            icon: 'info',
-            confirmButtonText: 'Ok',
-            timer: 2000,
-            timerProgressBar: true,
-        });
     }
 
     togglePasswordVisibility() {
