@@ -29,7 +29,7 @@ Este sistema permite a los alumnos registrar casos para revisión del comité ac
    npm run dev
    ```
 
-🧩 Frontend (Angular)
+### 🧩 Frontend (Angular)
 1. Clona el repositorio del frontend:
    ```bash
    cd frontend
